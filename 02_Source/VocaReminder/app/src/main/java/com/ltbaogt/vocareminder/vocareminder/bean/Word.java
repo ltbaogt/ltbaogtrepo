@@ -1,0 +1,138 @@
+package com.ltbaogt.vocareminder.vocareminder.bean;
+
+/**
+ * Created by My PC on 05/08/2016.
+ */
+
+public class Word {
+
+    private String mWordName;
+    private String mPronunciation;
+    private int mType_ID;
+    private String mDefault_Meaning;
+    private String mSentence;
+    private int mPriority;
+    private int mCount;
+    private int mGroup_ID;
+    private boolean mDeleted;
+
+    public Word() {
+        mWordName = "Name";
+        mPronunciation = "Pronunciation";
+        mType_ID = 1;
+        mDefault_Meaning = "Default Meaning 1";
+        mSentence = "Sentence";
+        mPriority = 1;
+        mCount = 0;
+        mGroup_ID = 1;
+        mDeleted = false;
+    }
+
+    public Word(String name,
+                String pronunciation,
+                int typeId,
+                String default_meaning,
+                String sentence,
+                int priority,
+                int count,
+                int groupId,
+                boolean deleted) {
+        mWordName = name;
+        mPronunciation = pronunciation;
+        mType_ID = 1;
+        mDefault_Meaning = default_meaning;
+        mSentence = sentence;
+        mPriority = priority;
+        mCount = count;
+        mGroup_ID = groupId;
+        mDeleted = deleted;
+    }
+
+    public String getWordName() {
+        return mWordName;
+    }
+
+    public void setWordName(String WordName) {
+        this.mWordName = WordName;
+    }
+
+    public String getPronunciation() {
+        return mPronunciation;
+    }
+
+    public void setPronunciation(String Pronunciation) {
+        this.mPronunciation = Pronunciation;
+    }
+
+    public int getType_ID() {
+        return mType_ID;
+    }
+
+    public void setType_ID(int mType_ID) {
+        this.mType_ID = mType_ID;
+    }
+
+    public String getDefault_Meaning() {
+        return mDefault_Meaning;
+    }
+
+    public void setDefault_Meaning(String Default_Meaning) {
+        this.mDefault_Meaning = Default_Meaning;
+    }
+
+    public String getSentence() {
+        return mSentence;
+    }
+
+    public void setSentence(String Sentence) {
+        this.mSentence = Sentence;
+    }
+
+    public int getPriority() {
+        return mPriority;
+    }
+
+    public void setPriority(int Priority) {
+        this.mPriority = Priority;
+    }
+
+    public int getCount() {
+        return mCount;
+    }
+
+    public void setCount(int Count) {
+        this.mCount = Count;
+    }
+
+    public int getGroup_ID() {
+        return mGroup_ID;
+    }
+
+    public void setGroup_ID(int Group_ID) {
+        this.mGroup_ID = Group_ID;
+    }
+
+    public boolean isDeleted() {
+        return mDeleted;
+    }
+
+    public void setDeleted(boolean Deleted) {
+        this.mDeleted = Deleted;
+    }
+
+    @Override
+    public String toString() {
+        String str = "Word={ Name= " + getWordName()
+                + ", Pronun= " + getPronunciation()
+                + ", TypeId= " + getType_ID()
+                + ", Meaning= " + getDefault_Meaning()
+                + ", Sentence= " + getSentence()
+                + ", Priority= " + getPriority()
+                + ", Count= " + getCount()
+                + ", GroupId= " + getGroup_ID()
+                + ", isDeleted= " + isDeleted()
+                + " }";
+        return str;
+
+    }
+}

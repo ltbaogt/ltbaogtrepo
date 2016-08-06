@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vocabulary">
+        <item>Abide by</item>
+        <item>Assurance</item>
+        <item>Determine</item>
+        <item>Engage</item>
+        <item>Obligate</item>
+        <item>Provision</item>
+        <item>Consume</item>
+        <item>Fad</item>
+        <item>Persuade</item>
+        <item>Consequence</item>
+    </string-array>
+
+    <string-array name="sentence">
+        <item>To comply with, to conform</item>
+        <item>Guarantee, confidence</item>
+        <item>To find out, to influence</item>
+        <item>To hire, to involve</item>
+        <item>To bind legally or morally</item>
+        <item>A measure taken beforehand, a stipulation</item>
+        <item>To absorb, to use up</item>
+        <item>A practice followed enthusiastically for a short time, a craze</item>
+        <item>To move by argument or logic</item>
+        <item>That which follows necessarily</item>
+    </string-array>
+</resources>
