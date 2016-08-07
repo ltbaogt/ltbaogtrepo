@@ -15,11 +15,21 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 public class OALGestureListener extends SimpleOnGestureListener {
     public static final String TAG = Define.TAG + "OALGestureListener";
     private Context mContext;
+    private int mScreenWidth;
+    private int mScreenHeight;
 
-    public OALGestureListener(Context ctx) {
+    private OALGestureListener() {
+
+    }
+    public OALGestureListener(Context ctx, int w, int h) {
         mContext = ctx;
+        mScreenWidth = w;
+        mScreenHeight = h;
     }
 
+    public void setOnOpenSettingPanelListener(OnOpenSettingPanel listener) {
+        mOpenSettingPanel = listener;
+    }
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         Log.d(TAG, ">>>onDoubleTap START");
@@ -28,9 +38,29 @@ public class OALGestureListener extends SimpleOnGestureListener {
         return super.onDoubleTap(e);
     }
 
+    public interface OnOpenSettingPanel {
+
+        public void onOpenSettingPanel();
+    }
+
+    OnOpenSettingPanel mOpenSettingPanel;
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        dismissReminder();
+        Log.d(TAG,">>>onFling ScreenWidth= " + mScreenWidth
+                             + " ScreenHeight= " + mScreenHeight
+                             + " e1.getY= " + e1.getY()
+                             + " e2.getY= " + e2.getY());
+        if (e1.getY() >= (mScreenHeight - 500)
+                && e2.getY() >= (mScreenHeight - 500)
+                && e1.getY() > e2.getY()) {
+            Log.d(TAG, ">>>onFling show setting");
+            if (mOpenSettingPanel != null) {
+                mOpenSettingPanel.onOpenSettingPanel();
+            }
+        } else {
+            Log.d(TAG, ">>>onFling dismiss reminder");
+            dismissReminder();
+        }
         return super.onFling(e1, e2, velocityX, velocityY);
     }
 

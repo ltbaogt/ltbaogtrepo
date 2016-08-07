@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
@@ -24,7 +27,7 @@ import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
  * Created by My PC on 04/08/2016.
  */
 
-public class OALBroadcastReceiver extends BroadcastReceiver {
+public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestureListener.OnOpenSettingPanel {
 
     public static final String TAG = Define.TAG + "OALBroadcastReceiver";
     View mReminderLayout;
@@ -36,13 +39,12 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     OALShareReferenceHepler mOALShareReferenceHepler;
 
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, ">>>onReceive START");
         mContext = context;
         String action = intent.getAction();
-        initComponents();
+        initPhoneStateChanged();
         int callState = mTelephonyManager.getCallState();
         Log.d(TAG, ">>>onReceive callState= " + callState);
         if (Intent.ACTION_SCREEN_ON.equals(action) && (callState == TelephonyManager.CALL_STATE_IDLE)) {
@@ -50,6 +52,16 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mReminderLayout = li.inflate(R.layout.main_reminder_layout, null, false);
+//            mReminderLayout
+            //
+            mReminderLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mReminderLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    initGestureDetection();
+                }
+            });
+            initSharedReferences();
             //Setup Gesture action when reminder layout inflated
             setupReminderEvent();
             setupContentView();
@@ -76,21 +88,25 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
         Log.d(TAG, ">>>onReceive END");
     }
 
-    private void initComponents() {
-
+    private void initPhoneStateChanged() {
         //Get phone state
         if (mTelephonyManager == null) {
             mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
         }
+    }
 
+    private void initGestureDetection() {
         //Detect double and fling
         if (mDoubletabDetector == null) {
-            mDoubletabDetector = new OALGestureListener(mContext);
+            mDoubletabDetector = new OALGestureListener(mContext, mReminderLayout.getMeasuredWidth(), mReminderLayout.getMeasuredHeight());
+            mDoubletabDetector.setOnOpenSettingPanelListener(this);
         }
         if (mGestureDetector == null) {
             mGestureDetector = new GestureDetector(mContext, mDoubletabDetector);
         }
+    }
 
+    private void initSharedReferences() {
         //Instance SharedReferences
         if (mOALShareReferenceHepler == null) {
             mOALShareReferenceHepler = new OALShareReferenceHepler(mContext);
@@ -120,9 +136,35 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, ">>>onTouch");
+                if (mReminderLayout != null) {
+                    View v = mReminderLayout.findViewById(R.id.panel_setting);
+                    v.setVisibility(View.INVISIBLE);
+                }
                 return mGestureDetector.onTouchEvent(motionEvent);
+            }
+        });
+        ImageButton btn = (ImageButton) mReminderLayout.findViewById(R.id.btn_setting);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, ">>>BTN_SETTING>>>onClick");
+
+                if (mContext != null) {
+                    Intent intent = new Intent(Define.CLOSE_VOCA_REMINDER);
+                    mContext.sendBroadcast(intent);
+                }
+                Intent mainScreen = new Intent(mContext, MainActivity.class);
+                mainScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(mainScreen);
             }
         });
     }
 
+    @Override
+    public void onOpenSettingPanel() {
+        View v = mReminderLayout.findViewById(R.id.panel_setting);
+        v.setVisibility(View.VISIBLE);
+    }
 }

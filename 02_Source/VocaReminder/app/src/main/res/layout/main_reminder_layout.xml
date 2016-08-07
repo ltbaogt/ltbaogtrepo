@@ -28,4 +28,22 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/textsize_sentence"/>
 
+    <LinearLayout
+        android:clickable="true"
+        android:id="@+id/panel_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_setting"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_setting"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="20dp"
+            android:background="@android:drawable/ic_dialog_dialer"/>
+    </LinearLayout>
 </RelativeLayout>
