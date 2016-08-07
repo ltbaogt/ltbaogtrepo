@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.ltbaogt.vocareminder.vocareminder.Define;
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 
 import java.io.File;
@@ -29,6 +29,18 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_PATH_SUFFIX = "/databases/";
 
     private static final String TABLE_NAME_TBL_WORD = "tbl_Word";
+
+    private static final int COL_WORD_ID_INDEX = 0;
+    private static final int COL_WORDNAME_INDEX = 1;
+    private static final int COL_PRONUNCIATION_INDEX = 2;
+    private static final int COL_TYPE_ID_INDEX = 3;
+    private static final int COL_DEFAULT_MEANING_INDEX = 4;
+    private static final int COL_SENTENCE_INDEX = 5;
+    private static final int COL_PRIORITY_INDEX = 6;
+    private static final int COL_COUNT_INDEX = 7;
+    private static final int COL_GROUP_ID_INDEX = 8;
+    private static final int COL_DELETED_INDEX = 9;
+
     private static final String COL_WORD_ID = "Word_ID";
     private static final String COL_WORDNAME = "WordName";
     private static final String COL_PRONUNCIATION = "Pronunciation";
@@ -115,10 +127,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         cv.put(COL_WORDNAME, w.getWordName());
         cv.put(COL_PRONUNCIATION, w.getPronunciation());
         cv.put(COL_TYPE_ID, w.getType_ID());
-        Log.d(TAG, ">>>insertWord dddd= " + w.getDefault_Meaning());
         cv.put(COL_DEFAULT_MEANING, w.getDefault_Meaning());
-        Log.d(TAG, ">>>insertWord dddd= " + cv.get(COL_DEFAULT_MEANING).toString());
-
         cv.put(COL_SENTENCE, w.getSentence());
         cv.put(COL_PRIORITY, w.getPriority());
         cv.put(COL_COUNT, w.getCount());
@@ -133,7 +142,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?", new String[]{id + ""});
         if (cs.moveToFirst()) {
-            w.setWordName(cs.getString(1));
+            w.setWordName(cs.getString(COL_WORDNAME_INDEX));
+            w.setDefault_Meaning(cs.getString(COL_DEFAULT_MEANING_INDEX));
             Log.d(TAG, ">>>getWordById Word= " + w.toString());
         }
         return w;

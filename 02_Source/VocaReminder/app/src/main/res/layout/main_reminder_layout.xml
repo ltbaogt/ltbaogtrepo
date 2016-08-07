@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="150dp"
-        android:text="Abroad"
         android:textColor="@android:color/white"
         android:textSize="@dimen/textsize_vocabulary"
         android:textStyle="bold"/>
@@ -26,7 +25,6 @@
         android:layout_marginTop="10dp"
         android:gravity="left"
         android:maxWidth="400dp"
-        android:text="Nound: A Service is an application component representing either an application's desire to perform a longer-running operation while not interacting with the user"
         android:textColor="@android:color/white"
         android:textSize="@dimen/textsize_sentence"/>
 
