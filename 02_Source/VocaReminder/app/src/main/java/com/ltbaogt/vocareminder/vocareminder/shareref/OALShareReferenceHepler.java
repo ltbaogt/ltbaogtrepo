@@ -14,18 +14,22 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 public class OALShareReferenceHepler {
 
     public static final String TAG = Define.TAG + "OALShareReferenceHepler";
-    Context mContext;
-    SharedPreferences mSharedPreferences;
+    private static Context sContext;
+    public static SharedPreferences sSharedPreferences;
     private static final String MYPREFERENCES = "MyPrefs";
-    public static final String THEME_COLOR = "color_theme";
+    private static final String THEME_COLOR = "color_theme";
 
     public OALShareReferenceHepler(Context ctx) {
-        mContext = ctx;
-        mSharedPreferences = mContext.getSharedPreferences(MYPREFERENCES, Context.MODE_PRIVATE);
+        if (sContext == null) {
+            sContext = ctx;
+        }
+        if (sSharedPreferences == null) {
+            sSharedPreferences = sContext.getSharedPreferences(MYPREFERENCES, Context.MODE_PRIVATE);
+        }
     }
 
     private SharedPreferences.Editor getEditor() {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = sSharedPreferences.edit();
         return editor;
     }
 
@@ -36,7 +40,7 @@ public class OALShareReferenceHepler {
     }
 
     private int getInt(String key, int value) {
-        return mSharedPreferences.getInt(key, value);
+        return sSharedPreferences.getInt(key, value);
     }
 
     public void setThemeColor(int color) {

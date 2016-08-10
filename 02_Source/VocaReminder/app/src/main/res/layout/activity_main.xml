@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:onClick="insertDB"
-        android:text="Inser"/>
+        android:text="Insert"/>
 
     <Button
         android:layout_width="match_parent"

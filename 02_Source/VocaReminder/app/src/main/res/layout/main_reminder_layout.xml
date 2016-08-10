@@ -29,21 +29,21 @@
         android:textSize="@dimen/textsize_sentence"/>
 
     <LinearLayout
-        android:clickable="true"
         android:id="@+id/panel_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_setting"
+        android:clickable="true"
         android:gravity="center"
-        android:visibility="invisible"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_setting"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginLeft="20dp"
-            android:background="@android:drawable/ic_dialog_dialer"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_dialog_dialer"
+            android:clickable="true"/>
     </LinearLayout>
 </RelativeLayout>

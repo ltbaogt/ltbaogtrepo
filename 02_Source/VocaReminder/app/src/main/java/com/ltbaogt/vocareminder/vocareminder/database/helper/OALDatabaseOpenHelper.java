@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by My PC on 06/08/2016.
@@ -163,5 +164,20 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         }
         Log.d(TAG, ">>>getCount END, ret= " + ret);
         return ret;
+    }
+
+    public ArrayList<Word> getAllWords() {
+        ArrayList<Word> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD, null);
+        if (c.moveToFirst()) {
+            do{
+                Word w = new Word();
+                w.setWordName(c.getString(COL_WORDNAME_INDEX));
+                list.add(w);
+            } while(c.moveToNext());
+        }
+
+        return list;
     }
 }

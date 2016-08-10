@@ -5,6 +5,9 @@ import android.content.Context;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by My PC on 06/08/2016.
  */
@@ -39,5 +42,10 @@ public class OALBLL {
     public int getCount() {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
         return dbHelp.getCount();
+    }
+
+    public ArrayList<Word> getAllWords() {
+        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+        return dbHelp.getAllWords();
     }
 }

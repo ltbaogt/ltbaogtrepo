@@ -2,9 +2,15 @@ package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -14,17 +20,83 @@ import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentMain;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = Define.TAG + "MainActivity";
+    private final static String MAIN_FRAGMENT_TAG = "fragment_main";
+    private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
+    Toolbar mToolbar;
+    DrawerLayout mDrawer;
+
+    private FragmentMain mFragmentMain;
+    private FragmentEditWord mFragmentEditWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+        setSupportActionBar(mToolbar);
+        mFragmentMain = new FragmentMain();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentMain, MAIN_FRAGMENT_TAG).commit();
+        setupDrawer();
+
+    }
+
+    private void setupDrawer() {
+        NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
+        drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.home:
+                        if (mFragmentMain != null) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.main_content, mFragmentMain, MAIN_FRAGMENT_TAG)
+                                    .commit();
+                        }
+                        mDrawer.closeDrawers();
+                        break;
+                    case R.id.settings:
+                        mFragmentEditWord = new FragmentEditWord();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_content, mFragmentEditWord, EDIT_FRAGMENT_TAG)
+                                .commit();
+                        mDrawer.closeDrawers();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, ">>>onCreateOptionsMenu START");
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        Log.d(TAG, ">>>onCreateOptionsMenu END");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, ">>>onOptionsItemSelected START");
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        //int id = item.getItemId();
+
+        Log.d(TAG, ">>>onOptionsItemSelected END");
+        return super.onOptionsItemSelected(item);
     }
 
     public void createNewDB(View v) {
@@ -37,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         EditText etMeaning = (EditText) findViewById(R.id.et_meaning);
         String name = etName.getText().toString();
         String meaning = etMeaning.getText().toString();
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(meaning))
+        {
+            Log.d(TAG, ">>>insertDB error");
+            return;
+        }
         Log.d(TAG, ">>>insertDB name = " + name
                 + "meaning" + meaning);
         Word w = new Word();
@@ -44,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
         w.setDefault_Meaning(meaning);
         OALBLL bl = new OALBLL(this);
         bl.addNewWord(w);
+        etName.setText("");
+        etMeaning.setText("");
     }
 
     public void startVRService(View v) {
@@ -57,19 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chooseColor(View v) {
-//        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        //LinearLayout viewGroup = (LinearLayout) findViewById(R.id.popup_outer);
-//        View popup_layout = inflater.inflate(R.layout.popup_color_chooser_layout, null);
-//
-//        PopupWindow colorChooserPopup = new PopupWindow(this);
-//        colorChooserPopup.setContentView(popup_layout);
-//        colorChooserPopup.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-//        colorChooserPopup.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-//        colorChooserPopup.setFocusable(true);
-//        colorChooserPopup.showAtLocation(popup_layout, Gravity.NO_GRAVITY, 200, 200);
 
         OALShareReferenceHepler sp = new OALShareReferenceHepler(MainActivity.this);
-        int currentColor = sp.getThemeColor() == -1 ?ContextCompat.getColor(this, R.color.amber):sp.getThemeColor();
+        int currentColor = sp.getThemeColor() == -1 ? ContextCompat.getColor(this, R.color.amber) : sp.getThemeColor();
 
         int[] colors = new int[]{ContextCompat.getColor(this, R.color.amber), ContextCompat.getColor(this, R.color.deep_orange), ContextCompat.getColor(this, R.color.purple)};
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
@@ -83,4 +152,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
@@ -143,7 +143,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
                 return mGestureDetector.onTouchEvent(motionEvent);
             }
         });
-        ImageButton btn = (ImageButton) mReminderLayout.findViewById(R.id.btn_setting);
+        ImageView btn = (ImageView) mReminderLayout.findViewById(R.id.btn_setting);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
