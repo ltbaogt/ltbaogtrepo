@@ -1,11 +1,17 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by My PC on 05/08/2016.
  */
 
-public class Word {
+public class Word implements Parcelable {
 
+    private int mWordId;
     private String mWordName;
     private String mPronunciation;
     private int mType_ID;
@@ -17,6 +23,7 @@ public class Word {
     private boolean mDeleted;
 
     public Word() {
+        mWordId = -1;
         mWordName = "Name";
         mPronunciation = "Pronunciation";
         mType_ID = 1;
@@ -28,7 +35,8 @@ public class Word {
         mDeleted = false;
     }
 
-    public Word(String name,
+    public Word(int id,
+                String name,
                 String pronunciation,
                 int typeId,
                 String default_meaning,
@@ -37,9 +45,10 @@ public class Word {
                 int count,
                 int groupId,
                 boolean deleted) {
+        mWordId = id;
         mWordName = name;
         mPronunciation = pronunciation;
-        mType_ID = 1;
+        mType_ID = typeId;
         mDefault_Meaning = default_meaning;
         mSentence = sentence;
         mPriority = priority;
@@ -48,6 +57,39 @@ public class Word {
         mDeleted = deleted;
     }
 
+    protected Word(Parcel in) {
+        mWordId = in.readInt();
+        mWordName = in.readString();
+        mPronunciation = in.readString();
+        mType_ID = in.readInt();
+        mDefault_Meaning = in.readString();
+        mSentence = in.readString();
+        mPriority = in.readInt();
+        mCount = in.readInt();
+        mGroup_ID = in.readInt();
+        mDeleted = in.readByte() != 0;
+    }
+
+    //TODO: What is it?
+    public static final Creator<Word> CREATOR = new Creator<Word>() {
+        @Override
+        public Word createFromParcel(Parcel in) {
+            return new Word(in);
+        }
+
+        @Override
+        public Word[] newArray(int size) {
+            return new Word[size];
+        }
+    };
+
+    public void setWordId(int id) {
+        mWordId = id;
+    }
+
+    public int getWordId() {
+        return mWordId;
+    }
     public String getWordName() {
         return mWordName;
     }
@@ -122,7 +164,9 @@ public class Word {
 
     @Override
     public String toString() {
-        String str = "Word={ Name= " + getWordName()
+        String str = "Word={"
+                + " ID= " + getWordId()
+                + ", Name= " + getWordName()
                 + ", Pronun= " + getPronunciation()
                 + ", TypeId= " + getType_ID()
                 + ", Meaning= " + getDefault_Meaning()
@@ -134,5 +178,24 @@ public class Word {
                 + " }";
         return str;
 
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeInt(getWordId());
+        dest.writeString(getWordName());
+        dest.writeString(getPronunciation());
+        dest.writeInt(getType_ID());
+        dest.writeString(getDefault_Meaning());
+        dest.writeString(getSentence());
+        dest.writeInt(getPriority());
+        dest.writeInt(getCount());
+        dest.writeInt(getGroup_ID());
+        dest.writeInt(isDeleted() ? 1 : 0);
     }
 }

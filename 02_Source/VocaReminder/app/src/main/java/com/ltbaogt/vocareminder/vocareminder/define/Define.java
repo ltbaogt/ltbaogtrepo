@@ -9,4 +9,5 @@ public class Define {
     public static final String CLOSE_VOCA_REMINDER = "vocareminder.action.close";
     public static final String TAG = "OpenToLearn.";
     public static final String DEFAULT_THEME_COLOR = "#39B54A";
+    public static final String WORD_OBJECT_PARCELABLE = "word_object";
 }

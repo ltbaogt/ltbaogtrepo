@@ -52,8 +52,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
             mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mReminderLayout = li.inflate(R.layout.main_reminder_layout, null, false);
-//            mReminderLayout
-            //
+
             mReminderLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -121,13 +120,15 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         OALBLL bl = new OALBLL(mContext);
         int totalWord = bl.getCount();
         if (totalWord <= 0) return;
-        int random = ((int) System.currentTimeMillis() % totalWord) + 1;
+        int random = ((int) System.currentTimeMillis() % totalWord);
 
         Log.d(TAG, ">>>setupContentView random= " + random +
                 ", totalWord= " + totalWord);
         Word w = bl.getWordById(random);
-        tvWord.setText(w.getWordName());
-        tvSentence.setText(w.getDefault_Meaning());
+        if (w != null) {
+            tvWord.setText(w.getWordName());
+            tvSentence.setText(w.getDefault_Meaning());
+        }
     }
 
     private void setupReminderEvent() {

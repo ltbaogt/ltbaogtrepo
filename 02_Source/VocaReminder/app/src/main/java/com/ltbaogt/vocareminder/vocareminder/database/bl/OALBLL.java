@@ -44,8 +44,19 @@ public class OALBLL {
         return dbHelp.getCount();
     }
 
-    public ArrayList<Word> getAllWords() {
+    public void updateWord(Word w) {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
-        return dbHelp.getAllWords();
+        dbHelp.updateWord(w);
     }
+
+    public void deleteWordById(int id) {
+        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+        dbHelp.deleteWordById(id);
+    }
+
+    public ArrayList<Word> getAllWordsOrderByName() {
+        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+        return dbHelp.getAllWordsOrderByName();
+    }
+
 }

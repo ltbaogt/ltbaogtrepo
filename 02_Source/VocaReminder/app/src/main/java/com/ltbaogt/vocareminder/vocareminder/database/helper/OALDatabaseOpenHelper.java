@@ -121,10 +121,28 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         }
     }
     //Insert new word
-    public void insertWord(Word w) {
-        Log.d(TAG, ">>>insertWord" + w.toString());
+    public void insertWord(Word newWord) {
+        Log.d(TAG, ">>>insertWord START");
         SQLiteDatabase db = getWritableDatabase();
+
+        ArrayList<Word> list = getAllWords();
+        int candidateId = 0;
+        for(int i = 0; i < list.size(); i++) {
+            Word wTemp = list.get(i);
+            if (candidateId >= wTemp.getWordId()) {
+                candidateId++;
+            }
+        }
+        newWord.setWordId(candidateId);
+        Log.d(TAG, ">>>insertWord newWord= " + newWord.toString());
+        ContentValues cv = getContenValues(newWord);
+        long id = db.insert(TABLE_NAME_TBL_WORD, null, cv);
+        Log.d(TAG, ">>>insertWord END id= " + id);
+    }
+
+    private ContentValues getContenValues(Word w) {
         ContentValues cv = new ContentValues();
+        cv.put(COL_WORD_ID, w.getWordId());
         cv.put(COL_WORDNAME, w.getWordName());
         cv.put(COL_PRONUNCIATION, w.getPronunciation());
         cv.put(COL_TYPE_ID, w.getType_ID());
@@ -134,20 +152,24 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         cv.put(COL_COUNT, w.getCount());
         cv.put(COL_GROUP_ID, w.getGroup_ID());
         cv.put(COL_DELETED, w.isDeleted());
-        long id = db.insert(TABLE_NAME_TBL_WORD, null, cv);
-        Log.d(TAG, ">>>insertWord END id= " + id);
+        return cv;
     }
 
     public Word getWordById(int id) {
-        Word w = new Word();
+        Log.d(TAG, ">>>getWordById id= " + id);
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?", new String[]{id + ""});
+        String sqlString = "select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?";
+        Log.d(TAG, ">>>getWordById sqlString= " + sqlString);
+        Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
         if (cs.moveToFirst()) {
+            Word w = new Word();
+            w.setWordId(cs.getInt(COL_WORD_ID_INDEX));
             w.setWordName(cs.getString(COL_WORDNAME_INDEX));
             w.setDefault_Meaning(cs.getString(COL_DEFAULT_MEANING_INDEX));
             Log.d(TAG, ">>>getWordById Word= " + w.toString());
+            return w;
         }
-        return w;
+        return null;
     }
 
     public int getCount() {
@@ -169,15 +191,44 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public ArrayList<Word> getAllWords() {
         ArrayList<Word> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD, null);
+        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORD_ID, null);
         if (c.moveToFirst()) {
             do{
                 Word w = new Word();
+                w.setWordId(c.getInt(COL_WORD_ID_INDEX));
                 w.setWordName(c.getString(COL_WORDNAME_INDEX));
+                w.setDefault_Meaning(c.getString(COL_DEFAULT_MEANING_INDEX));
                 list.add(w);
             } while(c.moveToNext());
         }
 
         return list;
+    }
+
+    public ArrayList<Word> getAllWordsOrderByName() {
+        ArrayList<Word> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORDNAME, null);
+        if (c.moveToFirst()) {
+            do{
+                Word w = new Word();
+                w.setWordId(c.getInt(COL_WORD_ID_INDEX));
+                w.setWordName(c.getString(COL_WORDNAME_INDEX));
+                w.setDefault_Meaning(c.getString(COL_DEFAULT_MEANING_INDEX));
+                list.add(w);
+            } while(c.moveToNext());
+        }
+
+        return list;
+    }
+
+    public void updateWord(Word w) {
+        SQLiteDatabase db = getWritableDatabase();
+        int count = db.update(TABLE_NAME_TBL_WORD, getContenValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
+        Log.d(TAG, ">>>updateWord count= " + count);
+    }
+    public void deleteWordById(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=" + "?", new String[]{id + ""});
     }
 }
