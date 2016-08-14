@@ -16,7 +16,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by My PC on 06/08/2016.
@@ -123,9 +125,9 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     //Insert new word
     public void insertWord(Word newWord) {
         Log.d(TAG, ">>>insertWord START");
+        ArrayList<Word> list = getAllWords();
         SQLiteDatabase db = getWritableDatabase();
 
-        ArrayList<Word> list = getAllWords();
         int candidateId = 0;
         for(int i = 0; i < list.size(); i++) {
             Word wTemp = list.get(i);
@@ -137,6 +139,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         Log.d(TAG, ">>>insertWord newWord= " + newWord.toString());
         ContentValues cv = getContenValues(newWord);
         long id = db.insert(TABLE_NAME_TBL_WORD, null, cv);
+        db.close();
         Log.d(TAG, ">>>insertWord END id= " + id);
     }
 
@@ -159,7 +162,6 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         Log.d(TAG, ">>>getWordById id= " + id);
         SQLiteDatabase db = getWritableDatabase();
         String sqlString = "select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?";
-        Log.d(TAG, ">>>getWordById sqlString= " + sqlString);
         Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
         if (cs.moveToFirst()) {
             Word w = new Word();
@@ -169,6 +171,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             Log.d(TAG, ">>>getWordById Word= " + w.toString());
             return w;
         }
+        cs.close();
+        db.close();
         return null;
     }
 
@@ -181,9 +185,12 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             if (c.moveToFirst()) {
                 ret = c.getInt(0);
             }
+            c.close();
+            db.close();
         } catch (SQLException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
+
         Log.d(TAG, ">>>getCount END, ret= " + ret);
         return ret;
     }
@@ -201,7 +208,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
                 list.add(w);
             } while(c.moveToNext());
         }
-
+        c.close();
+        db.close();
         return list;
     }
 
@@ -218,7 +226,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
                 list.add(w);
             } while(c.moveToNext());
         }
-
+        c.close();
+        db.close();
         return list;
     }
 
@@ -230,5 +239,38 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public void deleteWordById(int id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=" + "?", new String[]{id + ""});
+    }
+
+    private int[] getListWordId() {
+        int[] reList = null;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cs = db.query(TABLE_NAME_TBL_WORD,new String[]{COL_WORD_ID},null, null, null,null, null);
+        int i = 0;
+        if (cs.moveToFirst()) {
+            reList = new int[cs.getCount()];
+            do {
+                reList[i] = cs.getInt(COL_WORD_ID_INDEX);
+                Log.d(TAG, ">>>getListWordId Word[" + i + "]= " + reList[i]);
+                i++;
+            } while (cs.moveToNext());
+        }
+        cs.close();
+        db.close();
+        return reList;
+    }
+
+    public Word randomWord() {
+        Log.d(TAG, ">>>randomWord START");
+        int[] listWordId = getListWordId();
+        if (listWordId != null) {
+            Random random = new Random();
+            int randomId = random.nextInt(listWordId.length);
+            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
+            Word w = getWordById(listWordId[randomId]);
+            Log.d(TAG, ">>>randomWord END, word after random " + w.toString());
+            return w;
+        }
+        Log.d(TAG, ">>>randomWord END");
+        return null;
     }
 }

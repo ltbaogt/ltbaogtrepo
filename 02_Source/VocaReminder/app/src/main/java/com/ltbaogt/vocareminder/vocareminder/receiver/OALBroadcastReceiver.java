@@ -36,8 +36,6 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
     OALGestureListener mDoubletabDetector;
     GestureDetector mGestureDetector;
     TelephonyManager mTelephonyManager;
-    OALShareReferenceHepler mOALShareReferenceHepler;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -60,7 +58,6 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
                     initGestureDetection();
                 }
             });
-            initSharedReferences();
             //Setup Gesture action when reminder layout inflated
             setupReminderEvent();
             setupContentView();
@@ -105,29 +102,19 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         }
     }
 
-    private void initSharedReferences() {
-        //Instance SharedReferences
-        if (mOALShareReferenceHepler == null) {
-            mOALShareReferenceHepler = new OALShareReferenceHepler(mContext);
-        }
-    }
-
     private void setupContentView() {
         if (mReminderLayout == null) return;
-        mReminderLayout.setBackgroundColor(mOALShareReferenceHepler.getThemeColor());
+        OALShareReferenceHepler ref = new OALShareReferenceHepler(mContext);
+        mReminderLayout.setBackgroundColor(ref.getThemeColor());
         TextView tvWord = (TextView) mReminderLayout.findViewById(R.id.tv_vocabulary);
         TextView tvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
         OALBLL bl = new OALBLL(mContext);
-        int totalWord = bl.getCount();
-        if (totalWord <= 0) return;
-        int random = ((int) System.currentTimeMillis() % totalWord);
-
-        Log.d(TAG, ">>>setupContentView random= " + random +
-                ", totalWord= " + totalWord);
-        Word w = bl.getWordById(random);
+        Word w = bl.randomWord();
         if (w != null) {
             tvWord.setText(w.getWordName());
             tvSentence.setText(w.getDefault_Meaning());
+        } else {
+            Log.d(TAG, "Dictionary is empty");
         }
     }
 

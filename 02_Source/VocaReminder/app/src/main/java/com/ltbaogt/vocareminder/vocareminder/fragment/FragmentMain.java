@@ -31,6 +31,7 @@ public class FragmentMain extends Fragment {
     RecyclerView mRecycler;
     ArrayList<Word> mArrayList;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,5 +69,12 @@ public class FragmentMain extends Fragment {
             editWordDialog.show(fm, "tag");
 
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getView().setOnClickListener(null);
+        Log.d(TAG, ">>>onDestroyView START");
     }
 }

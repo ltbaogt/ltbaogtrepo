@@ -1,8 +1,10 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -51,38 +53,51 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
-        drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.home:
-                        if (mFragmentMain != null) {
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.main_content, mFragmentMain, MAIN_FRAGMENT_TAG)
-                                    .commit();
-                        }
-                        mDrawer.closeDrawers();
-                        break;
-                    case R.id.settings:
-                        mFragmentEditWord = new FragmentEditWord();
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, mFragmentEditWord, EDIT_FRAGMENT_TAG)
-                                .commit();
-                        mDrawer.closeDrawers();
-                        break;
-                }
-                return true;
-            }
-        });
+        drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentMain, mFragmentEditWord));
     }
 
+    //Using static class instead of static class in order to GC
+    private static class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
+
+        private DrawerLayout drawer;
+        private Fragment main;
+        private Fragment edit;
+        private MainActivity mainActivity;
+        public NavigationViewListener(MainActivity c, DrawerLayout d, Fragment m, Fragment e) {
+            drawer = d;
+            main = m;
+            edit = e;
+            mainActivity = c;
+        }
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.home:
+                    if (main != null) {
+                        mainActivity.getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_content, main, MAIN_FRAGMENT_TAG)
+                                .commit();
+                    }
+                    drawer.closeDrawers();
+                    break;
+                case R.id.settings:
+                    edit = new FragmentEditWord();
+                    mainActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, edit, EDIT_FRAGMENT_TAG)
+                            .commit();
+                    drawer.closeDrawers();
+                    break;
+            }
+            return true;
+        }
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, ">>>onCreateOptionsMenu START");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
         Log.d(TAG, ">>>onCreateOptionsMenu END");
         return true;
     }
@@ -153,4 +168,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+        //Release resource
+        mFragmentMain = null;
+        mFragmentEditWord = null;
+        NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
+        drawer.setNavigationItemSelectedListener(null);
+        Log.d(TAG, ">>>onDestroy START");
+    }
 }
