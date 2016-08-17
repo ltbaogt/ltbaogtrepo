@@ -13,7 +13,7 @@ import com.ltbaogt.vocareminder.vocareminder.R;
  * Created by My PC on 09/08/2016.
  */
 
-public class FragmentEditWord extends Fragment {
+public class FragmentEditWord extends BaseFragment {
 
     @Nullable
     @Override

@@ -1,12 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,56 +27,102 @@ import java.util.ArrayList;
  * Created by My PC on 08/08/2016.
  */
 
-public class FragmentMain extends Fragment {
+public class FragmentMain extends BaseFragment {
 
     public static final String TAG = Define.TAG + "FragmentMain";
-    RecyclerView mRecycler;
-    ArrayList<Word> mArrayList;
-
+    private RecyclerView mRecycler;
+    private ArrayList<Word> mArrayList;
+    private View mMainView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_list_word, container, false);
-
+        super.onCreateView(inflater, container, savedInstanceState);
+        mMainView = inflater.inflate(R.layout.fragment_list_word, container, false);
         OALBLL bl = new OALBLL(getContext());
         mArrayList = bl.getAllWordsOrderByName();
         Log.d(TAG, ">>>onCreateView size= " + mArrayList.size());
         if (mArrayList.size() > 0) {
             //Show Recyclerview
-            mRecycler = (RecyclerView) v.findViewById(R.id.recycler);
+            mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
             mRecycler.setVisibility(View.VISIBLE);
             DictionaryAdapter da = new DictionaryAdapter(getActivity(), mArrayList);
             mRecycler.setAdapter(da);
             RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
             mRecycler.setLayoutManager(lm);
+            setRecyclerViewItemTouchListener();
         } else {
-            v.findViewById(R.id.noword_layout).setVisibility(View.VISIBLE);
-            v.setOnClickListener(new View.OnClickListener() {
+            updateLayoutNoWord();
+        }
+        return mMainView;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return mRecycler;
+    }
+    private void updateLayoutNoWord() {
+        Log.d(TAG, ">>>updateLayoutNoWord START");
+        if (mMainView != null && mArrayList != null && mArrayList.size() <= 0 && mMainView != null) {
+            mMainView.findViewById(R.id.noword_layout).setVisibility(View.VISIBLE);
+            if (mRecycler != null) {
+                mRecycler.setVisibility(View.INVISIBLE);
+            }
+            View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog();
+                    MainActivity activity = FragmentMain.this.getParentActivity();
+                    if (activity != null) {
+                        Word w = new Word();
+                        activity.showDialog(getString(R.string.popup_title_new_word)
+                                , getString(R.string.popup_button_cancel_word)
+                                , getString(R.string.popup_button_new_word), w);
+                    }
                 }
-            });
+            };
+            mMainView.setOnClickListener(listener);
+        } else {
+            if (mRecycler != null) {
+                mRecycler.setVisibility(View.VISIBLE);
+            }
         }
-        return v;
+        Log.d(TAG, ">>>updateLayoutNoWord END");
     }
 
-    private void showDialog() {
-        Activity a = getActivity();
-        if (a != null && a instanceof MainActivity) {
-            FragmentManager fm = ((MainActivity) a).getSupportFragmentManager();
-            FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
-            editWordDialog.show(fm, "tag");
-
-        }
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         getView().setOnClickListener(null);
         Log.d(TAG, ">>>onDestroyView START");
+    }
+
+    private void setRecyclerViewItemTouchListener() {
+        ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Word w = mArrayList.get(position);
+                OALBLL bl = new OALBLL(FragmentMain.this.getContext());
+                bl.deleteWordById(w.getWordId());
+                mArrayList.remove(position);
+                mRecycler.getAdapter().notifyItemRemoved(position);
+                mRecycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateLayoutNoWord();
+                    }
+                });
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecycler);
     }
 }

@@ -34,10 +34,12 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     private static final String TAG = Define.TAG + "DictionaryAdapter";
     private ArrayList<Word> mArrayList;
     private Context mContext;
+
     public DictionaryAdapter(Context ctx, ArrayList<Word> list) {
         mArrayList = list;
         mContext = ctx;
     }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -53,22 +55,18 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Word w = mArrayList.get(holder.getAdapterPosition());
-                showDialog(w);
+                if (mContext instanceof MainActivity) {
+                    Word w = mArrayList.get(holder.getAdapterPosition());
+                    ((MainActivity) mContext).showDialog(
+                            mContext.getString(R.string.popup_title_edit_word)
+                            , mContext.getString(R.string.popup_button_cancel_word)
+                            , mContext.getString(R.string.popup_button_edit_word)
+                            , w);
+                }
             }
         });
     }
 
-    private void showDialog(Word w) {
-        if (mContext instanceof MainActivity) {
-            FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-            FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
-            Bundle b = new Bundle();
-            b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
-            editWordDialog.setArguments(b);
-            editWordDialog.show(fm, "tag");
-        }
-    }
     @Override
     public int getItemCount() {
         Log.d(TAG, ">>>getItemCount mArrayList.size= " + mArrayList.size());

@@ -1,7 +1,9 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.io.Serializable;
 
@@ -84,7 +86,11 @@ public class Word implements Parcelable {
     };
 
     public void setWordId(int id) {
-        mWordId = id;
+        if (mWordId == -1) {
+            mWordId = id;
+        } else {
+            throw new SQLiteConstraintException("You cannot assign new id");
+        }
     }
 
     public int getWordId() {

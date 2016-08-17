@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -19,15 +21,19 @@ import android.widget.EditText;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentMain;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnDismissDialogListener {
 
     public static final String TAG = Define.TAG + "MainActivity";
     private final static String MAIN_FRAGMENT_TAG = "fragment_main";
@@ -54,6 +60,19 @@ public class MainActivity extends AppCompatActivity {
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentMain, mFragmentEditWord));
+    }
+
+    @Override
+    public void onDismissDialog() {
+        if (mFragmentMain != null) {
+            OALBLL bl = new OALBLL(this);
+            ArrayList<Word> mArrayList = bl.getAllWordsOrderByName();
+            if (mArrayList.size() >= 0) {
+                DictionaryAdapter da = new DictionaryAdapter(this, mArrayList);
+                mFragmentMain.getRecyclerView().setAdapter(da);
+            }
+
+        }
     }
 
     //Using static class instead of static class in order to GC
@@ -109,7 +128,14 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         //int id = item.getItemId();
-
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_add:
+                showDialog(getString(R.string.popup_title_new_word)
+                        , getString(R.string.popup_button_cancel_word)
+                        , getString(R.string.popup_button_new_word), new Word());
+                break;
+        }
         Log.d(TAG, ">>>onOptionsItemSelected END");
         return super.onOptionsItemSelected(item);
     }
@@ -171,8 +197,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-
         //Release resource
         mFragmentMain = null;
         mFragmentEditWord = null;
@@ -180,4 +204,28 @@ public class MainActivity extends AppCompatActivity {
         drawer.setNavigationItemSelectedListener(null);
         Log.d(TAG, ">>>onDestroy START");
     }
+
+    public void showDialog(String title, Word w) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
+        Bundle b = new Bundle();
+        b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
+        b.putString(Define.POPUP_TITLE, title);
+        editWordDialog.setArguments(b);
+        editWordDialog.show(fm, "tag");
+        editWordDialog.setOnDismissDialogListener(this);
+    }
+
+    public void showDialog(String title, String btn1, String btn2, Word w) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
+        Bundle b = new Bundle();
+        b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
+        b.putString(Define.POPUP_TITLE, title);
+        b.putString(Define.POPUP_BUTTON_01, btn1);
+        b.putString(Define.POPUP_BUTTON_02, btn2);
+        editWordDialog.setArguments(b);
+        editWordDialog.show(fm, "tag");
+    }
+
 }

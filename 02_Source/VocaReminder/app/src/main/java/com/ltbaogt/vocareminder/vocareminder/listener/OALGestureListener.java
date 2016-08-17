@@ -40,7 +40,7 @@ public class OALGestureListener extends SimpleOnGestureListener {
 
     public interface OnOpenSettingPanel {
 
-        public void onOpenSettingPanel();
+        void onOpenSettingPanel();
     }
 
     OnOpenSettingPanel mOpenSettingPanel;
