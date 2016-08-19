@@ -20,7 +20,8 @@
         <EditText
             android:id="@+id/et_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"/>
     </LinearLayout>
 
     <LinearLayout
@@ -36,7 +37,8 @@
         <EditText
             android:id="@+id/et_meaning"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"/>
     </LinearLayout>
 
     <LinearLayout
@@ -52,7 +54,8 @@
         <EditText
             android:id="@+id/et_sentence"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"/>
     </LinearLayout>
 
     <RelativeLayout

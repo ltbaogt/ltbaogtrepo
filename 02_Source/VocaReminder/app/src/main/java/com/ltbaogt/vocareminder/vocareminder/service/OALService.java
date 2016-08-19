@@ -1,9 +1,13 @@
 package com.ltbaogt.vocareminder.vocareminder.service;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -58,4 +62,26 @@ public class OALService extends Service {
         Log.d(TAG, ">>>onDestroy END");
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        restartService();
+        super.onTaskRemoved(rootIntent);
+    }
+
+    /**
+     * Restart service after user clear recent application in task manager
+     */
+    private void restartService() {
+        Log.d(TAG, ">>>restartService START");
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+
+        PendingIntent restartServicePedingIntent = PendingIntent
+                .getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + 1000, restartServicePedingIntent);
+        Log.d(TAG, ">>>restartService END");
+    }
 }

@@ -21,29 +21,6 @@
         android:onClick="stopVRService"
         android:text="Stop"/>
 
-    <EditText
-
-        android:id="@+id/et_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tên của từ mới"
-        android:inputType="textCapWords"/>
-
-    <EditText
-        android:id="@+id/et_meaning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nghĩa của từ mới"
-        android:inputType="textCapWords"/>
-
-    <Button
-        style="@style/AppTheme.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:onClick="insertDB"
-        android:text="Insert"/>
-
     <Button
         style="@style/AppTheme.Button"
         android:layout_width="match_parent"

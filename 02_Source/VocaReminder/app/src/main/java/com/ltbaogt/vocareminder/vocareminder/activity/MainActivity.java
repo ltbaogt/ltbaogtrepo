@@ -33,7 +33,7 @@ import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnDismissDialogListener {
+public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
     public static final String TAG = Define.TAG + "MainActivity";
     private final static String MAIN_FRAGMENT_TAG = "fragment_main";
@@ -63,16 +63,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     @Override
-    public void onDismissDialog() {
-        if (mFragmentMain != null) {
-            OALBLL bl = new OALBLL(this);
-            ArrayList<Word> mArrayList = bl.getAllWordsOrderByName();
-            if (mArrayList.size() >= 0) {
-                DictionaryAdapter da = new DictionaryAdapter(this, mArrayList);
-                mFragmentMain.getRecyclerView().setAdapter(da);
-            }
+    public void onSave(Word w) {
+        Log.d(TAG, ">>>onSave SRART");
+        mFragmentMain.addNewWord(w);
+        Log.d(TAG, ">>>onSave END");
+    }
 
-        }
+    @Override
+    public void onUpdate(Word w) {
+        mFragmentMain.updateWord(w);
     }
 
     //Using static class instead of static class in order to GC
@@ -131,9 +130,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         int id = item.getItemId();
         switch (id) {
             case R.id.action_add:
-                showDialog(getString(R.string.popup_title_new_word)
-                        , getString(R.string.popup_button_cancel_word)
-                        , getString(R.string.popup_button_new_word), new Word());
+                showDialogNewWord(new Word());
                 break;
         }
         Log.d(TAG, ">>>onOptionsItemSelected END");
@@ -143,27 +140,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public void createNewDB(View v) {
         OALBLL.delDatabase(this);
         OALBLL.initDatabase(this);
-    }
-
-    public void insertDB(View v) {
-        EditText etName = (EditText) findViewById(R.id.et_name);
-        EditText etMeaning = (EditText) findViewById(R.id.et_meaning);
-        String name = etName.getText().toString();
-        String meaning = etMeaning.getText().toString();
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(meaning))
-        {
-            Log.d(TAG, ">>>insertDB error");
-            return;
-        }
-        Log.d(TAG, ">>>insertDB name = " + name
-                + "meaning" + meaning);
-        Word w = new Word();
-        w.setWordName(name);
-        w.setDefault_Meaning(meaning);
-        OALBLL bl = new OALBLL(this);
-        bl.addNewWord(w);
-        etName.setText("");
-        etMeaning.setText("");
     }
 
     public void startVRService(View v) {
@@ -205,27 +181,31 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Log.d(TAG, ">>>onDestroy START");
     }
 
-    public void showDialog(String title, Word w) {
+    public void showDialog(Bundle b) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
-        Bundle b = new Bundle();
-        b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
-        b.putString(Define.POPUP_TITLE, title);
         editWordDialog.setArguments(b);
         editWordDialog.show(fm, "tag");
-        editWordDialog.setOnDismissDialogListener(this);
+        editWordDialog.setOnCreateOrUpdateWodListener(this);
     }
 
-    public void showDialog(String title, String btn1, String btn2, Word w) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
+    public void showDialogNewWord(Word w) {
         Bundle b = new Bundle();
         b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
-        b.putString(Define.POPUP_TITLE, title);
-        b.putString(Define.POPUP_BUTTON_01, btn1);
-        b.putString(Define.POPUP_BUTTON_02, btn2);
-        editWordDialog.setArguments(b);
-        editWordDialog.show(fm, "tag");
+        b.putInt(Define.POPUP_TYPE, Define.POPUP_NEW_WORD);
+        b.putString(Define.POPUP_TITLE, getString(R.string.popup_title_new_word));
+        b.putString(Define.POPUP_BUTTON_01, getString(R.string.popup_button_cancel_word));
+        b.putString(Define.POPUP_BUTTON_02, getString(R.string.popup_button_new_word));
+        showDialog(b);
+    }
+    public void showDialogEditWord(Word w) {
+        Bundle b = new Bundle();
+        b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
+        b.putInt(Define.POPUP_TYPE, Define.POPUP_EIDT_WORD);
+        b.putString(Define.POPUP_TITLE, getString(R.string.popup_title_new_word));
+        b.putString(Define.POPUP_BUTTON_01, getString(R.string.popup_button_cancel_word));
+        b.putString(Define.POPUP_BUTTON_02, getString(R.string.popup_button_edit_word));
+        showDialog(b);
     }
 
 }

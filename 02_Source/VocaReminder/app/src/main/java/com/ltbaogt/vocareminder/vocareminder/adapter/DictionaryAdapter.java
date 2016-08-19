@@ -42,13 +42,16 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d(TAG, ">>>onCreateViewHolder START");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.item_word, parent, false);
+        Log.d(TAG, ">>>onCreateViewHolder END");
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+        Log.d(TAG, ">>>onBindViewHolder START");
         Word w = mArrayList.get(position);
         Log.d(TAG, ">>>onBindViewHolder " + w.toString());
         holder.mWordName.setText(w.getWordName());
@@ -57,14 +60,11 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
             public void onClick(View view) {
                 if (mContext instanceof MainActivity) {
                     Word w = mArrayList.get(holder.getAdapterPosition());
-                    ((MainActivity) mContext).showDialog(
-                            mContext.getString(R.string.popup_title_edit_word)
-                            , mContext.getString(R.string.popup_button_cancel_word)
-                            , mContext.getString(R.string.popup_button_edit_word)
-                            , w);
+                    ((MainActivity) mContext).showDialogEditWord(w);
                 }
             }
         });
+        Log.d(TAG, ">>>onBindViewHolder END");
     }
 
     @Override

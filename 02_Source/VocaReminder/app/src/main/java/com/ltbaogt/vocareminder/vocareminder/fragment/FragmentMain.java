@@ -42,25 +42,34 @@ public class FragmentMain extends BaseFragment {
         OALBLL bl = new OALBLL(getContext());
         mArrayList = bl.getAllWordsOrderByName();
         Log.d(TAG, ">>>onCreateView size= " + mArrayList.size());
-        if (mArrayList.size() > 0) {
-            //Show Recyclerview
-            mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
-            mRecycler.setVisibility(View.VISIBLE);
-            DictionaryAdapter da = new DictionaryAdapter(getActivity(), mArrayList);
-            mRecycler.setAdapter(da);
-            RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
-            mRecycler.setLayoutManager(lm);
-            setRecyclerViewItemTouchListener();
-        } else {
-            updateLayoutNoWord();
-        }
+        //Show Recyclerview
+        mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
+        mRecycler.setVisibility(View.VISIBLE);
+        DictionaryAdapter da = new DictionaryAdapter(getActivity(), mArrayList);
+        mRecycler.setAdapter(da);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
+        mRecycler.setLayoutManager(lm);
+        setRecyclerViewItemTouchListener();
+        updateLayoutNoWord();
         return mMainView;
     }
 
-    public RecyclerView getRecyclerView() {
-        return mRecycler;
+    public void addNewWord(Word w) {
+        mArrayList.add(w);
+        mRecycler.getAdapter().notifyItemInserted(mArrayList.indexOf(w));
+        updateLayoutNoWord();
     }
-    private void updateLayoutNoWord() {
+
+    public void updateWord(Word w) {
+        Log.d(TAG, ">>>updateWord START");
+        int idWord = mArrayList.indexOf(w);
+        mArrayList.set(idWord, w);
+        mRecycler.getAdapter().notifyItemChanged(idWord);
+        //updateLayoutNoWord();
+        Log.d(TAG, ">>>updateWord END");
+    }
+
+    public void updateLayoutNoWord() {
         Log.d(TAG, ">>>updateLayoutNoWord START");
         if (mMainView != null && mArrayList != null && mArrayList.size() <= 0 && mMainView != null) {
             mMainView.findViewById(R.id.noword_layout).setVisibility(View.VISIBLE);
@@ -73,9 +82,7 @@ public class FragmentMain extends BaseFragment {
                     MainActivity activity = FragmentMain.this.getParentActivity();
                     if (activity != null) {
                         Word w = new Word();
-                        activity.showDialog(getString(R.string.popup_title_new_word)
-                                , getString(R.string.popup_button_cancel_word)
-                                , getString(R.string.popup_button_new_word), w);
+                        activity.showDialogNewWord(w);
                     }
                 }
             };
@@ -83,6 +90,7 @@ public class FragmentMain extends BaseFragment {
         } else {
             if (mRecycler != null) {
                 mRecycler.setVisibility(View.VISIBLE);
+                mMainView.findViewById(R.id.noword_layout).setVisibility(View.INVISIBLE);
             }
         }
         Log.d(TAG, ">>>updateLayoutNoWord END");
@@ -112,13 +120,7 @@ public class FragmentMain extends BaseFragment {
                 bl.deleteWordById(w.getWordId());
                 mArrayList.remove(position);
                 mRecycler.getAdapter().notifyItemRemoved(position);
-                mRecycler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateLayoutNoWord();
-                    }
-                });
-
+                updateLayoutNoWord();
             }
         };
 

@@ -135,12 +135,13 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
                 candidateId++;
             }
         }
-        newWord.setWordId(candidateId);
-        Log.d(TAG, ">>>insertWord newWord= " + newWord.toString());
-        ContentValues cv = getContenValues(newWord);
-        long id = db.insert(TABLE_NAME_TBL_WORD, null, cv);
+        if (candidateId <= Integer.MAX_VALUE && candidateId >= Integer.MIN_VALUE) {
+            newWord.setWordId(candidateId);
+            ContentValues cv = getContenValues(newWord);
+            db.insert(TABLE_NAME_TBL_WORD, null, cv);
+        }
         db.close();
-        Log.d(TAG, ">>>insertWord END id= " + id);
+        Log.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
     }
 
     private ContentValues getContenValues(Word w) {
@@ -237,8 +238,10 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         Log.d(TAG, ">>>updateWord count= " + count);
     }
     public void deleteWordById(int id) {
+        Log.d(TAG,">>>deleteWordById START, id= " + id);
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=" + "?", new String[]{id + ""});
+        Log.d(TAG,">>>deleteWordById END");
     }
 
     private int[] getListWordId() {
