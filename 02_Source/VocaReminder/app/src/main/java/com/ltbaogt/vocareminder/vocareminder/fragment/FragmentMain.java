@@ -54,6 +54,9 @@ public class FragmentMain extends BaseFragment {
         return mMainView;
     }
 
+    public DictionaryAdapter getWordAdapter() {
+        return (DictionaryAdapter)mRecycler.getAdapter();
+    }
     public void addNewWord(Word w) {
         mArrayList.add(w);
         mRecycler.getAdapter().notifyItemInserted(mArrayList.indexOf(w));

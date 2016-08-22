@@ -12,6 +12,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -29,15 +31,19 @@ import java.util.ArrayList;
  * Created by My PC on 09/08/2016.
  */
 
-public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.MyViewHolder> {
+public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.MyViewHolder>
+        implements Filterable {
 
     private static final String TAG = Define.TAG + "DictionaryAdapter";
     private ArrayList<Word> mArrayList;
+    private ArrayList<Word> mNoFilterList;
     private Context mContext;
 
     public DictionaryAdapter(Context ctx, ArrayList<Word> list) {
         mArrayList = list;
+        mNoFilterList = list;
         mContext = ctx;
+
     }
 
     @Override
@@ -55,6 +61,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         Word w = mArrayList.get(position);
         Log.d(TAG, ">>>onBindViewHolder " + w.toString());
         holder.mWordName.setText(w.getWordName());
+        holder.mMeaning.setText(w.getDefault_Meaning());
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,14 +80,50 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         return mArrayList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                ArrayList<Word> filteredList = null;
+                if (constraint.length() == 0) {
+                    filteredList = mNoFilterList;
+                } else {
+                    filteredList = getFilteredResult(constraint.toString().toLowerCase());
+                }
+                FilterResults result = new FilterResults();
+                result.values = filteredList;
+                return result;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mArrayList = (ArrayList<Word>) filterResults.values;
+                DictionaryAdapter.this.notifyDataSetChanged();
+            }
+        };
+    }
+
+    private ArrayList<Word> getFilteredResult(String s) {
+        ArrayList<Word> retList = new ArrayList<>();
+        for (Word w : mArrayList) {
+            if (w.getWordName().toLowerCase().contains(s)) {
+                retList.add(w);
+            }
+        }
+        return retList;
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView mWordName;
         protected CardView mSingleItem;
+        protected  TextView mMeaning;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mWordName = (TextView) itemView.findViewById(R.id.tv_title_wordname);
+            mMeaning = (TextView) itemView.findViewById(R.id.tv_meaning);
             mSingleItem = (CardView) itemView.findViewById(R.id.cardview);
         }
     }
