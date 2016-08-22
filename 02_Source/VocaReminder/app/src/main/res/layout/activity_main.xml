@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-
-    <Button
-        style="@style/AppTheme.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="startVRService"
-        android:text="Start"/>
-
-    <Button
-        style="@style/AppTheme.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="stopVRService"
-        android:text="Stop"/>
 
     <Button
         style="@style/AppTheme.Button"
@@ -27,15 +11,73 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:onClick="createNewDB"
-        android:text="Recreate Database"/>
+        android:text="Recreate Database" />
 
     <Button
-        style="@style/AppTheme.Button"
         android:id="@+id/btn_color_chooser"
+        style="@style/AppTheme.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:onClick="chooseColor"
-        android:text="Choose Color"/>
+        android:text="Choose Color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:id="@+id/setting_service_switch_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reminder OFF/ON" />
+
+        <Switch
+            android:id="@+id/setting_service_switch_switch"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:id="@+id/setting_dismiss_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="20dp"
+            android:text="Time to dismiss reminder" />
+
+        <Switch
+            android:id="@+id/setting_dismiss_time_switch"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
+
+        <SeekBar
+            android:id="@+id/setting_dismiss_time_sb"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/setting_dismiss_time_title"
+            android:layout_marginLeft="20dp"
+            android:max="5" />
+
+        <TextView
+            android:id="@+id/setting_dismiss_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setting_dismiss_time_title"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/setting_dismiss_time_sb"
+            android:text="5s" />
+    </RelativeLayout>
 
 </LinearLayout>

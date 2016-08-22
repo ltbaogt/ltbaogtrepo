@@ -58,4 +58,20 @@ public class OALShareReferenceHepler {
         }
         return ret;
     }
+
+    public int getDismissTime() {
+        try {
+            return getInt(Define.DISMISS_TIME, 0);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public void setDismissTime(int value) {
+        try {
+            putInt(Define.DISMISS_TIME, value);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+    }
 }

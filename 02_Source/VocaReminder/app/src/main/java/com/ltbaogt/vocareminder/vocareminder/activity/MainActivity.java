@@ -142,13 +142,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         OALBLL.initDatabase(this);
     }
 
-    public void startVRService(View v) {
+    public void startVRService() {
         if (!OALService.isStarted()) {
             startService(new Intent(this, OALService.class));
         }
     }
 
-    public void stopVRService(View v) {
+    public void stopVRService() {
         stopService(new Intent(this, OALService.class));
     }
 

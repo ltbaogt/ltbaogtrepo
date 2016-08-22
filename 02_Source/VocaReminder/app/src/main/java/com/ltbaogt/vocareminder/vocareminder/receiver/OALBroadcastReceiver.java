@@ -3,6 +3,8 @@ package com.ltbaogt.vocareminder.vocareminder.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -36,6 +38,18 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
     OALGestureListener mDoubletabDetector;
     GestureDetector mGestureDetector;
     TelephonyManager mTelephonyManager;
+
+    private Handler mServiceHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            switch (what) {
+                case Define.HANDLER_WHAT_AUTO_DISMISS:
+                    dismissReminderLayout();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -72,11 +86,19 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
             //Setup in/out animation for reminder
             lp.windowAnimations = android.R.style.Animation_Toast;
             mWindowManager.addView(mReminderLayout, lp);
+            OALShareReferenceHepler sr = new OALShareReferenceHepler(mContext);
+            int dismissTime = sr.getDismissTime();
+            if (dismissTime > 0) {
+                mServiceHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissReminderLayout();
+                    }
+                }, dismissTime);
+            }
         } else if (Define.CLOSE_VOCA_REMINDER.equals(action) || Intent.ACTION_SCREEN_OFF.equals(action)) {
             try {
-                if (mReminderLayout == null) return;
-                mWindowManager.removeViewImmediate(mReminderLayout);
-                mReminderLayout = null;
+                dismissReminderLayout();
             } catch (NullPointerException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
@@ -84,6 +106,11 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         Log.d(TAG, ">>>onReceive END");
     }
 
+    private void dismissReminderLayout() {
+        if (mReminderLayout == null) return;
+        mWindowManager.removeViewImmediate(mReminderLayout);
+        mReminderLayout = null;
+    }
     private void initPhoneStateChanged() {
         //Get phone state
         if (mTelephonyManager == null) {
