@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
+import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
@@ -46,6 +47,56 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
     }
 
+    public void filterRawWords() {
+        Log.d(TAG, "filterRawWords START");
+        try {
+            for (int i = mArrayList.size() - 1; i >= 0; i--) {
+                Word w = mArrayList.get(i);
+                if (!w.getDefault_Meaning().isEmpty()) {
+                    mArrayList.remove(w);
+                }
+            }
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+        Log.d(TAG, "filterRawWords END");
+    }
+    public void noFilter() {
+        Log.d(TAG, "noFilter START");
+        try {
+            OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(mContext);
+            mArrayList = db.getAllWordsOrderByName();
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+        Log.d(TAG, "noFilter END");
+    }
+
+    public void insertWord(Word w) {
+        Log.d(TAG, ">>>insertWord START");
+        mArrayList.add(w);
+        int position = mArrayList.indexOf(w);
+        notifyItemInserted(position);
+        Log.d(TAG, ">>>insertWord END");
+    }
+    public void updateWord(Word w) {
+        int index = mArrayList.indexOf(w);
+        if (index >= 0) {
+            mArrayList.set(index, w);
+            notifyItemChanged(index);
+        }
+    }
+
+    public Word removeWord(int position) {
+        Word w = mArrayList.get(position);
+        mArrayList.remove(w);
+        if (w != null) {
+            notifyItemRemoved(position);
+        }
+        return w;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, ">>>onCreateViewHolder START");

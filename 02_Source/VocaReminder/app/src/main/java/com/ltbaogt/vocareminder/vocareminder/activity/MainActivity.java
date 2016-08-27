@@ -26,6 +26,7 @@ import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
+import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
@@ -46,10 +47,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private FragmentMain mFragmentMain;
     private FragmentEditWord mFragmentEditWord;
 
+    //Actionbar's option menu
+    private Menu mActionMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+        OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(this);
+        db.openDatabase();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(mToolbar);
@@ -59,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     }
 
+
+    public Menu getActionBarMenu() {
+        return mActionMenu;
+    }
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentMain, mFragmentEditWord));
@@ -133,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 return true;
             }
         });
+
+        mActionMenu = menu;
         Log.d(TAG, ">>>onCreateOptionsMenu END");
         return true;
     }
@@ -148,6 +160,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         switch (id) {
             case R.id.action_add:
                 showDialogNewWord(new Word());
+                break;
+            case R.id.action_filter_raw_word:
+                if (mFragmentMain != null) {
+                    if (getString(R.string.action_filter_raw_word)
+                            .equalsIgnoreCase(item.getTitle().toString())) {
+                        mFragmentMain.filterRawWords();
+                        item.setTitle(R.string.action_filter_no_filter);
+                    } else if (getString(R.string.action_filter_no_filter)
+                            .equalsIgnoreCase(item.getTitle().toString())) {
+                        mFragmentMain.noFilter();
+                        item.setTitle(R.string.action_filter_raw_word);
+                    }
+                }
                 break;
         }
         Log.d(TAG, ">>>onOptionsItemSelected END");

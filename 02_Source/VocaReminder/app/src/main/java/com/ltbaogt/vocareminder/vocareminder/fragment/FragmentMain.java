@@ -1,16 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,26 +29,27 @@ public class FragmentMain extends BaseFragment {
 
     public static final String TAG = Define.TAG + "FragmentMain";
     private RecyclerView mRecycler;
-    private ArrayList<Word> mArrayList;
     private View mMainView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.d(TAG, "onCreateView START");
         mMainView = inflater.inflate(R.layout.fragment_list_word, container, false);
         OALBLL bl = new OALBLL(getContext());
-        mArrayList = bl.getAllWordsOrderByName();
-        Log.d(TAG, ">>>onCreateView size= " + mArrayList.size());
+        ArrayList<Word> arrayList = bl.getAllWordsOrderByName();
+        Log.d(TAG, ">>>onCreateView size= " + arrayList.size());
         //Show Recyclerview
         mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
         mRecycler.setVisibility(View.VISIBLE);
-        DictionaryAdapter da = new DictionaryAdapter(getActivity(), mArrayList);
+        DictionaryAdapter da = new DictionaryAdapter(getActivity(), arrayList);
         mRecycler.setAdapter(da);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
         mRecycler.setLayoutManager(lm);
         setRecyclerViewItemTouchListener();
         updateLayoutNoWord();
+        Log.d(TAG, "onCreateView END");
         return mMainView;
     }
 
@@ -58,23 +57,31 @@ public class FragmentMain extends BaseFragment {
         return (DictionaryAdapter)mRecycler.getAdapter();
     }
     public void addNewWord(Word w) {
-        mArrayList.add(w);
-        mRecycler.getAdapter().notifyItemInserted(mArrayList.indexOf(w));
+        getWordAdapter().insertWord(w);
         updateLayoutNoWord();
     }
 
+    public void filterRawWords() {
+        getWordAdapter().filterRawWords();
+    }
+
+    public void noFilter() {
+        getWordAdapter().noFilter();
+    }
     public void updateWord(Word w) {
         Log.d(TAG, ">>>updateWord START");
-        int idWord = mArrayList.indexOf(w);
-        mArrayList.set(idWord, w);
-        mRecycler.getAdapter().notifyItemChanged(idWord);
-        //updateLayoutNoWord();
+        getWordAdapter().updateWord(w);
         Log.d(TAG, ">>>updateWord END");
     }
 
     public void updateLayoutNoWord() {
         Log.d(TAG, ">>>updateLayoutNoWord START");
-        if (mMainView != null && mArrayList != null && mArrayList.size() <= 0 && mMainView != null) {
+        if (getWordAdapter().getItemCount() <= 0) {
+            getWordAdapter().noFilter();
+            MenuItem item = ((MainActivity)getActivity()).getActionBarMenu().findItem(R.id.action_filter_raw_word);
+            item.setTitle(R.string.action_filter_raw_word);
+        }
+        if (mMainView != null && getWordAdapter() != null && getWordAdapter().getItemCount() <= 0 && mMainView != null) {
             mMainView.findViewById(R.id.noword_layout).setVisibility(View.VISIBLE);
             if (mRecycler != null) {
                 mRecycler.setVisibility(View.INVISIBLE);
@@ -118,11 +125,9 @@ public class FragmentMain extends BaseFragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                Word w = mArrayList.get(position);
+                Word w = getWordAdapter().removeWord(position);
                 OALBLL bl = new OALBLL(FragmentMain.this.getContext());
                 bl.deleteWordById(w.getWordId());
-                mArrayList.remove(position);
-                mRecycler.getAdapter().notifyItemRemoved(position);
                 updateLayoutNoWord();
             }
         };

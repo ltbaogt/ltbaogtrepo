@@ -79,6 +79,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     private void copyDbFromAsset() throws IOException {
+        Log.d(TAG, ">>>copyDbFromAsset START");
         InputStream is = mContext.getAssets().open(DATABASE_NAME);
 
         //Create empty db
@@ -98,9 +99,11 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         os.flush();
         os.close();
         is.close();
+        Log.d(TAG, ">>>copyDbFromAsset END");
     }
 
     public SQLiteDatabase openDatabase() throws SQLException {
+        Log.d(TAG, ">>>openDatabase START");
         File dbFile = mContext.getDatabasePath(DATABASE_NAME);
         boolean isExists = dbFile.exists();
         Log.d(TAG, ">>>SQLiteDatabase isExists= " + isExists);
@@ -111,7 +114,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
                 Log.d(TAG, Log.getStackTraceString(e));
             }
         }
-        Log.d(TAG, ">>>openDatabase openDatabase");
+        Log.d(TAG, ">>>openDatabase END");
         return SQLiteDatabase.openDatabase(dbFile.getPath(), null,
                 SQLiteDatabase.NO_LOCALIZED_COLLATORS | SQLiteDatabase.CREATE_IF_NECESSARY);
     }
