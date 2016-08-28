@@ -24,7 +24,6 @@ public class FragmentEditWord extends BaseFragment implements SeekBar.OnSeekBarC
     //Time to dismiss
     TextView mTvDismissTime;
     SeekBar mSeekbarDismissTime;
-    Switch mSwitchDismissTime;
     private int mCurrentDismissTime;
 
     //Service running
@@ -49,7 +48,6 @@ public class FragmentEditWord extends BaseFragment implements SeekBar.OnSeekBarC
     private void findView(View v) {
         mTvDismissTime = (TextView) v.findViewById(R.id.setting_dismiss_time_value);
         mSeekbarDismissTime = (SeekBar) v.findViewById(R.id.setting_dismiss_time_sb);
-        mSwitchDismissTime = (Switch) v.findViewById(R.id.setting_dismiss_time_switch);
         mSwitchServiceRunning = (Switch) v.findViewById(R.id.setting_service_switch_switch);
         mServiceRunningListener = new ServiceRunningListener(getActivity());
         mSwitchServiceRunning.setOnCheckedChangeListener(mServiceRunningListener);

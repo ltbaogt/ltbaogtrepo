@@ -13,4 +13,11 @@
     <string name="popup_button_cancel_word">Cancel</string>
     <string name="popup_button_new_word">Add</string>
     <string name="popup_button_edit_word">Edit</string>
+    <string name="btn_ok">OK</string>
+    <string name="clean_up_vocabularies">Are you sure to perform this action ?</string>
+    <string name="btn_discard">Discard</string>
+    <string name="word_is_empty">Word name must be not empty</string>
+    <string name="word_name">New word</string>
+    <string name="word_meaning">Meaning</string>
+    <string name="word_sentence">Sentence</string>
 </resources>

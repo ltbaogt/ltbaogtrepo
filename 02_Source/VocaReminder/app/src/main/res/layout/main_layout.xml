@@ -19,16 +19,17 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bg_color"
-            android:layout_marginTop="?attr/actionBarSize"/>
+            android:background="@color/bg_color"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

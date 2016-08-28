@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
@@ -106,7 +108,22 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         int id = view.getId();
         switch (id) {
             case R.id.btn_save:
-                mWord.setWordName(mEtWordName.getText().toString());
+                String wordName = mEtWordName.getText().toString();
+                //Word name is empty
+                if ("".equalsIgnoreCase(wordName.trim())) {
+                    Toast toast = Toast.makeText(getActivity(), R.string.word_is_empty, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
+                    getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(50).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            FragmentDialogEditWord.this.getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(0).start();
+                        }
+                    }).start();
+//                    getDialog().getWindow().getDecorView().animate().translationX(-100).setDuration(2000).start();
+                    return;
+                }
+                mWord.setWordName(wordName);
                 mWord.setDefault_Meaning(mEtMeaning.getText().toString());
                 OALBLL bl = new OALBLL(view.getContext());
                 if (mWord.getWordId() != -1) {

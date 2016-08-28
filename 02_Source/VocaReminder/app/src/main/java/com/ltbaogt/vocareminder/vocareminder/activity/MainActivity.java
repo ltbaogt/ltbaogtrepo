@@ -2,6 +2,7 @@ package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -47,9 +48,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private FragmentMain mFragmentMain;
     private FragmentEditWord mFragmentEditWord;
 
-    //Actionbar's option menu
-    private Menu mActionMenu;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +63,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     }
 
-
-    public Menu getActionBarMenu() {
-        return mActionMenu;
-    }
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentMain, mFragmentEditWord));
@@ -144,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
         });
 
-        mActionMenu = menu;
         Log.d(TAG, ">>>onCreateOptionsMenu END");
         return true;
     }
@@ -180,8 +173,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void createNewDB(View v) {
-        OALBLL.delDatabase(this);
-        OALBLL.initDatabase(this);
+        showConfirmDialog(R.string.clean_up_vocabularies, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                OALBLL.delDatabase(MainActivity.this);
+                OALBLL.initDatabase(MainActivity.this);
+            }
+        });
     }
 
     public void startVRService() {
@@ -248,6 +246,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         b.putString(Define.POPUP_BUTTON_01, getString(R.string.popup_button_cancel_word));
         b.putString(Define.POPUP_BUTTON_02, getString(R.string.popup_button_edit_word));
         showDialog(b);
+    }
+
+    public void showConfirmDialog(int resId, DialogInterface.OnClickListener okAction) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(resId);
+        dialog.setNegativeButton(R.string.btn_discard, null);
+        dialog.setPositiveButton(R.string.btn_ok, okAction);
+        dialog.show();
     }
 
 }

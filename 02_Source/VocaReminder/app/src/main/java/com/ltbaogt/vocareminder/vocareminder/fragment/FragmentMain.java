@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,11 +77,6 @@ public class FragmentMain extends BaseFragment {
 
     public void updateLayoutNoWord() {
         Log.d(TAG, ">>>updateLayoutNoWord START");
-        if (getWordAdapter().getItemCount() <= 0) {
-            getWordAdapter().noFilter();
-            MenuItem item = ((MainActivity)getActivity()).getActionBarMenu().findItem(R.id.action_filter_raw_word);
-            item.setTitle(R.string.action_filter_raw_word);
-        }
         if (mMainView != null && getWordAdapter() != null && getWordAdapter().getItemCount() <= 0 && mMainView != null) {
             mMainView.findViewById(R.id.noword_layout).setVisibility(View.VISIBLE);
             if (mRecycler != null) {

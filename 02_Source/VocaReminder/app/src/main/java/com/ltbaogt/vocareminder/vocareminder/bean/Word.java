@@ -29,7 +29,7 @@ public class Word implements Parcelable {
         mWordName = "Name";
         mPronunciation = "Pronunciation";
         mType_ID = 1;
-        mDefault_Meaning = "Default Meaning";
+        mDefault_Meaning = "Let describe this word";
         mSentence = "Sentence";
         mPriority = 1;
         mCount = 0;
