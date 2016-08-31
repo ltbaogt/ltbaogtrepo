@@ -17,6 +17,7 @@
     <string name="clean_up_vocabularies">Are you sure to perform this action ?</string>
     <string name="btn_discard">Discard</string>
     <string name="word_is_empty">Word name must be not empty</string>
+    <string name="word_not_found">Word is not found</string>
     <string name="word_name">New word</string>
     <string name="word_meaning">Meaning</string>
     <string name="word_sentence">Sentence</string>

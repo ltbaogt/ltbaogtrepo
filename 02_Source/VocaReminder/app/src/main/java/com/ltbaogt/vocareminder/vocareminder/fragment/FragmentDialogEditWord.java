@@ -1,8 +1,11 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,12 +19,18 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  * Created by My PC on 10/08/2016.
@@ -36,7 +45,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private EditText mEtSentence;
     private Button mBtnCancel;
     private Button mBtnSave;
+    private ImageView mBtnGetInfo;
     private OnCreateOrUpdateWodListener mOnCreateOrUpdateWodListener;
+    private ProgressBar mLoading;
 
     public interface OnCreateOrUpdateWodListener {
         void onSave(Word w);
@@ -57,8 +68,11 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         Bundle b = getArguments();
         mBtnCancel = (Button) v.findViewById(R.id.btn_cancel);
         mBtnSave = (Button) v.findViewById(R.id.btn_save);
+        mBtnGetInfo = (ImageView) v.findViewById(R.id.btn_get_info);
+        mLoading = (ProgressBar) v.findViewById(R.id.ctrlActivityIndicator);
         mBtnCancel.setOnClickListener(this);
         mBtnSave.setOnClickListener(this);
+        mBtnGetInfo.setOnClickListener(this);
 
         String btn1Title = b.getString(Define.POPUP_BUTTON_01, "--");
         String btn2Title = b.getString(Define.POPUP_BUTTON_02, "--");
@@ -98,9 +112,13 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 
     private void hideKeyboard() {
         Log.d(TAG, ">>>hideKeyboard START");
-        Activity activity = getActivity();
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        try {
+            Activity activity = getActivity();
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Unable to hide keyboard");
+        }
         Log.d(TAG, ">>>hideKeyboard END");
     }
     @Override
@@ -142,6 +160,52 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             case R.id.btn_cancel:
                 dismiss();
                 break;
+            case R.id.btn_get_info:
+                mLoading.setVisibility(View.VISIBLE);
+                mBtnGetInfo.setVisibility(View.INVISIBLE);
+                getInfo();
+                break;
         }
+    }
+
+    private void getInfo() {
+        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
+            @Override
+            public void onFinishLoad(Document doc) {
+                mLoading.setVisibility(View.INVISIBLE);
+                mBtnGetInfo.setVisibility(View.VISIBLE);
+
+                String mp3Url = HttpUtil.getMp3Url(doc);
+                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
+                if (mp3Url != null) {
+                    try {
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        mediaPlayer.setDataSource(mp3Url);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (Exception e) {
+                        Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
+                    }
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
+                }
+
+                String pronun = HttpUtil.getPronunciation(doc);
+                if (pronun != null) {
+                    mEtMeaning.setText(pronun);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
+                }
+
+            }
+        };
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
+        task.execute();
+
     }
 }

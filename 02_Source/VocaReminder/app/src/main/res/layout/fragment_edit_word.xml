@@ -13,15 +13,34 @@
         android:layout_marginBottom="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/word_name"/>
 
         <EditText
             android:id="@+id/et_name"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@android:drawable/ic_media_play"
+                android:id="@+id/btn_get_info"
+                android:layout_gravity="right"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+            <ProgressBar
+                android:layout_height="48dp"
+                android:layout_width="48dp"
+                android:id="@+id/ctrlActivityIndicator"
+                android:indeterminateOnly="true"
+                android:keepScreenOn="true"
+                android:visibility="invisible"
+                />
+        </FrameLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -30,13 +49,14 @@
         android:layout_marginBottom="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/word_meaning"/>
 
         <EditText
             android:id="@+id/et_meaning"
-            android:layout_width="match_parent"
+            android:lines="2"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"/>
     </LinearLayout>
@@ -47,13 +67,13 @@
         android:layout_marginBottom="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/word_sentence"/>
 
         <EditText
             android:id="@+id/et_sentence"
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"/>
     </LinearLayout>
