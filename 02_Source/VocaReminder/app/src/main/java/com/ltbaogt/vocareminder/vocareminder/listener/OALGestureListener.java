@@ -66,7 +66,7 @@ public class OALGestureListener extends SimpleOnGestureListener {
 
     private void dismissReminder() {
         if (mContext != null) {
-            Intent intent = new Intent(Define.CLOSE_VOCA_REMINDER);
+            Intent intent = new Intent(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
             mContext.sendBroadcast(intent);
         }
     }

@@ -14,17 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
@@ -34,8 +31,6 @@ import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentMain;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
@@ -166,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                         item.setTitle(R.string.action_filter_raw_word);
                     }
                 }
+                break;
+            case R.id.action_preview:
+                Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
+                sendBroadcast(previewIntent);
                 break;
         }
         Log.d(TAG, ">>>onOptionsItemSelected END");

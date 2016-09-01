@@ -39,8 +39,8 @@ public class OALService extends Service {
         super.onCreate();
         mInstance = this;
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Define.OPEN_VOCA_REMINDER);
-        filter.addAction(Define.CLOSE_VOCA_REMINDER);
+        filter.addAction(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
+        filter.addAction(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mReceiver,filter);

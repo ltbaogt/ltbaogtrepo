@@ -96,7 +96,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
                     }
                 }, dismissTime);
             }
-        } else if (Define.CLOSE_VOCA_REMINDER.equals(action) || Intent.ACTION_SCREEN_OFF.equals(action)) {
+        } else if (Define.VOCA_ACTION_CLOSE_VOCA_REMINDER.equals(action) || Intent.ACTION_SCREEN_OFF.equals(action)) {
             try {
                 dismissReminderLayout();
             } catch (NullPointerException e) {
@@ -152,8 +152,13 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, ">>>onTouch");
                 if (mReminderLayout != null) {
-                    View v = mReminderLayout.findViewById(R.id.panel_setting);
-                    v.setVisibility(View.INVISIBLE);
+                    final View v = mReminderLayout.findViewById(R.id.panel_setting);
+                    v.animate().alpha(0).setDuration(2000).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            v.setVisibility(View.INVISIBLE);
+                        }
+                    }).start();
                 }
                 return mGestureDetector.onTouchEvent(motionEvent);
             }
@@ -165,7 +170,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
                 Log.d(TAG, ">>>BTN_SETTING>>>onClick");
 
                 if (mContext != null) {
-                    Intent intent = new Intent(Define.CLOSE_VOCA_REMINDER);
+                    Intent intent = new Intent(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
                     mContext.sendBroadcast(intent);
                 }
                 Intent mainScreen = new Intent(mContext, MainActivity.class);
@@ -180,6 +185,8 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
     @Override
     public void onOpenSettingPanel() {
         View v = mReminderLayout.findViewById(R.id.panel_setting);
+        v.setAlpha(0);
         v.setVisibility(View.VISIBLE);
+        v.animate().alpha(1).setDuration(2000).start();
     }
 }
