@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -93,7 +96,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mEtMeaning.setText(mWord.getDefault_Meaning());
             }
             mEtWordName.requestFocus();
-            showKeyboard();
+            //showKeyboard();
         }
         return v;
     }
@@ -101,7 +104,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        hideKeyboard();
+        //hideKeyboard();
     }
 
     private void showKeyboard() {

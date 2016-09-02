@@ -3,6 +3,8 @@ package com.ltbaogt.vocareminder.vocareminder.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
@@ -59,7 +61,8 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         initPhoneStateChanged();
         int callState = mTelephonyManager.getCallState();
         Log.d(TAG, ">>>onReceive callState= " + callState);
-        if (Intent.ACTION_SCREEN_ON.equals(action) && (callState == TelephonyManager.CALL_STATE_IDLE)) {
+        if (Intent.ACTION_SCREEN_ON.equals(action) && (callState == TelephonyManager.CALL_STATE_IDLE)
+                || Define.VOCA_ACTION_OPEN_VOCA_REMINDER.equals(action)) {
             if (mReminderLayout != null) return;
             mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -138,6 +141,9 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         OALBLL bl = new OALBLL(mContext);
         Word w = bl.randomWord();
         if (w != null) {
+            AssetManager assetManager = mContext.getApplicationContext().getAssets();
+            Typeface typeface = Typeface.createFromAsset(assetManager,"fonts/lemon_font.ttf");
+            tvWord.setTypeface(typeface);
             tvWord.setText(w.getWordName());
             tvSentence.setText(w.getDefault_Meaning());
         } else {

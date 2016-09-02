@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -23,5 +23,14 @@
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="AppTheme.ProgressBar">
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorPrimary"
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
+        <item name="android:indeterminateTint" tools:ignore="NewApi">@color/colorPrimary</item>
     </style>
 </resources>
