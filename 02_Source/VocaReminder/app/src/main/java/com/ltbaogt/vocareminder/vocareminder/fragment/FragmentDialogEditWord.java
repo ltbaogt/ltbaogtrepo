@@ -44,6 +44,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private static final String TAG = Define.TAG + "FragmentDialogEditWord";
     private Word mWord;
     private EditText mEtWordName;
+    private EditText mEtPronunciation;
     private EditText mEtMeaning;
     private EditText mEtSentence;
     private Button mBtnCancel;
@@ -84,15 +85,20 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         if (b != null) {
             mEtWordName = (EditText) v.findViewById(R.id.et_name);
             mEtMeaning = (EditText) v.findViewById(R.id.et_meaning);
-
+            mEtPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
+            //Set title for dialog
             getDialog().setTitle(b.getString(Define.POPUP_TITLE, "Default Popup"));
+            //Get word instance
             mWord = b.getParcelable(Define.WORD_OBJECT_PARCELABLE);
+            //Get popup type add new of update
             int popupType = b.getInt(Define.POPUP_TYPE, Define.POPUP_NEW_WORD);
             if (popupType == Define.POPUP_NEW_WORD) {
                 mEtWordName.setHint(mWord.getWordName());
+                mEtPronunciation.setHint(mWord.getPronunciation());
                 mEtMeaning.setHint(mWord.getDefault_Meaning());
             } else {
                 mEtWordName.setText(mWord.getWordName());
+                mEtPronunciation.setText(mWord.getPronunciation());
                 mEtMeaning.setText(mWord.getDefault_Meaning());
             }
             mEtWordName.requestFocus();
@@ -129,9 +135,11 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         int id = view.getId();
         switch (id) {
             case R.id.btn_save:
-                String wordName = mEtWordName.getText().toString();
+                String wordName = mEtWordName.getText().toString().trim();
+                String wordPronun = mEtPronunciation.getText().toString().trim();
+                String wordMeaning = mEtMeaning.getText().toString().trim();
                 //Word name is empty
-                if ("".equalsIgnoreCase(wordName.trim())) {
+                if ("".equalsIgnoreCase(wordName)) {
                     Toast toast = Toast.makeText(getActivity(), R.string.word_is_empty, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP,0,0);
                     toast.show();
@@ -145,17 +153,18 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                     return;
                 }
                 mWord.setWordName(wordName);
-                mWord.setDefault_Meaning(mEtMeaning.getText().toString());
+                mWord.setPronunciation(wordPronun);
+                mWord.setDefault_Meaning(wordMeaning);
                 OALBLL bl = new OALBLL(view.getContext());
-                if (mWord.getWordId() != -1) {
-                    bl.updateWord(mWord);
-                    if (mOnCreateOrUpdateWodListener != null) {
-                        mOnCreateOrUpdateWodListener.onUpdate(mWord);
-                    }
-                } else {
+                if (mWord.getWordId() == -1) {
                     bl.addNewWord(mWord);
                     if (mOnCreateOrUpdateWodListener != null) {
                         mOnCreateOrUpdateWodListener.onSave(mWord);
+                    }
+                } else {
+                    bl.updateWord(mWord);
+                    if (mOnCreateOrUpdateWodListener != null) {
+                        mOnCreateOrUpdateWodListener.onUpdate(mWord);
                     }
                 }
                 dismiss();
@@ -197,8 +206,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 }
 
                 String pronun = HttpUtil.getPronunciation(doc);
-                if (pronun != null) {
-                    mEtMeaning.setText(pronun);
+                if (pronun != null && mEtPronunciation != null) {
+                    mEtPronunciation.setText(pronun);
+                    mWord.setPronunciation(pronun);
                 } else {
                     Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP,0,0);

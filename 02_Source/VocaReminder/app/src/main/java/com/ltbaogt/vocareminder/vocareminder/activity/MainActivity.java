@@ -66,12 +66,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     @Override
     public void onSave(Word w) {
         Log.d(TAG, ">>>onSave SRART");
+        //Fragment that is holding RecyclerView.
+        // This fragment will invoke RecyclerView get its adapter to add new Word to Adapter's ArrayList
         mFragmentMain.addNewWord(w);
         Log.d(TAG, ">>>onSave END");
     }
 
     @Override
     public void onUpdate(Word w) {
+        //Fragment that is holding RecyclerView.
+        // This fragment will invoke RecyclerView get its adapter to update Word in Adapter's ArrayList
         mFragmentMain.updateWord(w);
     }
 
@@ -196,7 +200,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         OALShareReferenceHepler sp = new OALShareReferenceHepler(MainActivity.this);
         int currentColor = sp.getThemeColor() == -1 ? ContextCompat.getColor(this, R.color.amber) : sp.getThemeColor();
 
-        int[] colors = new int[]{ContextCompat.getColor(this, R.color.amber), ContextCompat.getColor(this, R.color.deep_orange), ContextCompat.getColor(this, R.color.purple)};
+        int[] colors = new int[]{ContextCompat.getColor(this, R.color.amber)
+                , ContextCompat.getColor(this, R.color.deep_orange)
+                , ContextCompat.getColor(this, R.color.purple)
+                , ContextCompat.getColor(this, R.color.indigo)
+                , ContextCompat.getColor(this, R.color.green_grey)
+                , ContextCompat.getColor(this, R.color.teal)};
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
         colorPickerDialog.initialize(R.string.app_name, colors, currentColor, 3, colors.length);
         colorPickerDialog.show(getFragmentManager(), "color_chooser");
@@ -241,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Bundle b = new Bundle();
         b.putParcelable(Define.WORD_OBJECT_PARCELABLE, w);
         b.putInt(Define.POPUP_TYPE, Define.POPUP_EIDT_WORD);
-        b.putString(Define.POPUP_TITLE, getString(R.string.popup_title_new_word));
+        b.putString(Define.POPUP_TITLE, getString(R.string.popup_title_edit_word));
         b.putString(Define.POPUP_BUTTON_01, getString(R.string.popup_button_cancel_word));
         b.putString(Define.POPUP_BUTTON_02, getString(R.string.popup_button_edit_word));
         showDialog(b);

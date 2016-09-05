@@ -54,6 +54,7 @@ public class FragmentMain extends BaseFragment {
         return mMainView;
     }
 
+    //Get Adapter of RecyclerView. Current is DictionaryAdapter instance
     public DictionaryAdapter getWordAdapter() {
         return (DictionaryAdapter)mRecycler.getAdapter();
     }

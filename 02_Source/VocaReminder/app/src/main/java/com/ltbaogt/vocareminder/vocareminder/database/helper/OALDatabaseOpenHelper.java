@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -140,14 +139,14 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         }
         if (candidateId <= Integer.MAX_VALUE && candidateId >= Integer.MIN_VALUE) {
             newWord.setWordId(candidateId);
-            ContentValues cv = getContenValues(newWord);
+            ContentValues cv = getContentValues(newWord);
             db.insert(TABLE_NAME_TBL_WORD, null, cv);
         }
         db.close();
         Log.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
     }
 
-    private ContentValues getContenValues(Word w) {
+    private ContentValues getContentValues(Word w) {
         ContentValues cv = new ContentValues();
         cv.put(COL_WORD_ID, w.getWordId());
         cv.put(COL_WORDNAME, w.getWordName());
@@ -226,6 +225,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
                 Word w = new Word();
                 w.setWordId(c.getInt(COL_WORD_ID_INDEX));
                 w.setWordName(c.getString(COL_WORDNAME_INDEX));
+                w.setPronunciation(c.getString(COL_PRONUNCIATION_INDEX));
                 w.setDefault_Meaning(c.getString(COL_DEFAULT_MEANING_INDEX));
                 list.add(w);
             } while(c.moveToNext());
@@ -237,7 +237,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
-        int count = db.update(TABLE_NAME_TBL_WORD, getContenValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
+        int count = db.update(TABLE_NAME_TBL_WORD, getContentValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
         Log.d(TAG, ">>>updateWord count= " + count);
     }
     public void deleteWordById(int id) {
