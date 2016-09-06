@@ -196,6 +196,13 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                         mediaPlayer.setDataSource(mp3Url);
                         mediaPlayer.prepare();
                         mediaPlayer.start();
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mediaPlayer) {
+                                mediaPlayer.stop();
+                                mediaPlayer.release();
+                            }
+                        });
                     } catch (Exception e) {
                         Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
                     }

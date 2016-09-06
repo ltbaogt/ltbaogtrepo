@@ -19,7 +19,7 @@ import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
  * Created by My PC on 09/08/2016.
  */
 
-public class FragmentEditWord extends BaseFragment implements SeekBar.OnSeekBarChangeListener {
+public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarChangeListener {
 
     //Time to dismiss
     TextView mTvDismissTime;

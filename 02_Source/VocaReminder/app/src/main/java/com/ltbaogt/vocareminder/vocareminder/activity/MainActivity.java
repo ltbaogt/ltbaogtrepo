@@ -27,8 +27,8 @@ import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
-import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
-import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentMain;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     Toolbar mToolbar;
     DrawerLayout mDrawer;
 
-    private FragmentMain mFragmentMain;
-    private FragmentEditWord mFragmentEditWord;
+    private FragmentListWord mFragmentListWord;
+    private FragmentSetting mFragmentSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +52,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(mToolbar);
-        mFragmentMain = new FragmentMain();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentMain, MAIN_FRAGMENT_TAG).commit();
+        mFragmentListWord = new FragmentListWord();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentListWord, MAIN_FRAGMENT_TAG).commit();
         setupDrawer();
 
     }
 
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
-        drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentMain, mFragmentEditWord));
+        drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentListWord, mFragmentSetting));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Log.d(TAG, ">>>onSave SRART");
         //Fragment that is holding RecyclerView.
         // This fragment will invoke RecyclerView get its adapter to add new Word to Adapter's ArrayList
-        mFragmentMain.addNewWord(w);
+        mFragmentListWord.addNewWord(w);
         Log.d(TAG, ">>>onSave END");
     }
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public void onUpdate(Word w) {
         //Fragment that is holding RecyclerView.
         // This fragment will invoke RecyclerView get its adapter to update Word in Adapter's ArrayList
-        mFragmentMain.updateWord(w);
+        mFragmentListWord.updateWord(w);
     }
 
     //Using static class instead of static class in order to GC
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
-                    edit = new FragmentEditWord();
+                    edit = new FragmentSetting();
                     mainActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_content, edit, EDIT_FRAGMENT_TAG)
                             .commit();
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mFragmentMain.getWordAdapter().getFilter().filter(newText);
+                mFragmentListWord.getWordAdapter().getFilter().filter(newText);
                 return true;
             }
         });
@@ -154,14 +154,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 showDialogNewWord(new Word());
                 break;
             case R.id.action_filter_raw_word:
-                if (mFragmentMain != null) {
+                if (mFragmentListWord != null) {
                     if (getString(R.string.action_filter_raw_word)
                             .equalsIgnoreCase(item.getTitle().toString())) {
-                        mFragmentMain.filterRawWords();
+                        mFragmentListWord.filterRawWords();
                         item.setTitle(R.string.action_filter_no_filter);
                     } else if (getString(R.string.action_filter_no_filter)
                             .equalsIgnoreCase(item.getTitle().toString())) {
-                        mFragmentMain.noFilter();
+                        mFragmentListWord.noFilter();
                         item.setTitle(R.string.action_filter_raw_word);
                     }
                 }
@@ -222,8 +222,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     protected void onDestroy() {
         super.onDestroy();
         //Release resource
-        mFragmentMain = null;
-        mFragmentEditWord = null;
+        mFragmentListWord = null;
+        mFragmentSetting = null;
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(null);
         Log.d(TAG, ">>>onDestroy START");

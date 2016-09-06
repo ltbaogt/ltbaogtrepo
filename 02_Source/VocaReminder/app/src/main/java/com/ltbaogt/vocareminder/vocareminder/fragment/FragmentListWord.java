@@ -2,14 +2,11 @@ package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,9 +23,9 @@ import java.util.ArrayList;
  * Created by My PC on 08/08/2016.
  */
 
-public class FragmentMain extends BaseFragment {
+public class FragmentListWord extends BaseFragment {
 
-    public static final String TAG = Define.TAG + "FragmentMain";
+    public static final String TAG = Define.TAG + "FragmentListWord";
     private RecyclerView mRecycler;
     private View mMainView;
 
@@ -86,7 +83,7 @@ public class FragmentMain extends BaseFragment {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MainActivity activity = FragmentMain.this.getParentActivity();
+                    MainActivity activity = FragmentListWord.this.getParentActivity();
                     if (activity != null) {
                         Word w = new Word();
                         activity.showDialogNewWord(w);
@@ -123,7 +120,7 @@ public class FragmentMain extends BaseFragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Word w = getWordAdapter().removeWord(position);
-                OALBLL bl = new OALBLL(FragmentMain.this.getContext());
+                OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
                 bl.deleteWordById(w.getWordId());
                 updateLayoutNoWord();
             }

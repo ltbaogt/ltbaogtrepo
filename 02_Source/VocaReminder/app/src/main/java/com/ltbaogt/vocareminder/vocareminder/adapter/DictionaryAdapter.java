@@ -1,21 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
@@ -23,8 +16,6 @@ import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
-import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentEditWord;
 
 import java.util.ArrayList;
 

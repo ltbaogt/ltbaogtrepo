@@ -142,7 +142,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         Word w = bl.randomWord();
         if (w != null) {
             AssetManager assetManager = mContext.getApplicationContext().getAssets();
-            Typeface typeface = Typeface.createFromAsset(assetManager,"fonts/lemon_font.ttf");
+            Typeface typeface = Typeface.createFromAsset(assetManager, "fonts/monotype_corsiva.ttf");
             tvWord.setTypeface(typeface);
             tvWord.setText(w.getWordName());
             tvSentence.setText(w.getDefault_Meaning());
