@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 
@@ -31,7 +32,6 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_PATH_SUFFIX = "/databases/";
 
     private static final String TABLE_NAME_TBL_WORD = "tbl_Word";
-
     private static final int COL_WORD_ID_INDEX = 0;
     private static final int COL_WORDNAME_INDEX = 1;
     private static final int COL_PRONUNCIATION_INDEX = 2;
@@ -54,6 +54,10 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String COL_GROUP_ID = "Group_ID";
     private static final String COL_DELETED = "Deleted";
     //private static final String COL_LASTUPDATE= "LastUpdate";
+
+    private static final String TABLE_NAME_TBL_TAG = "tbl_Group_ID";
+    private static final int COL_TAG_ID_INDEX = 0;
+    private static final int COL_TAG_NAME_INDEX = 1;
 
 
     private Context mContext;
@@ -278,5 +282,22 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         }
         Log.d(TAG, ">>>randomWord END");
         return null;
+    }
+
+    public ArrayList<Tag> getTagList() {
+        ArrayList<Tag> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_TAG, null);
+        if (cs.moveToFirst()) {
+            do {
+                Tag tag = new Tag();
+                tag.setTagID(cs.getInt(COL_TAG_ID_INDEX));
+                tag.setTagName(cs.getString(COL_TAG_NAME_INDEX));
+                list.add(tag);
+            } while (cs.moveToNext());
+        }
+        db.close();
+        cs.close();
+        return list;
     }
 }

@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
+import com.ltbaogt.vocareminder.vocareminder.listener.OALSimpleOnGestureListener;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private FragmentListWord mFragmentListWord;
     private FragmentSetting mFragmentSetting;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +86,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private static class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
 
         private DrawerLayout drawer;
-        private Fragment main;
-        private Fragment edit;
+        private Fragment list;
+        private Fragment setting;
         private MainActivity mainActivity;
         public NavigationViewListener(MainActivity c, DrawerLayout d, Fragment m, Fragment e) {
             drawer = d;
-            main = m;
-            edit = e;
+            list = m;
+            setting = e;
             mainActivity = c;
         }
         @Override
@@ -97,19 +100,28 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             int id = item.getItemId();
             switch (id) {
                 case R.id.home:
-                    if (main != null) {
+                    if (list != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, main, MAIN_FRAGMENT_TAG)
+                                .replace(R.id.main_content, list, MAIN_FRAGMENT_TAG)
                                 .commit();
+                        if (list instanceof FragmentListWord) {
+                            ((FragmentListWord) list).hideTagPanel();
+                        }
                     }
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
-                    edit = new FragmentSetting();
+                    setting = new FragmentSetting();
                     mainActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_content, edit, EDIT_FRAGMENT_TAG)
+                            .replace(R.id.main_content, setting, EDIT_FRAGMENT_TAG)
                             .commit();
                     drawer.closeDrawers();
+                    break;
+                case R.id.tag:
+                    drawer.closeDrawers();
+                    if (list != null) {
+                        ((FragmentListWord) list).toggleTagPanel();
+                    }
                     break;
             }
             return true;
