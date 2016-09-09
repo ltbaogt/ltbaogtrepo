@@ -1,6 +1,8 @@
 package com.ltbaogt.vocareminder.vocareminder.adapter;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,12 +32,16 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     private ArrayList<Word> mArrayList;
     private ArrayList<Word> mNoFilterList;
     private Context mContext;
+    private Typeface mTypeFaceBold;
+    private Typeface mTypeFaceRegular;
 
     public DictionaryAdapter(Context ctx, ArrayList<Word> list) {
         mArrayList = list;
         mNoFilterList = list;
         mContext = ctx;
-
+        AssetManager assetManager = mContext.getApplicationContext().getAssets();
+        mTypeFaceBold = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
+        mTypeFaceRegular = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
     }
 
     public void filterRawWords() {
@@ -102,7 +108,11 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         Log.d(TAG, ">>>onBindViewHolder START");
         Word w = mArrayList.get(position);
         Log.d(TAG, ">>>onBindViewHolder " + w.toString());
+
+        holder.mWordName.setTypeface(mTypeFaceBold);
         holder.mWordName.setText(w.getWordName());
+
+        holder.mMeaning.setTypeface(mTypeFaceRegular);
         holder.mMeaning.setText(w.getDefault_Meaning());
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override

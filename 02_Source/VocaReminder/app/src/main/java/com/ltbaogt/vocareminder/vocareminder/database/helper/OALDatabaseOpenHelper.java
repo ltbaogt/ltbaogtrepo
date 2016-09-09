@@ -174,6 +174,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             Word w = new Word();
             w.setWordId(cs.getInt(COL_WORD_ID_INDEX));
             w.setWordName(cs.getString(COL_WORDNAME_INDEX));
+            w.setPronunciation(cs.getString(COL_PRONUNCIATION_INDEX));
             w.setDefault_Meaning(cs.getString(COL_DEFAULT_MEANING_INDEX));
             Log.d(TAG, ">>>getWordById Word= " + w.toString());
             return w;

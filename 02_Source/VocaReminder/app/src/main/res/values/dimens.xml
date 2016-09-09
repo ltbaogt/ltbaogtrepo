@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="textsize_vocabulary">50sp</dimen>
-    <dimen name="textsize_sentence">20dp</dimen>
+    <dimen name="textsize_sentence">25sp</dimen>
     <dimen name="color_over_chooser">48dp</dimen>
 
     <!-- for carview -->

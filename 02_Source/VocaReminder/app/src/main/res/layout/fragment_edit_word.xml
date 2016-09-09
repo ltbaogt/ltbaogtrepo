@@ -66,14 +66,6 @@
         </FrameLayout>
     </LinearLayout>
 
-    <ImageView
-        android:layout_marginLeft="20dp"
-        android:layout_alignBaseline="@id/infobar"
-        android:layout_toRightOf="@id/infobar"
-        android:layout_below="@id/et_sentence"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_agenda"/>
     <RelativeLayout
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"

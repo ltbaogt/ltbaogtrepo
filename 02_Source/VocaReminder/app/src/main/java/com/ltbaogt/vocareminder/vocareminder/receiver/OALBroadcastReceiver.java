@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
@@ -137,14 +139,38 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         OALShareReferenceHepler ref = new OALShareReferenceHepler(mContext);
         mReminderLayout.setBackgroundColor(ref.getThemeColor());
         TextView tvWord = (TextView) mReminderLayout.findViewById(R.id.tv_vocabulary);
-        TextView tvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
+        TextView tvPronun = (TextView) mReminderLayout.findViewById(R.id.tv_pronunciation);
+        final TextView tvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
+        ToggleButton toggleButton = (ToggleButton) mReminderLayout.findViewById(R.id.toggle);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    tvSentence.setAlpha(0);
+                    tvSentence.setVisibility(View.VISIBLE);
+                    tvSentence.animate().alpha(1).setDuration(500).start();
+                } else {
+                    tvSentence.animate().alpha(0).setDuration(500).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvSentence.setVisibility(View.INVISIBLE);
+                        }
+                    }).start();
+
+                }
+            }
+        });
         OALBLL bl = new OALBLL(mContext);
         Word w = bl.randomWord();
         if (w != null) {
             AssetManager assetManager = mContext.getApplicationContext().getAssets();
-            Typeface typeface = Typeface.createFromAsset(assetManager, "fonts/monotype_corsiva.ttf");
+            Typeface typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
             tvWord.setTypeface(typeface);
             tvWord.setText(w.getWordName());
+
+            typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
+            tvPronun.setText(w.getPronunciation());
+            tvSentence.setTypeface(typeface);
             tvSentence.setText(w.getDefault_Meaning());
         } else {
             Log.d(TAG, "Dictionary is empty");
@@ -193,6 +219,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
         View v = mReminderLayout.findViewById(R.id.panel_setting);
         v.setAlpha(0);
         v.setVisibility(View.VISIBLE);
-        v.animate().alpha(1).setDuration(2000).start();
+        v.animate().alpha(1).setDuration(1000).start();
     }
+
 }

@@ -187,25 +187,30 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
 
-                String mp3Url = HttpUtil.getMp3Url(doc);
+                final String mp3Url = HttpUtil.getMp3Url(doc);
                 Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
                 if (mp3Url != null) {
-                    try {
-                        MediaPlayer mediaPlayer = new MediaPlayer();
-                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mediaPlayer.setDataSource(mp3Url);
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
-                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mediaPlayer) {
-                                mediaPlayer.stop();
-                                mediaPlayer.release();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                MediaPlayer mediaPlayer = new MediaPlayer();
+                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mediaPlayer.setDataSource(mp3Url);
+                                mediaPlayer.prepare();
+                                mediaPlayer.start();
+                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(MediaPlayer mediaPlayer) {
+                                        mediaPlayer.stop();
+                                        mediaPlayer.release();
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
                             }
-                        });
-                    } catch (Exception e) {
-                        Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
-                    }
+                        }
+                    }).start();
                 } else {
                     Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP,0,0);

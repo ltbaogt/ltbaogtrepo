@@ -19,4 +19,7 @@ public class Define {
 
     public static final int POPUP_NEW_WORD = 0;
     public static final int POPUP_EIDT_WORD = 1;
+
+    public static final String TYPE_FACE_BOLD = "fonts/tondo_bold.ttf";
+    public static final String TYPE_FACE_REGILAR = "fonts/tondo_regular.ttf";
 }
