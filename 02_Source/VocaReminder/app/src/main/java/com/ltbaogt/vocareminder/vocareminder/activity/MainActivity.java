@@ -104,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                         mainActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_content, list, MAIN_FRAGMENT_TAG)
                                 .commit();
-                        if (list instanceof FragmentListWord) {
-                            ((FragmentListWord) list).hideTagPanel();
-                        }
+//                        if (list instanceof FragmentListWord) {
+//                            ((FragmentListWord) list).hideTagPanel();
+//                        }
                     }
                     drawer.closeDrawers();
                     break;
@@ -117,12 +117,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                             .commit();
                     drawer.closeDrawers();
                     break;
-                case R.id.tag:
-                    drawer.closeDrawers();
-                    if (list != null) {
-                        ((FragmentListWord) list).toggleTagPanel();
-                    }
-                    break;
+//                case R.id.tag:
+//                    drawer.closeDrawers();
+//                    if (list != null) {
+//                        ((FragmentListWord) list).toggleTagPanel();
+//                    }
+//                    break;
             }
             return true;
         }

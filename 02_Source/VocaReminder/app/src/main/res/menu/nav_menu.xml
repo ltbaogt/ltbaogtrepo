@@ -5,10 +5,10 @@
             android:id="@+id/home"
             android:title="Vocabulary"
             android:icon="@drawable/ic_home"/>
-        <item
-            android:id="@+id/tag"
-            android:title="Tag"
-            android:icon="@drawable/ic_tag_64"/>
+        <!--<item-->
+            <!--android:id="@+id/tag"-->
+            <!--android:title="Tag"-->
+            <!--android:icon="@drawable/ic_tag_64"/>-->
         <item
             android:id="@+id/settings"
             android:title="Settings"
