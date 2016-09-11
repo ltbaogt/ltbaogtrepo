@@ -6,7 +6,6 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -55,9 +54,9 @@ public class OALBLL {
         dbHelp.deleteWordById(id);
     }
 
-    public ArrayList<Word> getAllWordsOrderByName() {
+    public ArrayList<Word> getAllWordsOrderByNameInList() {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
-        return dbHelp.getAllWordsOrderByName();
+        return dbHelp.getAllWordsOrderByNameInList();
     }
 
     public Word randomWord() {

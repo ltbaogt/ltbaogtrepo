@@ -1,8 +1,8 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -20,9 +20,12 @@ import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
 import com.ltbaogt.vocareminder.vocareminder.adapter.TagAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
+import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OALSimpleOnGestureListener;
+import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
+import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 
 import java.util.ArrayList;
 
@@ -64,11 +67,11 @@ public class FragmentListWord extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
         Log.d(TAG, "onCreateView START");
         mMainView = inflater.inflate(R.layout.fragment_list_word, container, false);
-        OALBLL bl = new OALBLL(getContext());
-        ArrayList<Word> arrayList = bl.getAllWordsOrderByName();
-        Log.d(TAG, ">>>onCreateView size= " + arrayList.size());
+        ProviderWrapper pw = new ProviderWrapper(getContext());
+        ArrayList<Word> arrayList = pw.getListWord();
         //Show Recyclerview
         mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
         mRecycler.setVisibility(View.VISIBLE);
@@ -79,26 +82,28 @@ public class FragmentListWord extends BaseFragment {
         setRecyclerViewItemTouchListener();
         updateLayoutNoWord();
 
-        ArrayList<Tag> tagList = bl.getTagList();
-        mRecyclerTag = (RecyclerView) mMainView.findViewById(R.id.recycler_tag);
-        TagAdapter tagAdapter = new TagAdapter(tagList);
-        RecyclerView.LayoutManager lmTag = new LinearLayoutManager(getContext());
-        mRecyclerTag.setLayoutManager(lmTag);
-        mRecyclerTag.setAdapter(tagAdapter);
-
-
-        mTagPanel = (LinearLayout) mMainView.findViewById(R.id.panel_tag);
-        mOnDoubleTapTagPanel = new OnDoubleTapTagPanel(this);
-        mTagPanelSimpleOnGestureListener = new OALSimpleOnGestureListener();
-        mTagPanelSimpleOnGestureListener.setOnDoubleTapListener(mOnDoubleTapTagPanel);
-        mTagPanelGestureDetector = new GestureDetector(getActivity(), mTagPanelSimpleOnGestureListener);
-        mTagPanel.setClickable(true);
-        mTagPanel.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return mTagPanelGestureDetector.onTouchEvent(motionEvent);
-            }
-        });
+        //Remve Tag panel start
+//        ArrayList<Tag> tagList = bl.getTagList();
+//        mRecyclerTag = (RecyclerView) mMainView.findViewById(R.id.recycler_tag);
+//        TagAdapter tagAdapter = new TagAdapter(tagList);
+//        RecyclerView.LayoutManager lmTag = new LinearLayoutManager(getContext());
+//        mRecyclerTag.setLayoutManager(lmTag);
+//        mRecyclerTag.setAdapter(tagAdapter);
+//
+//
+//        mTagPanel = (LinearLayout) mMainView.findViewById(R.id.panel_tag);
+//        mOnDoubleTapTagPanel = new OnDoubleTapTagPanel(this);
+//        mTagPanelSimpleOnGestureListener = new OALSimpleOnGestureListener();
+//        mTagPanelSimpleOnGestureListener.setOnDoubleTapListener(mOnDoubleTapTagPanel);
+//        mTagPanelGestureDetector = new GestureDetector(getActivity(), mTagPanelSimpleOnGestureListener);
+//        mTagPanel.setClickable(true);
+//        mTagPanel.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return mTagPanelGestureDetector.onTouchEvent(motionEvent);
+//            }
+//        });
+//Remve Tag panel end
         Log.d(TAG, "onCreateView END");
         return mMainView;
     }

@@ -198,9 +198,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void startVRService() {
-        if (!OALService.isStarted()) {
+//        if (!OALService.isStarted()) {
             startService(new Intent(this, OALService.class));
-        }
+//        }
     }
 
     public void stopVRService() {

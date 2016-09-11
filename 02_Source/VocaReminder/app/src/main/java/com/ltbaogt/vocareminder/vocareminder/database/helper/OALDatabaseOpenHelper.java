@@ -31,28 +31,28 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "db.s3db";
     private static final String DATABASE_PATH_SUFFIX = "/databases/";
 
-    private static final String TABLE_NAME_TBL_WORD = "tbl_Word";
-    private static final int COL_WORD_ID_INDEX = 0;
-    private static final int COL_WORDNAME_INDEX = 1;
-    private static final int COL_PRONUNCIATION_INDEX = 2;
-    private static final int COL_TYPE_ID_INDEX = 3;
-    private static final int COL_DEFAULT_MEANING_INDEX = 4;
-    private static final int COL_SENTENCE_INDEX = 5;
-    private static final int COL_PRIORITY_INDEX = 6;
-    private static final int COL_COUNT_INDEX = 7;
-    private static final int COL_GROUP_ID_INDEX = 8;
-    private static final int COL_DELETED_INDEX = 9;
+    public static final String TABLE_NAME_TBL_WORD = "tbl_Word";
+    public static final int COL_WORD_ID_INDEX = 0;
+    public static final int COL_WORDNAME_INDEX = 1;
+    public static final int COL_PRONUNCIATION_INDEX = 2;
+    public static final int COL_TYPE_ID_INDEX = 3;
+    public static final int COL_DEFAULT_MEANING_INDEX = 4;
+    public static final int COL_SENTENCE_INDEX = 5;
+    public static final int COL_PRIORITY_INDEX = 6;
+    public static final int COL_COUNT_INDEX = 7;
+    public static final int COL_GROUP_ID_INDEX = 8;
+    public static final int COL_DELETED_INDEX = 9;
 
-    private static final String COL_WORD_ID = "Word_ID";
-    private static final String COL_WORDNAME = "WordName";
-    private static final String COL_PRONUNCIATION = "Pronunciation";
-    private static final String COL_TYPE_ID = "Type_ID";
-    private static final String COL_DEFAULT_MEANING = "Default_Meaning";
-    private static final String COL_SENTENCE = "Sentence";
-    private static final String COL_PRIORITY = "Priority";
-    private static final String COL_COUNT = "Count";
-    private static final String COL_GROUP_ID = "Group_ID";
-    private static final String COL_DELETED = "Deleted";
+    public static final String COL_WORD_ID = "Word_ID";
+    public static final String COL_WORDNAME = "WordName";
+    public static final String COL_PRONUNCIATION = "Pronunciation";
+    public static final String COL_TYPE_ID = "Type_ID";
+    public static final String COL_DEFAULT_MEANING = "Default_Meaning";
+    public static final String COL_SENTENCE = "Sentence";
+    public static final String COL_PRIORITY = "Priority";
+    public static final String COL_COUNT = "Count";
+    public static final String COL_GROUP_ID = "Group_ID";
+    public static final String COL_DELETED = "Deleted";
     //private static final String COL_LASTUPDATE= "LastUpdate";
 
     private static final String TABLE_NAME_TBL_TAG = "tbl_Group_ID";
@@ -167,9 +167,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public Word getWordById(int id) {
         Log.d(TAG, ">>>getWordById id= " + id);
-        SQLiteDatabase db = getWritableDatabase();
-        String sqlString = "select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?";
-        Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
+        Cursor cs = getWordByIdInCursor(id);
         if (cs.moveToFirst()) {
             Word w = new Word();
             w.setWordId(cs.getInt(COL_WORD_ID_INDEX));
@@ -180,10 +178,18 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             return w;
         }
         cs.close();
-        db.close();
         return null;
     }
 
+    public Cursor getWordByIdInCursor(int id) {
+        Log.d(TAG, ">>>getWordById id= " + id);
+        SQLiteDatabase db = getWritableDatabase();
+        String sqlString = "select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?";
+        Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
+        cs.moveToFirst();
+        db.close();
+        return cs;
+    }
     public int getCount() {
         Log.d(TAG, ">>>getCount START");
         int ret = -1;
@@ -221,10 +227,9 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Word> getAllWordsOrderByName() {
+    public ArrayList<Word> getAllWordsOrderByNameInList() {
         ArrayList<Word> list = new ArrayList<>();
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORDNAME, null);
+        Cursor c = getAllWordsOrderByNameInCursor();
         if (c.moveToFirst()) {
             do{
                 Word w = new Word();
@@ -236,10 +241,16 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             } while(c.moveToNext());
         }
         c.close();
-        db.close();
         return list;
     }
 
+    public Cursor getAllWordsOrderByNameInCursor() {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORDNAME, null);
+        cs.moveToFirst();
+        db.close();
+        return cs;
+    }
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
         int count = db.update(TABLE_NAME_TBL_WORD, getContentValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
@@ -249,10 +260,11 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         Log.d(TAG,">>>deleteWordById START, id= " + id);
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=" + "?", new String[]{id + ""});
+        db.close();
         Log.d(TAG,">>>deleteWordById END");
     }
 
-    private int[] getListWordId() {
+    public int[] getListWordId() {
         int[] reList = null;
         SQLiteDatabase db = getWritableDatabase();
         Cursor cs = db.query(TABLE_NAME_TBL_WORD,new String[]{COL_WORD_ID},null, null, null,null, null);
@@ -270,6 +282,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return reList;
     }
 
+
     public Word randomWord() {
         Log.d(TAG, ">>>randomWord START");
         int[] listWordId = getListWordId();
@@ -285,6 +298,17 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public Cursor randomWordInCursor() {
+        Cursor cs = null;
+        int[] listWordId = getListWordId();
+        if (listWordId != null) {
+            Random random = new Random();
+            int randomId = random.nextInt(listWordId.length);
+            cs = getWordByIdInCursor(randomId);
+            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
+        }
+        return cs;
+    }
     public ArrayList<Tag> getTagList() {
         ArrayList<Tag> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();

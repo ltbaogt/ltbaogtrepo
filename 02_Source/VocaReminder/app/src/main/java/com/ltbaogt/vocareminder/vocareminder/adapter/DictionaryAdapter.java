@@ -63,7 +63,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         Log.d(TAG, "noFilter START");
         try {
             OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(mContext);
-            mArrayList = db.getAllWordsOrderByName();
+            mArrayList = db.getAllWordsOrderByNameInList();
             notifyDataSetChanged();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

@@ -35,7 +35,7 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_main, container, false);
         findView(v);
-        mSwitchServiceRunning.setChecked(OALService.isStarted());
+//        mSwitchServiceRunning.setChecked(OALService.isStarted());
 
         OALShareReferenceHepler sr = new OALShareReferenceHepler(getContext());
         int dismissTime = sr.getDismissTime() / 1000;

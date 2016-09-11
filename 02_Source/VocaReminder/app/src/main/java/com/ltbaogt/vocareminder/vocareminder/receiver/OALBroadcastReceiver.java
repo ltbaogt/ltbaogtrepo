@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -24,83 +22,100 @@ import android.widget.ToggleButton;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
-import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.handler.ReceiverHandler;
 import com.ltbaogt.vocareminder.vocareminder.listener.OALGestureListener;
+import com.ltbaogt.vocareminder.vocareminder.listener.OpenPanelListener;
+import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
+import com.ltbaogt.vocareminder.vocareminder.runnable.ShowHideViewRunnable;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 /**
  * Created by My PC on 04/08/2016.
  */
 
-public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestureListener.OnOpenSettingPanel {
+public class OALBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = Define.TAG + "OALBroadcastReceiver";
-    View mReminderLayout;
+    private View mReminderLayout;
+    private ToggleButton mToggleButton;
+    private ImageView mButtonOpenApp;
+    private TextView mTvWord;
+    private TextView mTvPronun;
+    private TextView mTvSentence;
     WindowManager mWindowManager;
     Context mContext;
     OALGestureListener mDoubletabDetector;
     GestureDetector mGestureDetector;
     TelephonyManager mTelephonyManager;
+    WindowManager.LayoutParams mLayoutParam;
 
-    private Handler mServiceHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            int what = msg.what;
-            switch (what) {
-                case Define.HANDLER_WHAT_AUTO_DISMISS:
-                    dismissReminderLayout();
-                    break;
+    private OALShareReferenceHepler mSharedRef;
+
+    private ReceiverHandler mServiceHandler;
+
+    private OpenPanelListener mOpenPanelListener;
+
+    private ShowHideViewRunnable mShowHideRunnable;
+
+    public OALBroadcastReceiver(Context ctx) {
+        Log.d(TAG, ">>>OALBroadcastReceiver init");
+        mContext = ctx;
+        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mReminderLayout = layoutInflater.inflate(R.layout.main_reminder_layout, null, false);
+        mTvWord = (TextView) mReminderLayout.findViewById(R.id.tv_vocabulary);
+        mTvPronun = (TextView) mReminderLayout.findViewById(R.id.tv_pronunciation);
+        mTvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
+        mToggleButton = (ToggleButton) mReminderLayout.findViewById(R.id.toggle);
+        mButtonOpenApp = (ImageView) mReminderLayout.findViewById(R.id.btn_setting);
+
+        AssetManager assetManager = mContext.getAssets();
+        Typeface typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
+        mTvWord.setTypeface(typeface);
+
+        typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
+        mTvSentence.setTypeface(typeface);
+        mReminderLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mReminderLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                initGestureDetection();
             }
-        }
-    };
+        });
+
+        mLayoutParam = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT);
+        //TOAST: ability to view notification
+        //lp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        //SYSTEM_ERROR: doesn't ability to view notification
+        mLayoutParam.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        mLayoutParam.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        //Setup in/out animation for reminder
+        mLayoutParam.windowAnimations = android.R.style.Animation_Toast;
+
+        setupReminderEvent();
+        initPhoneStateChanged();
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, ">>>onReceive START");
-        mContext = context;
         String action = intent.getAction();
-        initPhoneStateChanged();
         int callState = mTelephonyManager.getCallState();
         Log.d(TAG, ">>>onReceive callState= " + callState);
         if (Intent.ACTION_SCREEN_ON.equals(action) && (callState == TelephonyManager.CALL_STATE_IDLE)
                 || Define.VOCA_ACTION_OPEN_VOCA_REMINDER.equals(action)) {
-            if (mReminderLayout != null) return;
-            mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-            LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mReminderLayout = li.inflate(R.layout.main_reminder_layout, null, false);
-
-            mReminderLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    mReminderLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    initGestureDetection();
-                }
-            });
+            //if (mReminderLayout != null) return;
             //Setup Gesture action when reminder layout inflated
-            setupReminderEvent();
             setupContentView();
-
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT);
-            //TOAST: ability to view notification
-            //lp.type = WindowManager.LayoutParams.TYPE_TOAST;
-            //SYSTEM_ERROR: doesn't ability to view notification
-            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            lp.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-            //Setup in/out animation for reminder
-            lp.windowAnimations = android.R.style.Animation_Toast;
-            mWindowManager.addView(mReminderLayout, lp);
-            OALShareReferenceHepler sr = new OALShareReferenceHepler(mContext);
-            int dismissTime = sr.getDismissTime();
+            mWindowManager.addView(mReminderLayout, mLayoutParam);
+            int dismissTime = mSharedRef.getDismissTime();
             if (dismissTime > 0) {
-                mServiceHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismissReminderLayout();
-                    }
-                }, dismissTime);
+                Log.d(TAG, ">>>onReceive sendMessage to dismiss reminder after " + dismissTime);
+                mServiceHandler.sendEmptyMessageDelayed(Define.HANDLER_WHAT_AUTO_DISMISS,dismissTime);
             }
+
         } else if (Define.VOCA_ACTION_CLOSE_VOCA_REMINDER.equals(action) || Intent.ACTION_SCREEN_OFF.equals(action)) {
             try {
                 dismissReminderLayout();
@@ -112,9 +127,12 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
     }
 
     private void dismissReminderLayout() {
-        if (mReminderLayout == null) return;
-        mWindowManager.removeViewImmediate(mReminderLayout);
-        mReminderLayout = null;
+        try {
+            mWindowManager.removeViewImmediate(mReminderLayout);
+            mWindowManager.addView(null, null);
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "View isn't attached to window manager");
+        }
     }
     private void initPhoneStateChanged() {
         //Get phone state
@@ -126,52 +144,26 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
     private void initGestureDetection() {
         //Detect double and fling
         if (mDoubletabDetector == null) {
+            mOpenPanelListener = new OpenPanelListener(mReminderLayout);
             mDoubletabDetector = new OALGestureListener(mContext, mReminderLayout.getMeasuredWidth(), mReminderLayout.getMeasuredHeight());
-            mDoubletabDetector.setOnOpenSettingPanelListener(this);
+            mDoubletabDetector.setOnOpenSettingPanelListener(mOpenPanelListener);
         }
         if (mGestureDetector == null) {
             mGestureDetector = new GestureDetector(mContext, mDoubletabDetector);
         }
+
     }
 
     private void setupContentView() {
         if (mReminderLayout == null) return;
-        OALShareReferenceHepler ref = new OALShareReferenceHepler(mContext);
-        mReminderLayout.setBackgroundColor(ref.getThemeColor());
-        TextView tvWord = (TextView) mReminderLayout.findViewById(R.id.tv_vocabulary);
-        TextView tvPronun = (TextView) mReminderLayout.findViewById(R.id.tv_pronunciation);
-        final TextView tvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
-        ToggleButton toggleButton = (ToggleButton) mReminderLayout.findViewById(R.id.toggle);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    tvSentence.setAlpha(0);
-                    tvSentence.setVisibility(View.VISIBLE);
-                    tvSentence.animate().alpha(1).setDuration(500).start();
-                } else {
-                    tvSentence.animate().alpha(0).setDuration(500).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvSentence.setVisibility(View.INVISIBLE);
-                        }
-                    }).start();
+        mReminderLayout.setBackgroundColor(mSharedRef.getThemeColor());
 
-                }
-            }
-        });
-        OALBLL bl = new OALBLL(mContext);
-        Word w = bl.randomWord();
+        ProviderWrapper providerWrapper = new ProviderWrapper(mContext);
+        Word w = providerWrapper.getRandomWord();
         if (w != null) {
-            AssetManager assetManager = mContext.getApplicationContext().getAssets();
-            Typeface typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
-            tvWord.setTypeface(typeface);
-            tvWord.setText(w.getWordName());
-
-            typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
-            tvPronun.setText(w.getPronunciation());
-            tvSentence.setTypeface(typeface);
-            tvSentence.setText(w.getDefault_Meaning());
+            mTvWord.setText(w.getWordName());
+            mTvPronun.setText(w.getPronunciation());
+            mTvSentence.setText(w.getDefault_Meaning());
         } else {
             Log.d(TAG, "Dictionary is empty");
         }
@@ -179,24 +171,20 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
 
     private void setupReminderEvent() {
         if (mReminderLayout == null) return;
+
         mReminderLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, ">>>onTouch");
                 if (mReminderLayout != null) {
-                    final View v = mReminderLayout.findViewById(R.id.panel_setting);
-                    v.animate().alpha(0).setDuration(2000).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            v.setVisibility(View.INVISIBLE);
-                        }
-                    }).start();
+                    View v = mReminderLayout.findViewById(R.id.panel_setting);
+                    mShowHideRunnable.setView(v);
+                    v.animate().alpha(0).setDuration(2000).withEndAction(mShowHideRunnable).start();
                 }
                 return mGestureDetector.onTouchEvent(motionEvent);
             }
         });
-        ImageView btn = (ImageView) mReminderLayout.findViewById(R.id.btn_setting);
-        btn.setOnClickListener(new View.OnClickListener() {
+        mButtonOpenApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, ">>>BTN_SETTING>>>onClick");
@@ -212,14 +200,24 @@ public class OALBroadcastReceiver extends BroadcastReceiver implements OALGestur
                 mContext.startActivity(mainScreen);
             }
         });
-    }
 
-    @Override
-    public void onOpenSettingPanel() {
-        View v = mReminderLayout.findViewById(R.id.panel_setting);
-        v.setAlpha(0);
-        v.setVisibility(View.VISIBLE);
-        v.animate().alpha(1).setDuration(1000).start();
+        mToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    mTvSentence.setAlpha(0);
+                    mTvSentence.setVisibility(View.VISIBLE);
+                    mTvSentence.animate().alpha(1).setDuration(500).start();
+                } else {
+                    mShowHideRunnable.setView(mTvSentence);
+                    mTvSentence.animate().alpha(0).setDuration(500).withEndAction(mShowHideRunnable).start();
+
+                }
+            }
+        });
+        mServiceHandler = new ReceiverHandler(mContext);
+        mSharedRef = new OALShareReferenceHepler(mContext);
+        mShowHideRunnable = new ShowHideViewRunnable();
     }
 
 }

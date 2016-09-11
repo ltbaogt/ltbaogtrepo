@@ -21,12 +21,12 @@ import com.ltbaogt.vocareminder.vocareminder.receiver.OALBroadcastReceiver;
 public class OALService extends Service {
 
     private static final String TAG = Define.TAG + "OALService";
-    private static OALService mInstance = null;
-    OALBroadcastReceiver mReceiver = new OALBroadcastReceiver();
+    //private static OALService mInstance = null;
+    OALBroadcastReceiver mReceiver;
 
-    public static boolean isStarted() {
-        return  (mInstance != null);
-    }
+//    public static boolean isStarted() {
+//        return  (mInstance != null);
+//    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,7 +37,8 @@ public class OALService extends Service {
     public void onCreate() {
         Log.d(TAG, ">>>onCreate START");
         super.onCreate();
-        mInstance = this;
+//        mInstance = this;
+        mReceiver = new OALBroadcastReceiver(getApplicationContext());
         IntentFilter filter = new IntentFilter();
         filter.addAction(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
         filter.addAction(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
@@ -57,7 +58,7 @@ public class OALService extends Service {
     public void onDestroy() {
         Log.d(TAG, ">>>onDestroy START");
         super.onDestroy();
-        mInstance = null;
+//        mInstance = null;
         unregisterReceiver(mReceiver);
         Log.d(TAG, ">>>onDestroy END");
     }

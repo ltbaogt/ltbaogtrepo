@@ -1,9 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.database.sqlite.SQLiteConstraintException;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
 
 import java.io.Serializable;
 
@@ -11,6 +16,7 @@ import java.io.Serializable;
  * Created by My PC on 05/08/2016.
  */
 
+@SuppressLint("ParcelCreator")
 public class Word implements Parcelable {
 
     private int mWordId;
@@ -72,18 +78,18 @@ public class Word implements Parcelable {
         mDeleted = in.readByte() != 0;
     }
 
-    //TODO: What is it?
-    public static final Creator<Word> CREATOR = new Creator<Word>() {
-        @Override
-        public Word createFromParcel(Parcel in) {
-            return new Word(in);
-        }
-
-        @Override
-        public Word[] newArray(int size) {
-            return new Word[size];
-        }
-    };
+//    //TODO: What is it?
+//    public static final Creator<Word> CREATOR = new Creator<Word>() {
+//        @Override
+//        public Word createFromParcel(Parcel in) {
+//            return new Word(in);
+//        }
+//
+//        @Override
+//        public Word[] newArray(int size) {
+//            return new Word[size];
+//        }
+//    };
 
     public void setWordId(int id) {
         if (mWordId == -1) {
@@ -204,4 +210,5 @@ public class Word implements Parcelable {
         dest.writeInt(getGroup_ID());
         dest.writeInt(isDeleted() ? 1 : 0);
     }
+
 }
