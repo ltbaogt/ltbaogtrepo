@@ -1,6 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -17,14 +15,10 @@ import android.widget.LinearLayout;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
-import com.ltbaogt.vocareminder.vocareminder.adapter.TagAdapter;
-import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
-import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OALSimpleOnGestureListener;
-import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 
 import java.util.ArrayList;

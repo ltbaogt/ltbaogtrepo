@@ -2,7 +2,6 @@ package com.ltbaogt.vocareminder.vocareminder.database.bl;
 
 import android.content.Context;
 
-import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 
@@ -63,8 +62,5 @@ public class OALBLL {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
         return dbHelp.randomWord();
     }
-    public ArrayList<Tag> getTagList () {
-        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
-        return dbHelp.getTagList();
-    }
+
 }

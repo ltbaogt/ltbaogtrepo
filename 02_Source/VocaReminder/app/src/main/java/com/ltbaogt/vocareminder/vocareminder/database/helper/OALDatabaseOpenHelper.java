@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
-import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 
@@ -309,22 +308,6 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
         }
         return cs;
-    }
-    public ArrayList<Tag> getTagList() {
-        ArrayList<Tag> list = new ArrayList<>();
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_TAG, null);
-        if (cs.moveToFirst()) {
-            do {
-                Tag tag = new Tag();
-                tag.setTagID(cs.getInt(COL_TAG_ID_INDEX));
-                tag.setTagName(cs.getString(COL_TAG_NAME_INDEX));
-                list.add(tag);
-            } while (cs.moveToNext());
-        }
-        db.close();
-        cs.close();
-        return list;
     }
 
     public Cursor getSettingValueForKey(String key) {
