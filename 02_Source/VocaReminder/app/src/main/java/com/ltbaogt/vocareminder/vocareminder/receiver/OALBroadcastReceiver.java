@@ -28,7 +28,6 @@ import com.ltbaogt.vocareminder.vocareminder.listener.OALGestureListener;
 import com.ltbaogt.vocareminder.vocareminder.listener.OpenPanelListener;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.runnable.ShowHideViewRunnable;
-import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 /**
  * Created by My PC on 04/08/2016.

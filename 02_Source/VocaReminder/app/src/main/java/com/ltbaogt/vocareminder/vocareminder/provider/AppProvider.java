@@ -13,7 +13,6 @@ import android.util.Log;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 /**
  * Created by MyPC on 10/09/2016.

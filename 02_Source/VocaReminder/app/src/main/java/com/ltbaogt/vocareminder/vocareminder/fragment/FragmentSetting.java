@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
-import com.ltbaogt.vocareminder.vocareminder.service.OALService;
-import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 /**
  * Created by My PC on 09/08/2016.
