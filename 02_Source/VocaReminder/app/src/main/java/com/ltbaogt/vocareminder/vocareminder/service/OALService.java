@@ -58,14 +58,15 @@ public class OALService extends Service {
     public void onDestroy() {
         Log.d(TAG, ">>>onDestroy START");
         super.onDestroy();
-//        mInstance = null;
         unregisterReceiver(mReceiver);
+        Intent i = new Intent(this, this.getClass());
+        getApplicationContext().startService(i);
         Log.d(TAG, ">>>onDestroy END");
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        restartService();
+        //restartService();
         super.onTaskRemoved(rootIntent);
     }
 

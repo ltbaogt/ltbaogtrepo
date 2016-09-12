@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
 import com.ltbaogt.vocareminder.vocareminder.bean.Tag;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
@@ -324,5 +325,20 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         db.close();
         cs.close();
         return list;
+    }
+
+    public Cursor getSettingValueForKey(String key) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cs = db.rawQuery(Setting.sqlSelectForGetValueForKey(key), new String[]{key});
+        cs.moveToFirst();
+        return cs;
+    }
+
+    public int setSettingValueForKey(String key, String value) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(Setting.COL_VALUE, value);
+        int ret = db.update(Setting.TABLE_NAME, cv,Setting.COL_NAME + " = ?", new String[]{key});
+        return ret;
     }
 }

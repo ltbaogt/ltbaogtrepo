@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
@@ -35,16 +36,22 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_main, container, false);
         findView(v);
-//        mSwitchServiceRunning.setChecked(OALService.isStarted());
 
-        OALShareReferenceHepler sr = new OALShareReferenceHepler(getContext());
-        int dismissTime = sr.getDismissTime() / 1000;
-        mSeekbarDismissTime.setOnSeekBarChangeListener(this);
-        mSeekbarDismissTime.setProgress(dismissTime);
-        mTvDismissTime.setText(dismissTime + "s");
+        if(getMainActivity() != null) {
+            int dismissTime = getMainActivity().getProviderWrapper().getDismissTime() / 1000;
+            mSeekbarDismissTime.setOnSeekBarChangeListener(this);
+            mSeekbarDismissTime.setProgress(dismissTime);
+            mTvDismissTime.setText(dismissTime + "s");
+        }
         return v;
     }
 
+    private MainActivity getMainActivity() {
+        if (getActivity() instanceof MainActivity) {
+            return (MainActivity)getActivity();
+        }
+        return null;
+    }
     private void findView(View v) {
         mTvDismissTime = (TextView) v.findViewById(R.id.setting_dismiss_time_value);
         mSeekbarDismissTime = (SeekBar) v.findViewById(R.id.setting_dismiss_time_sb);
@@ -67,8 +74,9 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mTvDismissTime.setText(mCurrentDismissTime + "s");
-        OALShareReferenceHepler sr = new OALShareReferenceHepler(getContext());
-        sr.setDismissTime(mCurrentDismissTime * 1000);
+        if (getMainActivity() != null) {
+            getMainActivity().getProviderWrapper().updateDismissTime(mCurrentDismissTime * 1000);
+        }
     }
 
 }

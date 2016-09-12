@@ -50,8 +50,6 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     TelephonyManager mTelephonyManager;
     WindowManager.LayoutParams mLayoutParam;
 
-    private OALShareReferenceHepler mSharedRef;
-
     private ReceiverHandler mServiceHandler;
 
     private OpenPanelListener mOpenPanelListener;
@@ -109,8 +107,14 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             //if (mReminderLayout != null) return;
             //Setup Gesture action when reminder layout inflated
             setupContentView();
-            mWindowManager.addView(mReminderLayout, mLayoutParam);
-            int dismissTime = mSharedRef.getDismissTime();
+            //Add try/catch in order to prevent user add  reminder many times
+            try {
+                mWindowManager.addView(mReminderLayout, mLayoutParam);
+            } catch (IllegalStateException e) {
+                Log.d(TAG, ">>>onReceive No need add new Reminder");
+            }
+            ProviderWrapper providerWrapper = new ProviderWrapper(mContext);
+            int dismissTime = providerWrapper.getDismissTime();
             if (dismissTime > 0) {
                 Log.d(TAG, ">>>onReceive sendMessage to dismiss reminder after " + dismissTime);
                 mServiceHandler.sendEmptyMessageDelayed(Define.HANDLER_WHAT_AUTO_DISMISS,dismissTime);
@@ -156,9 +160,9 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
     private void setupContentView() {
         if (mReminderLayout == null) return;
-        mReminderLayout.setBackgroundColor(mSharedRef.getThemeColor());
-
         ProviderWrapper providerWrapper = new ProviderWrapper(mContext);
+
+        mReminderLayout.setBackgroundColor(providerWrapper.getColorTheme());
         Word w = providerWrapper.getRandomWord();
         if (w != null) {
             mTvWord.setText(w.getWordName());
@@ -216,7 +220,6 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             }
         });
         mServiceHandler = new ReceiverHandler(mContext);
-        mSharedRef = new OALShareReferenceHepler(mContext);
         mShowHideRunnable = new ShowHideViewRunnable();
     }
 

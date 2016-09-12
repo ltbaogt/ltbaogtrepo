@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +29,8 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
-import com.ltbaogt.vocareminder.vocareminder.listener.OALSimpleOnGestureListener;
+import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
-import com.ltbaogt.vocareminder.vocareminder.shareref.OALShareReferenceHepler;
 
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
@@ -44,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private FragmentListWord mFragmentListWord;
     private FragmentSetting mFragmentSetting;
+
+    private ProviderWrapper mProviderWrapper;
 
 
     @Override
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         mFragmentListWord = new FragmentListWord();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentListWord, MAIN_FRAGMENT_TAG).commit();
         setupDrawer();
+        mProviderWrapper = new ProviderWrapper(getApplicationContext());
 
     }
 
@@ -209,8 +210,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     public void chooseColor(View v) {
 
-        OALShareReferenceHepler sp = new OALShareReferenceHepler(MainActivity.this);
-        int currentColor = sp.getThemeColor() == -1 ? ContextCompat.getColor(this, R.color.amber) : sp.getThemeColor();
+        int currentColor = mProviderWrapper.getColorTheme() == -1 ? ContextCompat.getColor(this, R.color.amber) : mProviderWrapper.getColorTheme();
 
         int[] colors = new int[]{ContextCompat.getColor(this, R.color.amber)
                 , ContextCompat.getColor(this, R.color.deep_orange)
@@ -224,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int color) {
-                OALShareReferenceHepler sp = new OALShareReferenceHepler(MainActivity.this);
-                sp.setThemeColor(color);
+                mProviderWrapper.updateColorTheme(color);
+
             }
         });
     }
@@ -276,4 +276,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         dialog.show();
     }
 
+    public ProviderWrapper getProviderWrapper() {
+        return mProviderWrapper;
+    }
 }

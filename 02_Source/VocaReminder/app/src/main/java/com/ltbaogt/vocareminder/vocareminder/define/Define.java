@@ -16,6 +16,8 @@ public class Define {
     public static final String POPUP_BUTTON_02 = "popup_button_save";
     public static final int HANDLER_WHAT_AUTO_DISMISS = 0;
     public static final String DISMISS_TIME = "dismiss_time";
+    public static final String THEME_COLOR = "color_theme";
+    public static final String SERVICE_STATUS = "service_status";
 
     public static final int POPUP_NEW_WORD = 0;
     public static final int POPUP_EIDT_WORD = 1;

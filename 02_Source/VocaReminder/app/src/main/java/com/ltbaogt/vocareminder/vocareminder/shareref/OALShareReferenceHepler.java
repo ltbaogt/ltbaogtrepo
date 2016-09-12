@@ -17,15 +17,16 @@ public class OALShareReferenceHepler {
     private Context mContext;
     public SharedPreferences mSharedPreferences;
     private static final String MYPREFERENCES = "MyPrefs";
-    private static final String THEME_COLOR = "color_theme";
 
     public OALShareReferenceHepler(Context ctx) {
-        if (mContext == null) {
-            mContext = ctx;
+        Log.d(TAG, ">>>OALShareReferenceHepler create new ShareReference");
+        try {
+            throw new NullPointerException();
+        } catch (NullPointerException e) {
+            Log.e(TAG, Log.getStackTraceString(e));
         }
-        if (mSharedPreferences == null) {
-            mSharedPreferences = mContext.getSharedPreferences(MYPREFERENCES, Context.MODE_PRIVATE);
-        }
+        mContext = ctx;
+        mSharedPreferences = mContext.getSharedPreferences(MYPREFERENCES, Context.MODE_PRIVATE);
     }
 
     private SharedPreferences.Editor getEditor() {
@@ -34,17 +35,21 @@ public class OALShareReferenceHepler {
     }
 
     private void putInt(String key, int value) {
+        Log.d(TAG, ">>>putInt START, value= " + value);
         SharedPreferences.Editor editor = getEditor();
         editor.putInt(key, value);
         editor.commit();
+        Log.d(TAG, ">>>putInt END");
     }
 
     private int getInt(String key, int value) {
-        return mSharedPreferences.getInt(key, value);
+        int ret = mSharedPreferences.getInt(key, value);
+        Log.d(TAG, ">>>getInt START, ret= " + ret);
+        return ret;
     }
 
     public void setThemeColor(int color) {
-        putInt(THEME_COLOR, color);
+        putInt(Define.THEME_COLOR, color);
     }
 
     //Get color of Reminder layout
@@ -52,7 +57,7 @@ public class OALShareReferenceHepler {
         int ret = Color.parseColor(Define.DEFAULT_THEME_COLOR);
         try {
             //If first start we will use default theme color
-            ret = getInt(THEME_COLOR, ret);
+            ret = getInt(Define.THEME_COLOR, ret);
         } catch(NullPointerException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
