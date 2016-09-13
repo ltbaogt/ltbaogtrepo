@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.receiver.OALBroadcastReceiver;
 
 /**
@@ -59,31 +60,17 @@ public class OALService extends Service {
         Log.d(TAG, ">>>onDestroy START");
         super.onDestroy();
         unregisterReceiver(mReceiver);
-        Intent i = new Intent(this, this.getClass());
-        getApplicationContext().startService(i);
+        ProviderWrapper wrapper = new ProviderWrapper(getApplicationContext());
+        if (wrapper.getServiceRunningStatus() == 1) {
+            Intent i = new Intent(this, this.getClass());
+            getApplicationContext().startService(i);
+        }
         Log.d(TAG, ">>>onDestroy END");
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        //restartService();
         super.onTaskRemoved(rootIntent);
     }
 
-    /**
-     * Restart service after user clear recent application in task manager
-     */
-    private void restartService() {
-        Log.d(TAG, ">>>restartService START");
-        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
-        restartServiceIntent.setPackage(getPackageName());
-
-        PendingIntent restartServicePedingIntent = PendingIntent
-                .getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
-
-        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + 1000, restartServicePedingIntent);
-        Log.d(TAG, ">>>restartService END");
-    }
 }

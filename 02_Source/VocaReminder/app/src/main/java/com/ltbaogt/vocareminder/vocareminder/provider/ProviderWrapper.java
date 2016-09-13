@@ -94,4 +94,12 @@ public class ProviderWrapper {
         setIntValueForKey(Define.DISMISS_TIME, time);
     }
 
+    public int getServiceRunningStatus(){
+        return getIntValueForKey(Define.SERVICE_STATUS);
+    }
+
+    public void setServiceRunningStatus(int runningState) {
+        setIntValueForKey(Define.SERVICE_STATUS, runningState);
+    }
+
 }

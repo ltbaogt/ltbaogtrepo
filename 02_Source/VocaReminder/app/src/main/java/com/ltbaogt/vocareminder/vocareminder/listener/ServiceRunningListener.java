@@ -28,9 +28,7 @@ public class ServiceRunningListener implements CompoundButton.OnCheckedChangeLis
         if (mActivity != null && mActivity instanceof MainActivity) {
             MainActivity activity = ((MainActivity) mActivity);
             if (b) {
-//                if (!OALService.isStarted()) {
-                    activity.startVRService();
-//                }
+                activity.startVRService();
             } else {
                 activity.stopVRService();
             }

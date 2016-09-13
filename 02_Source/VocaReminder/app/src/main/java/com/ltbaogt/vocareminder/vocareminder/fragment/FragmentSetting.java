@@ -40,6 +40,8 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mSeekbarDismissTime.setOnSeekBarChangeListener(this);
             mSeekbarDismissTime.setProgress(dismissTime);
             mTvDismissTime.setText(dismissTime + "s");
+            int serviceStatus = getMainActivity().getProviderWrapper().getServiceRunningStatus();
+            mSwitchServiceRunning.setChecked((serviceStatus == 1 ? true:false));
         }
         return v;
     }
