@@ -24,7 +24,6 @@ public class AppProvider extends ContentProvider {
     private static final int WORD_ID = 2;
     private static final int SETTING_LIST = 3;
     private static final UriMatcher URI_MATCHER;
-    private OALDatabaseOpenHelper mDbHepler;
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -36,9 +35,6 @@ public class AppProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.d(TAG, ">>>onCreate START");
-        mDbHepler = new OALDatabaseOpenHelper(getContext());
-        Log.d(TAG, ">>>onCreate END");
         return true;
     }
 
@@ -46,15 +42,17 @@ public class AppProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] strings, String selection, String[] strings1, String s1) {
         Cursor c = null;
+        OALDatabaseOpenHelper dbHepler = new OALDatabaseOpenHelper(getContext());
         if (URI_MATCHER.match(uri) == WORD_LIST) {
-            c = mDbHepler.getAllWordsOrderByNameInCursor();
+            c = dbHepler.getAllWordsOrderByNameInCursor();
         } else if (URI_MATCHER.match(uri) == WORD_ID) {
-            c = mDbHepler.randomWordInCursor();
+            c = dbHepler.randomWordInCursor();
         } else if (URI_MATCHER.match(uri) == SETTING_LIST) {
             Log.d(TAG, ">>>query SETTING_LIST");
-            c = mDbHepler.getSettingValueForKey(selection);
+            c = dbHepler.getSettingValueForKey(selection);
         }
         c.setNotificationUri(getContext().getContentResolver(), uri);
+        dbHepler.close();
         return c;
     }
 
@@ -85,12 +83,14 @@ public class AppProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues contentValues, String key, String[] strings) {
+        OALDatabaseOpenHelper dbHepler = new OALDatabaseOpenHelper(getContext());
         if (URI_MATCHER.match(uri) == SETTING_LIST) {
             Log.d(TAG, ">>>update START");
             int color = contentValues.getAsInteger(key);
-            mDbHepler.setSettingValueForKey(key, String.valueOf(color));
+            dbHepler.setSettingValueForKey(key, String.valueOf(color));
             Log.d(TAG, ">>>update END");
         }
+        dbHepler.close();
         return 0;
     }
 

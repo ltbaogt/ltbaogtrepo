@@ -32,6 +32,7 @@ public class ReceiverHandler extends Handler {
         if (mContext != null) {
             Intent intent = new Intent(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
             mContext.sendBroadcast(intent);
+            Log.d("ReceiverHandler", ">>>dismissReminder");
         }
     }
 }
