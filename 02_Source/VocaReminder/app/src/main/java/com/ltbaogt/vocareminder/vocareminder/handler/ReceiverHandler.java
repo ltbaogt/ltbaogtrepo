@@ -16,7 +16,7 @@ public class ReceiverHandler extends Handler {
     Context mContext;
     public ReceiverHandler(Context ctx) {
         Log.d(Define.TAG, ">>>ReceiverHandler init");
-        mContext = ctx;
+        mContext = ctx.getApplicationContext();
     }
     @Override
     public void handleMessage(Message msg) {

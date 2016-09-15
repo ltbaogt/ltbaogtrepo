@@ -22,12 +22,8 @@ import com.ltbaogt.vocareminder.vocareminder.receiver.OALBroadcastReceiver;
 public class OALService extends Service {
 
     private static final String TAG = Define.TAG + "OALService";
-    //private static OALService mInstance = null;
     OALBroadcastReceiver mReceiver;
 
-//    public static boolean isStarted() {
-//        return  (mInstance != null);
-//    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,17 +56,12 @@ public class OALService extends Service {
         Log.d(TAG, ">>>onDestroy START");
         super.onDestroy();
         unregisterReceiver(mReceiver);
+        mReceiver = null;
         ProviderWrapper wrapper = new ProviderWrapper(getApplicationContext());
         if (wrapper.getServiceRunningStatus() == 1) {
-            Intent i = new Intent(this, this.getClass());
+            Intent i = new Intent(getApplicationContext(), this.getClass());
             getApplicationContext().startService(i);
         }
         Log.d(TAG, ">>>onDestroy END");
     }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-    }
-
 }

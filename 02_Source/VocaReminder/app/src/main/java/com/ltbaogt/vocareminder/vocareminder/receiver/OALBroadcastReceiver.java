@@ -30,6 +30,8 @@ import com.ltbaogt.vocareminder.vocareminder.listener.OpenPanelListener;
 import com.ltbaogt.vocareminder.vocareminder.listener.ShowMeaningCheckChanged;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by My PC on 04/08/2016.
  */
@@ -37,7 +39,7 @@ import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 public class OALBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = Define.TAG + "OALBroadcastReceiver";
-    private View mReminderLayout;
+    private WeakReference<View> mReminderLayout;
 //    private ToggleButton mToggleButton;
 //    private ImageView mButtonOpenApp;
 //    private TextView mTvWord;
@@ -96,11 +98,12 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     private void dismissReminderLayout() {
         Log.d(TAG, ">>>dismissReminderLayout");
         try {
-            getWindowManager().removeViewImmediate(mReminderLayout);
-            mReminderLayout.setOnTouchListener(null);
-            mReminderLayout = null;
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
+            if (getWeakPreferenceMainLayout() != null) {
+                getWindowManager().removeViewImmediate(getWeakPreferenceMainLayout());
+                getWeakPreferenceMainLayout().setOnTouchListener(null);
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler = null;
+            }
         } catch (IllegalArgumentException e) {
 
         }
@@ -127,12 +130,12 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void setupContentView() {
-        mReminderLayout = getInflaterService().inflate(R.layout.main_reminder_layout, null, false);
-        TextView mTvWord = (TextView) mReminderLayout.findViewById(R.id.tv_vocabulary);
-        TextView mTvPronun = (TextView) mReminderLayout.findViewById(R.id.tv_pronunciation);
-        TextView mTvSentence = (TextView) mReminderLayout.findViewById(R.id.tv_sentence);
-        ToggleButton mToggleButton = (ToggleButton) mReminderLayout.findViewById(R.id.toggle);
-        ImageView mButtonOpenApp = (ImageView) mReminderLayout.findViewById(R.id.btn_setting);
+        mReminderLayout = new WeakReference<>(getInflaterService().inflate(R.layout.main_reminder_layout, null, false));
+        TextView mTvWord = (TextView) getWeakPreferenceMainLayout().findViewById(R.id.tv_vocabulary);
+        TextView mTvPronun = (TextView) getWeakPreferenceMainLayout().findViewById(R.id.tv_pronunciation);
+        TextView mTvSentence = (TextView) getWeakPreferenceMainLayout().findViewById(R.id.tv_sentence);
+        ToggleButton mToggleButton = (ToggleButton) getWeakPreferenceMainLayout().findViewById(R.id.toggle);
+        ImageView mButtonOpenApp = (ImageView) getWeakPreferenceMainLayout().findViewById(R.id.btn_setting);
 
         //Start app
         mButtonOpenApp.setOnClickListener(new OnClickStartApp());
@@ -162,7 +165,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
         //Set color
         ProviderWrapper providerWrapper = new ProviderWrapper(mContext.getApplicationContext());
-        mReminderLayout.setBackgroundColor(providerWrapper.getColorTheme());
+        getWeakPreferenceMainLayout().setBackgroundColor(providerWrapper.getColorTheme());
         //Random word
         Word w = providerWrapper.getRandomWord();
         if (w != null) {
@@ -172,12 +175,19 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
         } else {
             Log.d(TAG, "Dictionary is empty");
         }
-        getWindowManager().addView(mReminderLayout, layoutParam);
+        getWindowManager().addView(getWeakPreferenceMainLayout(), layoutParam);
     }
 
     private void setupReminderEvent() {
-        mReminderLayout.setOnTouchListener(new OnTouchDismissListener());
+        getWeakPreferenceMainLayout().setOnTouchListener(new OnTouchDismissListener());
 
     }
 
+    private View getWeakPreferenceMainLayout() {
+        if (mReminderLayout == null || mReminderLayout.get() == null) {
+            return null;
+        } else {
+            return mReminderLayout.get();
+        }
+    }
 }
