@@ -40,18 +40,8 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = Define.TAG + "OALBroadcastReceiver";
     private WeakReference<View> mReminderLayout;
-//    private ToggleButton mToggleButton;
-//    private ImageView mButtonOpenApp;
-//    private TextView mTvWord;
-//    private TextView mTvPronun;
-//    private TextView mTvSentence;
-//    WindowManager mWindowManager;
-    Context mContext;
-//    OALGestureListener mDoubletabDetector;
-//    GestureDetector mGestureDetector;
-//    private OpenPanelListener mOpenPanelListener;
 
-//    LayoutInflater mLayoutInflater;
+    Context mContext;
     private Typeface mBoldtypeface;
     private Typeface mRegulartypeface;
     private  ReceiverHandler mHandler;
@@ -101,6 +91,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             if (getWeakPreferenceMainLayout() != null) {
                 getWindowManager().removeViewImmediate(getWeakPreferenceMainLayout());
                 getWeakPreferenceMainLayout().setOnTouchListener(null);
+                mReminderLayout = null;
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler = null;
             }

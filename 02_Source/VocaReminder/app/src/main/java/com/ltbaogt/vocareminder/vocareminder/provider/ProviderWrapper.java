@@ -13,6 +13,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**

@@ -10,6 +10,8 @@ import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by My PC on 21/08/2016.
  */
@@ -17,16 +19,16 @@ import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 public class ServiceRunningListener implements CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = Define.TAG + "ServiceRunningListener";
-    private Activity mActivity;
+    private WeakReference<Activity> mActivity;
 
     public ServiceRunningListener(Activity a) {
-        mActivity = a;
+        mActivity = new WeakReference<>(a);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (mActivity != null && mActivity instanceof MainActivity) {
-            MainActivity activity = ((MainActivity) mActivity);
+        if (mActivity != null && mActivity.get() != null && mActivity.get() instanceof MainActivity) {
+            MainActivity activity = ((MainActivity) mActivity.get());
             if (b) {
                 activity.startVRService();
             } else {
