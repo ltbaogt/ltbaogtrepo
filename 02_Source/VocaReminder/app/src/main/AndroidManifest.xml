@@ -22,7 +22,6 @@
         <service android:name=".service.OALService"
             android:process=":vreminder"/>
         <provider
-            android:process=":vreminderprovider"
             android:name=".provider.AppProvider"
             android:authorities="com.ltbaogt.vocareminder.app"
             android:exported="true"
