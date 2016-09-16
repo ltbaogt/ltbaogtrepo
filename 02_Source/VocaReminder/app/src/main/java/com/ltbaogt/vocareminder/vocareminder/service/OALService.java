@@ -1,15 +1,15 @@
 package com.ltbaogt.vocareminder.vocareminder.service;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
@@ -41,7 +41,8 @@ public class OALService extends Service {
         filter.addAction(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(mReceiver,filter);
+        registerReceiver(mReceiver, filter);
+        initScreenSizeIfNeed();
         Log.d(TAG, ">>>onCreate END");
     }
 
@@ -63,5 +64,20 @@ public class OALService extends Service {
             getApplicationContext().startService(i);
         }
         Log.d(TAG, ">>>onDestroy END");
+    }
+
+    private void initScreenSizeIfNeed() {
+        SharedPreferences shared = getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
+        int w = shared.getInt(Define.REF_SCREEN_SIZE_WIDTH, -1);
+        int h = shared.getInt(Define.REF_SCREEN_SIZE_HEIGHT, -1);
+        if (w == -1 || h == -1) {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((WindowManager)getApplicationContext().getSystemService(Service.WINDOW_SERVICE))
+                    .getDefaultDisplay().getMetrics(displayMetrics);
+            shared.edit().putInt(Define.REF_SCREEN_SIZE_WIDTH, displayMetrics.widthPixels).commit();
+            shared.edit().putInt(Define.REF_SCREEN_SIZE_HEIGHT, displayMetrics.heightPixels).commit();
+            Log.d("TAG", ">>>initScreenSizeIfNeed screen size= (" + displayMetrics.widthPixels + "x" + displayMetrics.heightPixels);
+        }
+
     }
 }

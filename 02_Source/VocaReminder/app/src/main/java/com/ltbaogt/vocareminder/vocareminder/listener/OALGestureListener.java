@@ -2,6 +2,7 @@ package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -21,10 +22,12 @@ public class OALGestureListener extends SimpleOnGestureListener {
     private OALGestureListener() {
 
     }
-    public OALGestureListener(Context ctx, int w, int h) {
+    public OALGestureListener(Context ctx) {
         mContext = ctx;
-        mScreenWidth = w;
-        mScreenHeight = h;
+        SharedPreferences shared = mContext.getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
+        mScreenWidth = shared.getInt(Define.REF_SCREEN_SIZE_WIDTH,0);
+        mScreenHeight = shared.getInt(Define.REF_SCREEN_SIZE_HEIGHT,0);
+        Log.d("TAG", ">>>OALGestureListener screen size= (" + mScreenWidth + "x" + mScreenHeight);
     }
 
     public void setOnOpenSettingPanelListener(OnOpenSettingPanel listener) {

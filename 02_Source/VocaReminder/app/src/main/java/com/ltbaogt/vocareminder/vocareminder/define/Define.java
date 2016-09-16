@@ -24,4 +24,7 @@ public class Define {
 
     public static final String TYPE_FACE_BOLD = "fonts/tondo_bold.ttf";
     public static final String TYPE_FACE_REGILAR = "fonts/tondo_regular.ttf";
+    public static final String REF_SCREEN_SIZE_WIDTH = "screen_size_width";
+    public static final String REF_SCREEN_SIZE_HEIGHT = "screen_size_height";
+    public static final String REF_KEY = "service_sharedreferenced";
 }

@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -92,8 +91,10 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
                 getWindowManager().removeViewImmediate(getWeakPreferenceMainLayout());
                 getWeakPreferenceMainLayout().setOnTouchListener(null);
                 mReminderLayout = null;
-                mHandler.removeCallbacksAndMessages(null);
-                mHandler = null;
+                if (mHandler != null) {
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler = null;
+                }
             }
         } catch (IllegalArgumentException e) {
 
@@ -111,14 +112,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     private LayoutInflater getInflaterService() {
         return ((LayoutInflater) mContext.getApplicationContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE));
     }
-    private void initGestureDetection() {
-        //Detect double and fling
-//        mOpenPanelListener = new OpenPanelListener(mReminderLayout);
-//        mDoubletabDetector = new OALGestureListener(mContext.getApplicationContext(), mReminderLayout.getMeasuredWidth(), mReminderLayout.getMeasuredHeight());
-//        mDoubletabDetector.setOnOpenSettingPanelListener(mOpenPanelListener);
-//        mGestureDetector = new GestureDetector(mContext.getApplicationContext(), mDoubletabDetector);
 
-    }
 
     private void setupContentView() {
         mReminderLayout = new WeakReference<>(getInflaterService().inflate(R.layout.main_reminder_layout, null, false));
@@ -170,7 +164,16 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void setupReminderEvent() {
-        getWeakPreferenceMainLayout().setOnTouchListener(new OnTouchDismissListener());
+        if (getWeakPreferenceMainLayout() != null) {
+            OpenPanelListener openPanelListener = new OpenPanelListener(mReminderLayout.get());
+            OALGestureListener doubletabDetector = new OALGestureListener(mReminderLayout.get().getContext());
+            doubletabDetector.setOnOpenSettingPanelListener(openPanelListener);
+            GestureDetector g = new GestureDetector(mReminderLayout.get().getContext(), doubletabDetector);
+            getWeakPreferenceMainLayout().setOnTouchListener(new OnTouchDismissListener(g));
+        } else {
+            Log.d(TAG, ">>>setupReminderEvent Cannot set OnTouchDismissListener event");
+        }
+
 
     }
 
