@@ -91,7 +91,7 @@
                     android:layout_below="@id/dismiss_time_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AAAAAAAAAAAAAAAAAAAAAAAAA"
+                    android:text="Change theme color of reminder background"
                     android:textSize="12sp" />
             </RelativeLayout>
 
@@ -112,7 +112,49 @@
                     android:layout_below="@id/change_color_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AAAAAAAAAAAAAAAAAAAAAAAAA"
+                    android:text="Clean up your vocabularies, all data will be eased"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:onClick="backupVocabulary">
+
+                <TextView
+                    android:id="@+id/backup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Backup your vocabularies" />
+
+                <TextView
+                    android:layout_below="@id/backup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Backup your vocabularies"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/setting_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:onClick="restoreVocabulary">
+
+                <TextView
+                    android:id="@+id/restore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Restore your vocabularies" />
+
+                <TextView
+                    android:layout_below="@id/restore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Restore your vocabularies"
                     android:textSize="12sp" />
             </RelativeLayout>
         </LinearLayout>

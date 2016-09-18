@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +22,9 @@ import android.view.View;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.google.gson.Gson;
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.bean.ConvertWord;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
@@ -31,6 +34,14 @@ import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
@@ -197,7 +208,45 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
         });
     }
+    public void backupVocabulary(View v) {
+        Log.d(TAG, ">>>backupVocabulary START");
+        OALBLL bl = new OALBLL(getApplicationContext());
+        ArrayList<ConvertWord> words = convertToAnonymousWord(bl.getAllWordsOrderByNameInList());
+        Gson gsonParser = new Gson();
+        String jsonWord = gsonParser.toJson(words);
+        try {
+            if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                Log.d(TAG, ">>>backupVocabulary SDCard isn't found");
+                return;
+            }
+            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/reminder";
+            Log.d(TAG, ">>>backupVocabulary" + storagePath);
+            File storageDirectory = new File(storagePath);
+            if (storageDirectory.exists()) {
+                Log.d(TAG, ">>>backupVocabulary location is found");
+            } else {
+                storageDirectory.mkdir();
+                Log.d(TAG, ">>>backupVocabulary create new directory <reminder>");
+            }
+            String backFilePath = storagePath + "/reminder.json";
+            File backupFile = new File(backFilePath);
+            if (backupFile.exists()) {
+                Log.d(TAG, ">>>backupVocabulary override old file");
+            } else {
+                backupFile.createNewFile();
+            }
 
+            FileWriter fw = new FileWriter(backupFile);
+            fw.write(jsonWord);
+            fw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, ">>>backupVocabulary END");
+    }
     public void startVRService() {
         mProviderWrapper.setServiceRunningStatus(1);
         startService(new Intent(this, OALService.class));
@@ -279,4 +328,23 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public ProviderWrapper getProviderWrapper() {
         return mProviderWrapper;
     }
+
+    private ArrayList<ConvertWord> convertToAnonymousWord(ArrayList<Word> list) {
+        ArrayList<ConvertWord> convertedList = new ArrayList<>();
+        for (Word w : list) {
+            ConvertWord cW = ConvertWord.fromWord(w);
+            convertedList.add(cW);
+        }
+        return convertedList;
+    }
+
+    private ArrayList<Word> convertToWord(ArrayList<ConvertWord> list) {
+        ArrayList<Word> convertedList = new ArrayList<>();
+        for (ConvertWord w : list) {
+            Word word = ConvertWord.toWord(w);
+            convertedList.add(word);
+        }
+        return convertedList;
+    }
+
 }
