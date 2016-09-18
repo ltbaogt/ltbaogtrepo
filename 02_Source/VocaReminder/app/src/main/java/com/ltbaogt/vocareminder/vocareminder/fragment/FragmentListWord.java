@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
@@ -178,6 +179,9 @@ public class FragmentListWord extends BaseFragment {
                 OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
                 bl.deleteWordById(w.getWordId());
                 updateLayoutNoWord();
+                Toast.makeText(getContext(),
+                        String.format(getResources().getString(R.string.message_word_was_deleted), w.getWordName()),
+                        Toast.LENGTH_SHORT).show();
             }
         };
 

@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,24 +32,28 @@ import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
-import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
     public static final String TAG = Define.TAG + "MainActivity";
     private final static String MAIN_FRAGMENT_TAG = "fragment_main";
     private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
+    private static final String BACKUP_FOLDER = "/reminder";
+    private static final String BACKUP_FILE = "/reminder.json";
     Toolbar mToolbar;
     DrawerLayout mDrawer;
 
@@ -116,9 +122,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                         mainActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_content, list, MAIN_FRAGMENT_TAG)
                                 .commit();
-//                        if (list instanceof FragmentListWord) {
-//                            ((FragmentListWord) list).hideTagPanel();
-//                        }
                     }
                     drawer.closeDrawers();
                     break;
@@ -208,18 +211,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
         });
     }
-    public void backupVocabulary(View v) {
-        Log.d(TAG, ">>>backupVocabulary START");
+    public void backup() {
         OALBLL bl = new OALBLL(getApplicationContext());
         ArrayList<ConvertWord> words = convertToAnonymousWord(bl.getAllWordsOrderByNameInList());
         Gson gsonParser = new Gson();
-        String jsonWord = gsonParser.toJson(words);
         try {
             if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 Log.d(TAG, ">>>backupVocabulary SDCard isn't found");
                 return;
             }
-            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/reminder";
+            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER;
             Log.d(TAG, ">>>backupVocabulary" + storagePath);
             File storageDirectory = new File(storagePath);
             if (storageDirectory.exists()) {
@@ -228,24 +229,72 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 storageDirectory.mkdir();
                 Log.d(TAG, ">>>backupVocabulary create new directory <reminder>");
             }
-            String backFilePath = storagePath + "/reminder.json";
+            String backFilePath = storagePath + BACKUP_FILE;
             File backupFile = new File(backFilePath);
             if (backupFile.exists()) {
                 Log.d(TAG, ">>>backupVocabulary override old file");
             } else {
                 backupFile.createNewFile();
             }
-
             FileWriter fw = new FileWriter(backupFile);
-            fw.write(jsonWord);
-            fw.close();
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (ConvertWord w : words) {
+                bw.write(gsonParser.toJson(w));
+                bw.newLine();
+            }
+            bw.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void backupVocabulary(View v) {
+        Log.d(TAG, ">>>backupVocabulary START");
+        showConfirmDialog(R.string.popup_title_edit_word, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                backup();
+            }
+        });
         Log.d(TAG, ">>>backupVocabulary END");
+    }
+
+    public void restoreVocabulary(View v) {
+        showConfirmDialog(R.string.add_new_word_suggestion, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                restore();
+            }
+        });
+    }
+
+    public void restore() {
+        OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
+        try {
+            if (db.getCount() <= 0) {
+                String backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER + BACKUP_FILE;
+                File backupFile = new File(backupFilePath);
+                if (backupFile.exists()) {
+                    BufferedReader br = new BufferedReader(new FileReader(backupFile));
+                    String object;
+                    Gson jsonParser = new Gson();
+                    while ((object = br.readLine()) != null) {
+                        Word w = ConvertWord.toWord(jsonParser.fromJson(object, ConvertWord.class));
+                        db.insertWord(w);
+                    }
+                } else {
+                    Log.d(TAG, "Cannot find backup file");
+                }
+            } else {
+                Log.d(TAG, "You have vocabulary in database");
+            }
+            db.close();
+        } catch (Exception e) {
+            Log.d(TAG, "An Error occurs when restoring");
+        }
     }
     public void startVRService() {
         mProviderWrapper.setServiceRunningStatus(1);
@@ -347,4 +396,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         return convertedList;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
+    }
 }

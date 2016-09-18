@@ -131,22 +131,29 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     //Insert new word
     public void insertWord(Word newWord) {
         Log.d(TAG, ">>>insertWord START");
-        ArrayList<Word> list = getAllWords();
-        SQLiteDatabase db = getWritableDatabase();
+        if (newWord.getWordId() == -1) {
+            ArrayList<Word> list = getAllWords();
+            SQLiteDatabase db = getWritableDatabase();
 
-        int candidateId = 0;
-        for(int i = 0; i < list.size(); i++) {
-            Word wTemp = list.get(i);
-            if (candidateId >= wTemp.getWordId()) {
-                candidateId++;
+            int candidateId = 0;
+            for (int i = 0; i < list.size(); i++) {
+                Word wTemp = list.get(i);
+                if (candidateId >= wTemp.getWordId()) {
+                    candidateId++;
+                }
             }
-        }
-        if (candidateId <= Integer.MAX_VALUE && candidateId >= Integer.MIN_VALUE) {
-            newWord.setWordId(candidateId);
+            if (candidateId <= Integer.MAX_VALUE && candidateId >= Integer.MIN_VALUE) {
+                newWord.setWordId(candidateId);
+                ContentValues cv = getContentValues(newWord);
+                db.insert(TABLE_NAME_TBL_WORD, null, cv);
+            }
+            db.close();
+        } else {
+            SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = getContentValues(newWord);
             db.insert(TABLE_NAME_TBL_WORD, null, cv);
         }
-        db.close();
+
         Log.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
     }
 

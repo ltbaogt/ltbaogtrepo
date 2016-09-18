@@ -22,4 +22,5 @@
     <string name="word_meaning">Meaning</string>
     <string name="word_sentence">Sentence</string>
     <string name="action_preview">Preview</string>
+    <string name="message_word_was_deleted">You deleted %s from vocabularies</string>
 </resources>
