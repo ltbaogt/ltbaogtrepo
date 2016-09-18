@@ -277,7 +277,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         try {
             if (db.getCount() <= 0) {
                 String backupFilePath = getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE)
-                        .getString(Define.BACKUP_PATH, "Not set");
+                        .getString(Define.BACKUP_PATH, "");
+                if (backupFilePath.isEmpty()) {
+                    backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER + BACKUP_FILE;
+                }
                 File backupFile = new File(backupFilePath);
                 if (backupFile.exists()) {
                     BufferedReader br = new BufferedReader(new FileReader(backupFile));
