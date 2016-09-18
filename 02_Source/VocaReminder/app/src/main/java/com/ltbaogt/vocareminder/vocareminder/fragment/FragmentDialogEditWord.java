@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +39,9 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by My PC on 10/08/2016.
  */
@@ -42,6 +49,7 @@ import org.jsoup.nodes.Document;
 public class FragmentDialogEditWord extends DialogFragment implements View.OnClickListener {
 
     private static final String TAG = Define.TAG + "FragmentDialogEditWord";
+    private static final int VOICE_RECOGNITION_REQUEST_CODE = 1;
     private Word mWord;
     private EditText mEtWordName;
     private EditText mEtPronunciation;
@@ -52,6 +60,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private ImageView mBtnGetInfo;
     private OnCreateOrUpdateWodListener mOnCreateOrUpdateWodListener;
     private ProgressBar mLoading;
+    private ImageView mBtnVoice;
 
     public interface OnCreateOrUpdateWodListener {
         void onSave(Word w);
@@ -77,6 +86,12 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         mBtnCancel.setOnClickListener(this);
         mBtnSave.setOnClickListener(this);
         mBtnGetInfo.setOnClickListener(this);
+        if (checkVoiceRecognition()) {
+            mBtnVoice = (ImageView) v.findViewById(R.id.btn_voice);
+            mBtnVoice.setVisibility(View.VISIBLE);
+            mBtnVoice.setOnClickListener(this);
+        }
+
 
         String btn1Title = b.getString(Define.POPUP_BUTTON_01, "--");
         String btn2Title = b.getString(Define.POPUP_BUTTON_02, "--");
@@ -111,6 +126,43 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         //hideKeyboard();
+    }
+
+    public boolean checkVoiceRecognition() {
+        PackageManager pm = getActivity().getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        if (activities.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void speak() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "ABC");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+            ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (textMatchList.size() > 0) {
+                String voiceInText = textMatchList.get(0);
+                if (!voiceInText.isEmpty()) {
+                    voiceInText = voiceInText.substring(0,1).toUpperCase() + voiceInText.substring(1);
+                    mEtWordName.setText("");
+                    mEtWordName.setText(String.valueOf(voiceInText));
+                }
+            }
+        } else {
+            Log.d(TAG, ">>>onActivityResult cannot recognize the voice");
+        }
+
     }
 
     private void showKeyboard() {
@@ -176,6 +228,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mLoading.setVisibility(View.VISIBLE);
                 mBtnGetInfo.setVisibility(View.INVISIBLE);
                 getInfo();
+                break;
+            case R.id.btn_voice:
+                speak();
                 break;
         }
     }
