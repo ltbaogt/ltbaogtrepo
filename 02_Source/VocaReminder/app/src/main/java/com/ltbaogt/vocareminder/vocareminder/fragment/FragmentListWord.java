@@ -6,11 +6,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
@@ -19,9 +17,7 @@ import com.ltbaogt.vocareminder.vocareminder.adapter.DictionaryAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.listener.OALSimpleOnGestureListener;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
-
 import java.util.ArrayList;
 
 /**
@@ -32,31 +28,31 @@ public class FragmentListWord extends BaseFragment {
 
     public static final String TAG = Define.TAG + "FragmentListWord";
     private RecyclerView mRecycler;
-    private RecyclerView mRecyclerTag;
+//    private RecyclerView mRecyclerTag;
     private View mMainView;
-    private LinearLayout mTagPanel;
+//    private LinearLayout mTagPanel;
 
-    private OALSimpleOnGestureListener mTagPanelSimpleOnGestureListener;
+//    private OALSimpleOnGestureListener mTagPanelSimpleOnGestureListener;
 
-    private static class OnDoubleTapTagPanel implements OALSimpleOnGestureListener.OnDoubleTap {
+//    private static class OnDoubleTapTagPanel implements OALSimpleOnGestureListener.OnDoubleTap {
+//
+//        FragmentListWord mFragmentListWord;
+//
+//        public OnDoubleTapTagPanel(FragmentListWord listWord) {
+//            mFragmentListWord = listWord;
+//        }
+//
+//        @Override
+//        public void onDoubleTap() {
+//            if (mFragmentListWord != null) {
+//                mFragmentListWord.toggleTagPanel();
+//            }
+//        }
+//    }
 
-        FragmentListWord mFragmentListWord;
+//    private GestureDetector mTagPanelGestureDetector;
 
-        public OnDoubleTapTagPanel(FragmentListWord listWord) {
-            mFragmentListWord = listWord;
-        }
-
-        @Override
-        public void onDoubleTap() {
-            if (mFragmentListWord != null) {
-                mFragmentListWord.toggleTagPanel();
-            }
-        }
-    }
-
-    private GestureDetector mTagPanelGestureDetector;
-
-    private OnDoubleTapTagPanel mOnDoubleTapTagPanel;
+//    private OnDoubleTapTagPanel mOnDoubleTapTagPanel;
 
     @Nullable
     @Override
@@ -156,14 +152,6 @@ public class FragmentListWord extends BaseFragment {
         Log.d(TAG, ">>>updateLayoutNoWord END");
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        getView().setOnClickListener(null);
-        Log.d(TAG, ">>>onDestroyView START");
-    }
-
     private void setRecyclerViewItemTouchListener() {
         ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(
                 0, ItemTouchHelper.LEFT) {
@@ -189,20 +177,20 @@ public class FragmentListWord extends BaseFragment {
         itemTouchHelper.attachToRecyclerView(mRecycler);
     }
 
-    //Show Tag panel
-    public void toggleTagPanel() {
-        if (mTagPanel != null) {
-            if (mTagPanel.getVisibility() == View.VISIBLE) {
-                mTagPanel.setVisibility(View.GONE);
-            } else {
-                mTagPanel.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-    //Show Tag panel
-    public void hideTagPanel() {
-        if (mTagPanel != null) {
-            mTagPanel.setVisibility(View.GONE);
-        }
-    }
+//    //Show Tag panel
+//    public void toggleTagPanel() {
+//        if (mTagPanel != null) {
+//            if (mTagPanel.getVisibility() == View.VISIBLE) {
+//                mTagPanel.setVisibility(View.GONE);
+//            } else {
+//                mTagPanel.setVisibility(View.VISIBLE);
+//            }
+//        }
+//    }
+//    //Show Tag panel
+//    public void hideTagPanel() {
+//        if (mTagPanel != null) {
+//            mTagPanel.setVisibility(View.GONE);
+//        }
+//    }
 }

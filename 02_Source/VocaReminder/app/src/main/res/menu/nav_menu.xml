@@ -3,23 +3,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/home"
-            android:title="Vocabulary"
-            android:icon="@drawable/ic_home"/>
+            android:title="@string/nav_vocabularies"
+            android:icon="@drawable/ic_word_list"/>
         <!--<item-->
             <!--android:id="@+id/tag"-->
             <!--android:title="Tag"-->
             <!--android:icon="@drawable/ic_tag_64"/>-->
         <item
             android:id="@+id/settings"
-            android:title="Settings"
+            android:title="@string/nav_setting"
             android:icon="@drawable/ic_setting"/>
-        <item
-            android:id="@+id/trash"
-            android:title="Trash"
-            android:icon="@drawable/ic_trash"/>
+        <!--<item-->
+            <!--android:id="@+id/trash"-->
+            <!--android:title="Trash"-->
+            <!--android:icon="@drawable/ic_trash"/>-->
         <item
             android:id="@+id/logout"
-            android:title="Logout"
+            android:title="@string/nav_exit"
             android:icon="@drawable/ic_exit"/>
     </group>
 </menu>

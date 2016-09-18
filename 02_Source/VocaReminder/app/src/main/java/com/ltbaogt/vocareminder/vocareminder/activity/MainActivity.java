@@ -132,12 +132,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                             .commit();
                     drawer.closeDrawers();
                     break;
-//                case R.id.tag:
-//                    drawer.closeDrawers();
-//                    if (list != null) {
-//                        ((FragmentListWord) list).toggleTagPanel();
-//                    }
-//                    break;
+                case R.id.logout:
+                    mainActivity.finish();
+                    break;
             }
             return true;
         }
@@ -243,7 +240,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 bw.newLine();
             }
             bw.close();
-
+            fw.close();
+            getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE)
+                    .edit()
+                    .putString(Define.BACKUP_PATH, backFilePath)
+                    .commit();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -253,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     public void backupVocabulary(View v) {
         Log.d(TAG, ">>>backupVocabulary START");
-        showConfirmDialog(R.string.popup_title_edit_word, new DialogInterface.OnClickListener() {
+        showConfirmDialog(R.string.popup_title_backup_vocabularies, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 backup();
@@ -263,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void restoreVocabulary(View v) {
-        showConfirmDialog(R.string.add_new_word_suggestion, new DialogInterface.OnClickListener() {
+        showConfirmDialog(R.string.popup_title_restore_vocabularies, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 restore();
@@ -275,7 +276,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
         try {
             if (db.getCount() <= 0) {
-                String backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER + BACKUP_FILE;
+                String backupFilePath = getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE)
+                        .getString(Define.BACKUP_PATH, "Not set");
                 File backupFile = new File(backupFilePath);
                 if (backupFile.exists()) {
                     BufferedReader br = new BufferedReader(new FileReader(backupFile));
@@ -317,13 +319,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 , ContextCompat.getColor(this, R.color.green_grey)
                 , ContextCompat.getColor(this, R.color.teal)};
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
-        colorPickerDialog.initialize(R.string.app_name, colors, currentColor, 3, colors.length);
+        colorPickerDialog.initialize(R.string.setting_title_choose_color, colors, currentColor, 3, colors.length);
         colorPickerDialog.show(getFragmentManager(), "color_chooser");
         colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int color) {
                 mProviderWrapper.updateColorTheme(color);
-
             }
         });
     }

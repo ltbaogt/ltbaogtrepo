@@ -137,7 +137,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                ArrayList<Word> filteredList = null;
+                ArrayList<Word> filteredList;
                 if (constraint.length() == 0) {
                     filteredList = mNoFilterList;
                 } else {

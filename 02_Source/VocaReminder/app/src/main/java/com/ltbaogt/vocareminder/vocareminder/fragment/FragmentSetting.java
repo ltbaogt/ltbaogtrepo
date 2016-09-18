@@ -1,5 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
 
 /**
@@ -29,6 +31,9 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
     Switch mSwitchServiceRunning;
     ServiceRunningListener mServiceRunningListener;
 
+    TextView mBackupDesription;
+    TextView mRestoreDescription;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,6 +47,14 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mTvDismissTime.setText(dismissTime + "s");
             int serviceStatus = getMainActivity().getProviderWrapper().getServiceRunningStatus();
             mSwitchServiceRunning.setChecked((serviceStatus == 1 ? true:false));
+            mBackupDesription = (TextView) v.findViewById(R.id.backup_description);
+            mRestoreDescription = (TextView) v.findViewById(R.id.restore_description);
+            String backupFilePath = getActivity().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE).getString(Define.BACKUP_PATH, "Not set");
+            if (backupFilePath != null) {
+                backupFilePath = backupFilePath.split("\\.")[0];
+            }
+            mBackupDesription.setText(backupFilePath);
+            mRestoreDescription.setText(backupFilePath);
         }
         return v;
     }

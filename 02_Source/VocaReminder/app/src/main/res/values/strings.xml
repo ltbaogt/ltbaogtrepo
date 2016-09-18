@@ -23,4 +23,11 @@
     <string name="word_sentence">Sentence</string>
     <string name="action_preview">Preview</string>
     <string name="message_word_was_deleted">You deleted %s from vocabularies</string>
+    <string name="nav_exit">Exit</string>
+    <string name="nav_setting">Settings</string>
+    <string name="nav_vocabularies">Vocabularies</string>
+    <string name="popup_title_backup_vocabularies">Backup your vocabularies</string>
+    <string name="popup_title_restore_vocabularies">Restore your vocabularies</string>
+    <string name="setting_title_choose_color">Choose Color</string>
+    <string name="item_word_delete">Delete</string>
 </resources>
