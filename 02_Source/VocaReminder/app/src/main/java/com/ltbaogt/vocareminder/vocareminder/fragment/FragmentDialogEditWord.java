@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -55,8 +56,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private EditText mEtPronunciation;
     private EditText mEtMeaning;
     private EditText mEtSentence;
-    private Button mBtnCancel;
-    private Button mBtnSave;
+    private ImageView mBtnCancel;
+    private ImageView mBtnSave;
     private ImageView mBtnGetInfo;
     private OnCreateOrUpdateWodListener mOnCreateOrUpdateWodListener;
     private ProgressBar mLoading;
@@ -79,8 +80,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_word, container, false);
         Bundle b = getArguments();
-        mBtnCancel = (Button) v.findViewById(R.id.btn_cancel);
-        mBtnSave = (Button) v.findViewById(R.id.btn_save);
+        mBtnCancel = (ImageView) v.findViewById(R.id.btn_cancel);
+        mBtnSave = (ImageView) v.findViewById(R.id.btn_save);
         mBtnGetInfo = (ImageView) v.findViewById(R.id.btn_get_info);
         mLoading = (ProgressBar) v.findViewById(R.id.ctrlActivityIndicator);
         mBtnCancel.setOnClickListener(this);
@@ -93,16 +94,16 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         }
 
 
-        String btn1Title = b.getString(Define.POPUP_BUTTON_01, "--");
-        String btn2Title = b.getString(Define.POPUP_BUTTON_02, "--");
-        mBtnCancel.setText(btn1Title);
-        mBtnSave.setText(btn2Title);
+//        String btn1Title = b.getString(Define.POPUP_BUTTON_01, "--");
+//        String btn2Title = b.getString(Define.POPUP_BUTTON_02, "--");
+//        //mBtnCancel.setText(btn1Title);
+//        mBtnSave.setText(btn2Title);
         if (b != null) {
             mEtWordName = (EditText) v.findViewById(R.id.et_name);
             mEtMeaning = (EditText) v.findViewById(R.id.et_meaning);
             mEtPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
             //Set title for dialog
-            getDialog().setTitle(b.getString(Define.POPUP_TITLE, "Default Popup"));
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             //Get word instance
             mWord = b.getParcelable(Define.WORD_OBJECT_PARCELABLE);
             //Get popup type add new of update
