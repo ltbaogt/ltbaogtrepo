@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,7 +44,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
@@ -62,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private ProviderWrapper mProviderWrapper;
 
+    private boolean mIsAttached;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,40 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d(TAG, ">>>onNewIntent START");
+        super.onNewIntent(intent);
+        if (intent.hasExtra(Define.EXTRA_QUICK_ADD)) {
+           if(mIsAttached) {
+               Word w = new Word();
+               showDialogNewWord(w);
+           }
+        }
+        Log.d(TAG, ">>>onNewIntent END");
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mIsAttached = true;
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mIsAttached = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getIntent().hasExtra(Define.EXTRA_QUICK_ADD)) {
+            Word w = new Word();
+            showDialogNewWord(w);
+        }
     }
 
     private void setupDrawer() {

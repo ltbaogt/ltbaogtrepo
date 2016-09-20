@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.listener.OnCheckNotificationQuickAdd;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
 
 /**
@@ -33,6 +34,8 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
 
     TextView mBackupDesription;
     TextView mRestoreDescription;
+
+    private Switch mSwitchQuickAdd;
 
     @Nullable
     @Override
@@ -55,6 +58,9 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             }
             mBackupDesription.setText(backupFilePath);
             mRestoreDescription.setText(backupFilePath);
+
+            mSwitchQuickAdd = (Switch) v.findViewById(R.id.setting_quick_add_switch);
+            mSwitchQuickAdd.setOnCheckedChangeListener(new OnCheckNotificationQuickAdd());
         }
         return v;
     }
@@ -91,5 +97,6 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             getMainActivity().getProviderWrapper().updateDismissTime(mCurrentDismissTime * 1000);
         }
     }
+
 
 }
