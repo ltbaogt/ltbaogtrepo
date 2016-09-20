@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-        OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(this);
-        db.openDatabase();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(mToolbar);
