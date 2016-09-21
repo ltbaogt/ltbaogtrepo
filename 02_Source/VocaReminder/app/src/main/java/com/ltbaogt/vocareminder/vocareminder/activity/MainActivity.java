@@ -20,9 +20,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.google.android.gms.ads.AdActivity;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.gson.Gson;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.ConvertWord;
@@ -61,8 +68,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private ProviderWrapper mProviderWrapper;
 
     private boolean mIsAttached;
-    private FragmentDialogEditWord mNewOrEditDialog;
 
+    private FragmentDialogEditWord mNewOrEditDialog;
+    private int mNumberOfClick;
+
+    private InterstitialAd mInterstitialAd;
+    private AdRequest mAdRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentListWord, MAIN_FRAGMENT_TAG).commit();
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
+        loadAdBanner();
+    }
+
+    //Load Ads banner
+    private void loadAdBanner() {
+        ViewGroup adBanner = (ViewGroup) findViewById(R.id.ad_banner_layout);
+        AdView adView = new AdView(getApplicationContext());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.ad_unit_banner));
+        adBanner.addView(adView);
+
+        mAdRequest = new AdRequest.Builder().build();
+        adView.loadAd(mAdRequest);
+
+        mInterstitialAd = new InterstitialAd(getApplicationContext());
+        mInterstitialAd.setAdUnitId(getString(R.string.ad_unit_full));
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mInterstitialAd.show();
+            }
+
+        });
 
     }
 
@@ -224,8 +259,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 }
                 break;
             case R.id.action_preview:
-                Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
-                sendBroadcast(previewIntent);
+                mNumberOfClick++;
+                if (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD) {
+                    mNumberOfClick = 0;
+                    mInterstitialAd.loadAd(mAdRequest);
+                } else {
+                    Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
+                    sendBroadcast(previewIntent);
+                }
                 break;
         }
         Log.d(TAG, ">>>onOptionsItemSelected END");

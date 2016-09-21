@@ -1,4 +1,7 @@
 <resources>
+    <!--Add Unit-->
+    <string name="ad_unit_banner">ca-app-pub-6603190689104907/4077371277</string>
+    <string name="ad_unit_full">ca-app-pub-6603190689104907/9984304074</string>
     <string name="app_name">VReminder</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Setting</string>
@@ -30,4 +33,5 @@
     <string name="popup_title_restore_vocabularies">Restore your vocabularies</string>
     <string name="setting_title_choose_color">Choose Color</string>
     <string name="item_word_delete">Delete</string>
+
 </resources>

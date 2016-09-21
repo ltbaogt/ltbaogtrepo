@@ -48,5 +48,4 @@
             android:minWidth="40dp"
             android:text="@string/add_new_word_suggestion" />
     </LinearLayout>
-
 </RelativeLayout>
