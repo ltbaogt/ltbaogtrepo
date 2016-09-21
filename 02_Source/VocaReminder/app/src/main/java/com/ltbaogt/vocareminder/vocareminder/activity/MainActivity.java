@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private ProviderWrapper mProviderWrapper;
 
     private boolean mIsAttached;
+    private FragmentDialogEditWord mNewOrEditDialog;
 
 
     @Override
@@ -376,11 +377,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void showDialog(Bundle b) {
+        if (mNewOrEditDialog != null && mNewOrEditDialog.getDialog() != null && mNewOrEditDialog.getDialog().isShowing()) {
+            mNewOrEditDialog.getDialog().dismiss();
+        }
         FragmentManager fm = getSupportFragmentManager();
-        FragmentDialogEditWord editWordDialog = new FragmentDialogEditWord();
-        editWordDialog.setArguments(b);
-        editWordDialog.show(fm, "tag");
-        editWordDialog.setOnCreateOrUpdateWodListener(this);
+        mNewOrEditDialog = new FragmentDialogEditWord();
+        mNewOrEditDialog.setArguments(b);
+        mNewOrEditDialog.show(fm, "tag");
+        mNewOrEditDialog.setOnCreateOrUpdateWodListener(this);
     }
 
     public void showDialogNewWord(Word w) {

@@ -48,6 +48,7 @@
                 android:layout_below="@id/cardview_word_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:textSize="20sp" />
 
             <View
