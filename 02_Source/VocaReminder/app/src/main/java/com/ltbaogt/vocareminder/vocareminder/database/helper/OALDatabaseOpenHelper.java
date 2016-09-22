@@ -61,6 +61,14 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
 
     private Context mContext;
+    private OnDatabaseCreateCompleted mOnDatabaseCreateCompleted;
+    public interface OnDatabaseCreateCompleted {
+        void onDatabaseCreated();
+    }
+
+    public void setOnDatabaseCreateCompleted(OnDatabaseCreateCompleted l) {
+        mOnDatabaseCreateCompleted = l;
+    }
 
     public OALDatabaseOpenHelper(Context ctx) {
         super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
@@ -118,6 +126,9 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             }
         }
         Log.d(TAG, ">>>openDatabase END");
+        if (mOnDatabaseCreateCompleted != null) {
+            mOnDatabaseCreateCompleted.onDatabaseCreated();
+        }
         return SQLiteDatabase.openDatabase(dbFile.getPath(), null,
                 SQLiteDatabase.NO_LOCALIZED_COLLATORS | SQLiteDatabase.CREATE_IF_NECESSARY);
     }
