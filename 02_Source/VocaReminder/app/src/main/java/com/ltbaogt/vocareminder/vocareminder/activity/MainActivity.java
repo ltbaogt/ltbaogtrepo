@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         adView.setAdUnitId(getString(R.string.ad_unit_banner));
         adBanner.addView(adView);
 
-        mAdRequest = new AdRequest.Builder().build();
+        mAdRequest = new AdRequest.Builder().addTestDevice("EA2540727A561FCA20EE335403F98E81").build();
         adView.loadAd(mAdRequest);
 
         mInterstitialAd = new InterstitialAd(getApplicationContext());
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 break;
             case R.id.action_preview:
                 mNumberOfClick++;
-                if (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD) {
+                if (isOnline() && (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
                     mNumberOfClick = 0;
                     mInterstitialAd.loadAd(mAdRequest);
                 } else {
@@ -484,5 +485,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             return;
         }
         super.onBackPressed();
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }

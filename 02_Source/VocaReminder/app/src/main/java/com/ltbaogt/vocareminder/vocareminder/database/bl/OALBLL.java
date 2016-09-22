@@ -58,9 +58,9 @@ public class OALBLL {
         return dbHelp.getAllWordsOrderByNameInList();
     }
 
-    public Word randomWord() {
-        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
-        return dbHelp.randomWord();
-    }
+//    public Word randomWord() {
+//        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+//        return dbHelp.randomWord();
+//    }
 
 }

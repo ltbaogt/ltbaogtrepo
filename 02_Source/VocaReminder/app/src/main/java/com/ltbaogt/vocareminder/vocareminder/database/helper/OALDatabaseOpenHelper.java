@@ -301,20 +301,20 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public Word randomWord() {
-        Log.d(TAG, ">>>randomWord START");
-        int[] listWordId = getListWordId();
-        if (listWordId != null) {
-            Random random = new Random();
-            int randomId = random.nextInt(listWordId.length);
-            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
-            Word w = getWordById(listWordId[randomId]);
-            Log.d(TAG, ">>>randomWord END, word after random " + w.toString());
-            return w;
-        }
-        Log.d(TAG, ">>>randomWord END");
-        return null;
-    }
+//    public Word randomWord() {
+//        Log.d(TAG, ">>>randomWord START");
+//        int[] listWordId = getListWordId();
+//        if (listWordId != null) {
+//            Random random = new Random();
+//            int randomId = random.nextInt(listWordId.length);
+//            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
+//            Word w = getWordById(listWordId[randomId]);
+//            Log.d(TAG, ">>>randomWord END, word after random " + w.toString());
+//            return w;
+//        }
+//        Log.d(TAG, ">>>randomWord END");
+//        return null;
+//    }
 
     public Cursor randomWordInCursor() {
         Cursor cs = null;
@@ -322,7 +322,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         if (listWordId != null) {
             Random random = new Random();
             int randomId = random.nextInt(listWordId.length);
-            cs = getWordByIdInCursor(randomId);
+            cs = getWordByIdInCursor(listWordId[randomId]);
             Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
         }
         return cs;

@@ -21,6 +21,7 @@ import java.util.ArrayList;
  */
 public class ProviderWrapper {
 
+    private static final String TAG = Define.TAG + "ProviderWrapper";
     private Context mContext;
 
     public ProviderWrapper(Context ctx) {
@@ -49,13 +50,16 @@ public class ProviderWrapper {
         Word w = new Word();
         Uri uri = Uri.parse(AppContact.CONTENT_URI + "/words/" + "5");
         Cursor words = mContext.getContentResolver().query(uri, WordProvider.PROJECTION_ALL, null, null, null);
-        if (words.moveToFirst()) {
-            w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
-            w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
-            w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
-            w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+        if (words != null) {
+            if (words.moveToFirst()) {
+                w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
+                w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
+                w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
+                w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+            }
+            words.close();
         }
-        words.close();
+        Log.d(TAG, ">>>getRandomWord Word ID= " + w.getWordId());
         return w;
     }
 

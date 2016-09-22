@@ -33,5 +33,6 @@
     <string name="popup_title_restore_vocabularies">Restore your vocabularies</string>
     <string name="setting_title_choose_color">Choose Color</string>
     <string name="item_word_delete">Delete</string>
+    <string name="you_are_offline">You Are Offline</string>
 
 </resources>

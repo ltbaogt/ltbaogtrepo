@@ -51,7 +51,9 @@ public class AppProvider extends ContentProvider {
             Log.d(TAG, ">>>query SETTING_LIST");
             c = dbHepler.getSettingValueForKey(selection);
         }
-        c.setNotificationUri(getContext().getContentResolver(), uri);
+        if (c != null) {
+            c.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         dbHepler.close();
         return c;
     }

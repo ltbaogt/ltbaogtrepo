@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
 
 import java.io.Serializable;
@@ -32,10 +33,10 @@ public class Word implements Parcelable {
 
     public Word() {
         mWordId = -1;
-        mWordName = "Name";
-        mPronunciation = "Pronunciation";
+        mWordName = Define.WORD_INIT_NAME;
+        mPronunciation = Define.WORD_INIT_PRONUNCIATION;
         mType_ID = 1;
-        mDefault_Meaning = "Let describe this word";
+        mDefault_Meaning = Define.WORD_INIT_DESCRIPTION;
         mSentence = "Sentence";
         mPriority = 1;
         mCount = 0;

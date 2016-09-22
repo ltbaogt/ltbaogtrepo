@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
@@ -226,9 +227,13 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 dismiss();
                 break;
             case R.id.btn_get_info:
-                mLoading.setVisibility(View.VISIBLE);
-                mBtnGetInfo.setVisibility(View.INVISIBLE);
-                getInfo();
+                if (((MainActivity)getActivity()).isOnline()) {
+                    mLoading.setVisibility(View.VISIBLE);
+                    mBtnGetInfo.setVisibility(View.INVISIBLE);
+                    getInfo();
+                } else {
+                    showToast(R.string.you_are_offline);
+                }
                 break;
             case R.id.btn_voice:
                 speak();
@@ -268,9 +273,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                         }
                     }).start();
                 } else {
-                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP,0,0);
-                    toast.show();
+                    showToast(R.string.word_not_found);
                 }
 
                 String pronun = HttpUtil.getPronunciation(doc);
@@ -288,5 +291,11 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
         task.execute();
 
+    }
+
+    private void showToast(int strId) {
+        Toast toast = Toast.makeText(getActivity(), strId, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP,0,0);
+        toast.show();
     }
 }
