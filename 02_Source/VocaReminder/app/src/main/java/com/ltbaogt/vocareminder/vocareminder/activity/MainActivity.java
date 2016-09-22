@@ -1,5 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
+import android.app.ActivityManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -491,4 +492,5 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
+
 }

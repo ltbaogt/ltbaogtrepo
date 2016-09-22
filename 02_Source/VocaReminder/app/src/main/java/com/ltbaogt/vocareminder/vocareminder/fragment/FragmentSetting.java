@@ -1,5 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnCheckNotificationQuickAdd;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
+import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 
 /**
  * Created by My PC on 09/08/2016.
@@ -49,7 +51,7 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mSeekbarDismissTime.setProgress(dismissTime);
             mTvDismissTime.setText(dismissTime + "s");
             int serviceStatus = getMainActivity().getProviderWrapper().getServiceRunningStatus();
-            mSwitchServiceRunning.setChecked((serviceStatus == 1 ? true:false));
+            mSwitchServiceRunning.setChecked((((serviceStatus == 1) && isServiceRunning()) ? true:false));
             mBackupDesription = (TextView) v.findViewById(R.id.backup_description);
             mRestoreDescription = (TextView) v.findViewById(R.id.restore_description);
             String backupFilePath = getActivity().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE).getString(Define.BACKUP_PATH, "Not set");
@@ -97,6 +99,14 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             getMainActivity().getProviderWrapper().updateDismissTime(mCurrentDismissTime * 1000);
         }
     }
-
+    public boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getActivity().getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (OALService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
