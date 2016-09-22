@@ -51,7 +51,7 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mSeekbarDismissTime.setProgress(dismissTime);
             mTvDismissTime.setText(dismissTime + "s");
             int serviceStatus = getMainActivity().getProviderWrapper().getServiceRunningStatus();
-            mSwitchServiceRunning.setChecked((((serviceStatus == 1) && isServiceRunning()) ? true:false));
+            mSwitchServiceRunning.setChecked((((serviceStatus == OALService.SERVICE_RUNNING_YES) && isServiceRunning()) ? true:false));
             mBackupDesription = (TextView) v.findViewById(R.id.backup_description);
             mRestoreDescription = (TextView) v.findViewById(R.id.restore_description);
             String backupFilePath = getActivity().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE).getString(Define.BACKUP_PATH, "Not set");

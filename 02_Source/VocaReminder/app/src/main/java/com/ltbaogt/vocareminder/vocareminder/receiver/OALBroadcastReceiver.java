@@ -29,6 +29,7 @@ import com.ltbaogt.vocareminder.vocareminder.listener.OnTouchDismissListener;
 import com.ltbaogt.vocareminder.vocareminder.listener.OpenPanelListener;
 import com.ltbaogt.vocareminder.vocareminder.listener.ShowMeaningCheckChanged;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
+import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 
 import java.lang.ref.WeakReference;
 
@@ -46,6 +47,9 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     private Typeface mRegulartypeface;
     private  ReceiverHandler mHandler;
 
+    public OALBroadcastReceiver() {
+
+    }
     public OALBroadcastReceiver(Context ctx) {
         Log.d(TAG, ">>>OALBroadcastReceiver init");
         mContext = ctx;
@@ -58,10 +62,13 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, ">>>onReceive START");
         String action = intent.getAction();
-        int callState = getTelephoneService().getCallState();
-        Log.d(TAG, ">>>onReceive callState= " + callState);
-        if (Intent.ACTION_SCREEN_ON.equals(action) && (callState == TelephonyManager.CALL_STATE_IDLE)
-                || Define.VOCA_ACTION_OPEN_VOCA_REMINDER.equals(action)) {
+
+        if (Intent.ACTION_SCREEN_ON.equals(action) || Define.VOCA_ACTION_OPEN_VOCA_REMINDER.equals(action)) {
+            int callState = getTelephoneService().getCallState();
+            Log.d(TAG, ">>>onReceive callState= " + callState);
+            if (callState != TelephonyManager.CALL_STATE_IDLE) {
+                return;
+            }
             //if (mReminderLayout != null) return;
             //Setup Gesture action when reminder layout inflated
             setupContentView();
@@ -80,6 +87,13 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
                 dismissReminderLayout();
             } catch (NullPointerException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
+            }
+        } else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+            Log.d(TAG, ">>>onReceive ACTION_BOOT_COMPLETED");
+            ProviderWrapper providerWrapper = new ProviderWrapper(context.getApplicationContext());
+            int isRunning = providerWrapper.getServiceRunningStatus();
+            if (isRunning == OALService.SERVICE_RUNNING_YES) {
+                context.startService(new Intent(context, OALService.class));
             }
         }
         Log.d(TAG, ">>>onReceive END");

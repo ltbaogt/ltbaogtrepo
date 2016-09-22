@@ -22,6 +22,8 @@ import com.ltbaogt.vocareminder.vocareminder.receiver.OALBroadcastReceiver;
 public class OALService extends Service {
 
     private static final String TAG = Define.TAG + "OALService";
+    public static final int SERVICE_RUNNING_YES = 1;
+    public static final int SERVICE_RUNNING_NO = 0;
     OALBroadcastReceiver mReceiver;
 
     @Nullable
