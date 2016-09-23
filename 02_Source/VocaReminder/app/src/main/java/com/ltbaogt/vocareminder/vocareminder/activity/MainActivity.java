@@ -5,9 +5,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +20,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
@@ -89,6 +93,26 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
         loadAdBanner();
+        getOnwer();
+    }
+
+    private void getOnwer() {
+        final String[] SELF_PROJECTION = new String[]{ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+        Cursor cs = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, SELF_PROJECTION, null, null, null);
+        String onwer = "Hello";
+        if (cs != null && cs.moveToFirst()) {
+            String o = cs.getString(1);
+            if (!TextUtils.isEmpty(onwer)) {
+                onwer = o;
+
+            }
+        }
+        NavigationView navView = (NavigationView) findViewById(R.id.navigation_view);
+        if (navView != null) {
+            View headerLayout = navView.getHeaderView(0);
+            TextView tvEmail = (TextView) headerLayout.findViewById(R.id.tv_email);
+                tvEmail.setText(onwer);
+        }
     }
 
     //Load Ads banner
