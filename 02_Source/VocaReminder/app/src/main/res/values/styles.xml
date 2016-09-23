@@ -33,4 +33,9 @@
         <item name="android:indeterminateTintMode" tools:targetApi="lollipop">src_atop</item>
         <item name="android:indeterminateTint" tools:ignore="NewApi">@color/colorPrimary</item>
     </style>
+
+    <style name="AppTheme.Setting">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
 </resources>
