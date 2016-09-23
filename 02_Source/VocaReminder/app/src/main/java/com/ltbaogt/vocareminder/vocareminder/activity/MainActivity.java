@@ -43,6 +43,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentAbout;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public static final String TAG = Define.TAG + "MainActivity";
     private final static String MAIN_FRAGMENT_TAG = "fragment_main";
     private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
+    private final static String ABOUT_FRAGMENT_TAG = "fragment_about";
     private static final String BACKUP_FOLDER = "/reminder";
     private static final String BACKUP_FILE = "/reminder.json";
     Toolbar mToolbar;
@@ -223,6 +225,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     setting = new FragmentSetting();
                     mainActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_content, setting, EDIT_FRAGMENT_TAG)
+                            .commit();
+                    drawer.closeDrawers();
+                    break;
+                case R.id.about:
+                    FragmentAbout fa = new FragmentAbout();
+                    mainActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, fa, ABOUT_FRAGMENT_TAG)
                             .commit();
                     drawer.closeDrawers();
                     break;
@@ -515,6 +524,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    public void setAdsVisibility(int visibility) {
+        View v = findViewById(R.id.ad_banner_layout);
+        if (v != null) {
+            v.setVisibility(visibility);
+        }
     }
 
 }

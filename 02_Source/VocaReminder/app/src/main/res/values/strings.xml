@@ -36,5 +36,11 @@
     <string name="you_are_offline">You Are Offline</string>
     <string name="splash_name">Voca Reminder</string>
     <string name="splash_slogan">Collect new word anywhere</string>
+    <string name="nav_about">About</string>
+    <string name="developer_email">Email: ltbaogt@gmail.com</string>
+    <string name="short_description">&#160;&#160;Với mục đích giúp các bạn có thể bổ sung từ vựng mọi lúc mọi nơi và học chúng một cách dễ dàng nhất nên mình đã viết ra ứng dụng nhắc nhở này. Ứng dụng như một công cụ nhắc nhở từ mới cho bạn mỗi khi unlock điện thoại, không mất thời gian để học miệt mài.\nĐừng lãng phí mỗi lần unlock điện thoai mà hãy tận dụng chúng để bổ sung tự vựng cho mình </string>
+    <string name="btn_share">SHARE</string>
+    <string name="btn_rate">LOVE ME</string>
+    <string name="share_via">Share via</string>
 
 </resources>
