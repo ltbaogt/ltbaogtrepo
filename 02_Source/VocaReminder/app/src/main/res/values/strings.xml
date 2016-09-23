@@ -34,5 +34,7 @@
     <string name="setting_title_choose_color">Choose Color</string>
     <string name="item_word_delete">Delete</string>
     <string name="you_are_offline">You Are Offline</string>
+    <string name="splash_name">Voca Reminder</string>
+    <string name="splash_slogan">Collect new word anywhere</string>
 
 </resources>
