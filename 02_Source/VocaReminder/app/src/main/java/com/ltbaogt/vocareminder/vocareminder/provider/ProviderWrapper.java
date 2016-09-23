@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
@@ -82,6 +84,9 @@ public class ProviderWrapper {
     }
     public int getColorTheme() {
         int color = getIntValueForKey(Define.THEME_COLOR);
+        if (color == -1) {
+            color = ContextCompat.getColor(mContext.getApplicationContext(), R.color.teal);
+        }
         Log.d("ProviderWrapper", ">>>getColorTheme size= " + color);
         return color;
     }
