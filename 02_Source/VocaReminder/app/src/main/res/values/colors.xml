@@ -11,8 +11,9 @@
     <color name="bg_three">#64DD17</color>
     <color name="bg_four">#E91E63</color>
 
-
+    <color name="redp_ressed_start">#c2756d</color>
     <color name="red">#F6402C</color>
+    <color name="redend">#f28377</color>
     <color name="pink">#EB1460</color>
     <color name="purple">#9C1AB1</color>
     <color name="deep_purple">#6633B9</color>

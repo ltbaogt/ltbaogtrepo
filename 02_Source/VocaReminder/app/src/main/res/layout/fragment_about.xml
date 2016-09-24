@@ -41,6 +41,7 @@
                 android:text="@string/developer_email" />
 
             <Button
+                android:background="@drawable/button_about_state"
                 android:id="@+id/btn_share"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -48,13 +49,16 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="50dp"
+                android:textColor="@android:color/white"
                 android:text="@string/btn_share" />
 
             <Button
+                android:background="@drawable/button_about_state"
                 android:id="@+id/btn_rate"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@id/btn_share"
+                android:textColor="@android:color/white"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="20dp"
