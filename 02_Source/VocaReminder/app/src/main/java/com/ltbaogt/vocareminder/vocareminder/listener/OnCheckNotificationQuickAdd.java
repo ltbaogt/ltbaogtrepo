@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.widget.CompoundButton;
 
@@ -31,7 +33,8 @@ public class OnCheckNotificationQuickAdd implements CompoundButton.OnCheckedChan
                     .setContentTitle("VocaReminder")
                     .setContentText("Tap to add a new vocabulary")
                     .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_eye);
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher));
             Notification n;
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                 n = builder.build();
