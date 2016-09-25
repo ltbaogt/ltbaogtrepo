@@ -293,9 +293,15 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 
     }
 
-    private void showToast(int strId) {
-        Toast toast = Toast.makeText(getActivity(), strId, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP,0,0);
-        toast.show();
+    private void showToast(final int strId) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(getActivity(), strId, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+            }
+        });
+
     }
 }

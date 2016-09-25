@@ -123,6 +123,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
                 }
             }
         });
+        holder.mPronunciation.setText(w.getPronunciation());
         Log.d(TAG, ">>>onBindViewHolder END");
     }
 
@@ -171,12 +172,14 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         protected TextView mWordName;
         protected CardView mSingleItem;
         protected  TextView mMeaning;
+        protected TextView mPronunciation;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mWordName = (TextView) itemView.findViewById(R.id.tv_title_wordname);
             mMeaning = (TextView) itemView.findViewById(R.id.tv_meaning);
             mSingleItem = (CardView) itemView.findViewById(R.id.cardview);
+            mPronunciation = (TextView) itemView.findViewById(R.id.tv_pronunciation);
         }
     }
 }
