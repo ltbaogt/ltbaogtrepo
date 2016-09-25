@@ -23,11 +23,11 @@
 
         </android.support.design.widget.AppBarLayout>
         <RelativeLayout
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <FrameLayout
                 android:layout_above="@+id/ad_banner_layout"
-                android:paddingTop="?attr/actionBarSize"
                 android:id="@+id/main_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
