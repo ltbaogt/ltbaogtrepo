@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -98,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         getOnwer();
     }
 
+    public CoordinatorLayout getCoordinatorLayout() {
+        return (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+    }
     private void getOnwer() {
         final String[] SELF_PROJECTION = new String[]{ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
         Cursor cs = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, SELF_PROJECTION, null, null, null);

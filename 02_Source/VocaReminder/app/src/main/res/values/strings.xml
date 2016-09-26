@@ -25,7 +25,7 @@
     <string name="word_meaning">Meaning</string>
     <string name="word_sentence">Sentence</string>
     <string name="action_preview">Preview</string>
-    <string name="message_word_was_deleted">You deleted %s from vocabularies</string>
+    <string name="message_word_was_deleted">You deleted %s</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_setting">Settings</string>
     <string name="nav_vocabularies">Vocabularies</string>
@@ -42,5 +42,7 @@
     <string name="btn_share">SHARE</string>
     <string name="btn_rate">LOVE ME</string>
     <string name="share_via">Share via</string>
+    <string name="snackbar_button_undo">UNDO</string>
+    <string name="snackbar_word_restored">Word %1s is restored</string>
 
 </resources>

@@ -58,6 +58,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME_TBL_TAG = "tbl_Group_ID";
     private static final int COL_TAG_ID_INDEX = 0;
     private static final int COL_TAG_NAME_INDEX = 1;
+    private static final String WHERE_DELETE = COL_DELETED + "= 0";
 
 
     private Context mContext;
@@ -264,7 +265,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public Cursor getAllWordsOrderByNameInCursor() {
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORDNAME, null);
+        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + WHERE_DELETE + " order by " + COL_WORDNAME, null);
         cs.moveToFirst();
         db.close();
         return cs;
@@ -276,16 +277,27 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
     public void deleteWordById(int id) {
         Log.d(TAG,">>>deleteWordById START, id= " + id);
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=" + "?", new String[]{id + ""});
-        db.close();
+        updateDeletion(id, 1);
         Log.d(TAG,">>>deleteWordById END");
     }
 
+    public void undoWordById(int id) {
+        Log.d(TAG,">>>deleteWordById START, id= " + id);
+        updateDeletion(id, 0);
+        Log.d(TAG,">>>deleteWordById END");
+    }
+
+    private void updateDeletion(int id, int state) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_DELETED, state);
+        db.update(TABLE_NAME_TBL_WORD,cv, COL_WORD_ID + "=" + "?",new String[]{id + ""});
+        db.close();
+    }
     public int[] getListWordId() {
         int[] reList = null;
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.query(TABLE_NAME_TBL_WORD,new String[]{COL_WORD_ID},null, null, null,null, null);
+        Cursor cs = db.query(TABLE_NAME_TBL_WORD,new String[]{COL_WORD_ID},WHERE_DELETE, null, null,null, null);
         int i = 0;
         if (cs.moveToFirst()) {
             reList = new int[cs.getCount()];

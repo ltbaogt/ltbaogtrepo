@@ -2,6 +2,8 @@ package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -166,10 +168,44 @@ public class FragmentListWord extends BaseFragment {
                 Word w = getWordAdapter().removeWord(position);
                 OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
                 bl.deleteWordById(w.getWordId());
+                showSnackbarForDeletionWord(bl, w, position);
+            }
+
+            //Show snackbar for deletion, user can undo after deleting
+            private void showSnackbarForDeletionWord(final OALBLL bl, final Word w, final int atPosition) {
+                if (getActivity() != null) {
+                    final CoordinatorLayout coordinatorLayout = ((MainActivity) getActivity()).getCoordinatorLayout();
+                    Snackbar snackbar = Snackbar.make(coordinatorLayout,
+                            String.format(getResources().getString(R.string.message_word_was_deleted),
+                                    w.getWordName()),
+                            Snackbar.LENGTH_LONG)
+                            .setAction(getResources().getString(R.string.snackbar_button_undo),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            undoDeleteWord(bl, coordinatorLayout, w, atPosition);
+                                        }
+                                    })
+                            .setCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar snackbar, int event) {
+                                    updateLayoutNoWord();
+                                }
+                            });
+                    snackbar.show();
+                }
+            }
+
+            //Undo deletion
+            private void undoDeleteWord(OALBLL bl, CoordinatorLayout layout, Word w, int atPosition) {
+                bl.undoWordById(w.getWordId());
+                getWordAdapter().insertWordAtIndex(w,atPosition);
                 updateLayoutNoWord();
-                Toast.makeText(getContext(),
-                        String.format(getResources().getString(R.string.message_word_was_deleted), w.getWordName()),
-                        Toast.LENGTH_SHORT).show();
+                Snackbar snackbar1 = Snackbar.make(layout,
+                        String.format(getResources().getString(R.string.snackbar_word_restored), w.getWordName()),
+                        Snackbar.LENGTH_SHORT);
+                snackbar1.show();
+
             }
         };
 

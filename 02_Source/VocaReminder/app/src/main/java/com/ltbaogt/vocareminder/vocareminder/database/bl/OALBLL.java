@@ -62,5 +62,8 @@ public class OALBLL {
 //        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
 //        return dbHelp.randomWord();
 //    }
-
+    public void undoWordById(int id) {
+        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+        dbHelp.undoWordById(id);
+    }
 }

@@ -94,6 +94,13 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         }
         return w;
     }
+
+    public void insertWordAtIndex(Word w, int index) {
+        Log.d(TAG, ">>>insertWordAtIndex START, index= " + index);
+        mArrayList.add(index, w);
+        notifyItemInserted(index);
+        Log.d(TAG, ">>>insertWordAtIndex END");
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, ">>>onCreateViewHolder START");
