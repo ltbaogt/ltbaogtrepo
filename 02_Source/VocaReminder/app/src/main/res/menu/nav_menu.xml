@@ -17,10 +17,10 @@
             android:id="@+id/about"
             android:title="@string/nav_about"
             android:icon="@drawable/ic_person"/>
-        <!--<item-->
-            <!--android:id="@+id/trash"-->
-            <!--android:title="Trash"-->
-            <!--android:icon="@drawable/ic_trash"/>-->
+        <item
+            android:id="@+id/trash"
+            android:title="Trash"
+            android:icon="@drawable/ic_trash"/>
         <item
             android:id="@+id/logout"
             android:title="@string/nav_exit"

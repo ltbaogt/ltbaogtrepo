@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private final static String MAIN_FRAGMENT_TAG = "fragment_main";
     private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
     private final static String ABOUT_FRAGMENT_TAG = "fragment_about";
+    private final static String ARCHIVED_FRAGMENT_TAG = "fragment_archived";
     private static final String BACKUP_FOLDER = "/reminder";
     private static final String BACKUP_FILE = "/reminder.json";
     Toolbar mToolbar;
@@ -236,6 +237,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     FragmentAbout fa = new FragmentAbout();
                     mainActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_content, fa, ABOUT_FRAGMENT_TAG)
+                            .commit();
+                    drawer.closeDrawers();
+                    break;
+                case R.id.trash:
+                    FragmentListWord archivedList = new FragmentListWord();
+                    archivedList.isArchivedSrceen(true);
+                    mainActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, archivedList, ARCHIVED_FRAGMENT_TAG)
                             .commit();
                     drawer.closeDrawers();
                     break;

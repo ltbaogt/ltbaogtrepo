@@ -23,11 +23,13 @@ public class AppProvider extends ContentProvider {
     private static final int WORD_LIST = 1;
     private static final int WORD_ID = 2;
     private static final int SETTING_LIST = 3;
+    private static final int ARCHIVED_LIST = 4;
     private static final UriMatcher URI_MATCHER;
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(AppContact.AUTHORITY, "words", WORD_LIST);
+        URI_MATCHER.addURI(AppContact.AUTHORITY, "archived", ARCHIVED_LIST);
         URI_MATCHER.addURI(AppContact.AUTHORITY, "words/#", WORD_ID);
         URI_MATCHER.addURI(AppContact.AUTHORITY, "settings", SETTING_LIST);
     }
@@ -45,6 +47,8 @@ public class AppProvider extends ContentProvider {
         OALDatabaseOpenHelper dbHepler = new OALDatabaseOpenHelper(getContext());
         if (URI_MATCHER.match(uri) == WORD_LIST) {
             c = dbHepler.getAllWordsOrderByNameInCursor();
+        } else if (URI_MATCHER.match(uri) == ARCHIVED_LIST) {
+            c = dbHepler.getArchivedWordsOrderByNameInCursor();
         } else if (URI_MATCHER.match(uri) == WORD_ID) {
             c = dbHepler.randomWordInCursor();
         } else if (URI_MATCHER.match(uri) == SETTING_LIST) {

@@ -48,6 +48,24 @@ public class ProviderWrapper {
         return list;
     }
 
+    public ArrayList<Word> getArchivedListWord() {
+        ArrayList<Word> list = new ArrayList<>();
+        Uri uri = Uri.parse(AppContact.CONTENT_URI + "/archived");
+        Cursor words = mContext.getContentResolver().query(uri, WordProvider.PROJECTION_ALL, null, null, null);
+        if (words.moveToFirst()) {
+            do {
+                Word w = new Word();
+                w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
+                w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
+                w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
+                w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+                list.add(w);
+            } while (words.moveToNext());
+        }
+        words.close();
+        return list;
+    }
+
     public Word getRandomWord() {
         Word w = new Word();
         Uri uri = Uri.parse(AppContact.CONTENT_URI + "/words/" + "5");

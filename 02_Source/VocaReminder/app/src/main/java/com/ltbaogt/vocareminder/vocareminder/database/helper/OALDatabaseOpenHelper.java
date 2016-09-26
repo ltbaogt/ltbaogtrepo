@@ -59,6 +59,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final int COL_TAG_ID_INDEX = 0;
     private static final int COL_TAG_NAME_INDEX = 1;
     private static final String WHERE_DELETE = COL_DELETED + "= 0";
+    private static final String WHERE_ARCHIVED = COL_DELETED + "= 1";
 
 
     private Context mContext;
@@ -270,6 +271,15 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         db.close();
         return cs;
     }
+
+    public Cursor getArchivedWordsOrderByNameInCursor() {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + WHERE_ARCHIVED + " order by " + COL_WORDNAME, null);
+        cs.moveToFirst();
+        db.close();
+        return cs;
+    }
+
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
         int count = db.update(TABLE_NAME_TBL_WORD, getContentValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});

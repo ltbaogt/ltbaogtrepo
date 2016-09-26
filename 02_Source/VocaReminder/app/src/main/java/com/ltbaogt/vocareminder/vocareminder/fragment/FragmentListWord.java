@@ -32,6 +32,7 @@ public class FragmentListWord extends BaseFragment {
     private RecyclerView mRecycler;
 //    private RecyclerView mRecyclerTag;
     private View mMainView;
+    private boolean mIsArchivedScreen;
 //    private LinearLayout mTagPanel;
 
 //    private OALSimpleOnGestureListener mTagPanelSimpleOnGestureListener;
@@ -56,6 +57,9 @@ public class FragmentListWord extends BaseFragment {
 
 //    private OnDoubleTapTagPanel mOnDoubleTapTagPanel;
 
+    public void isArchivedSrceen(boolean isArchived) {
+        mIsArchivedScreen = isArchived;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,8 +67,7 @@ public class FragmentListWord extends BaseFragment {
 
         Log.d(TAG, "onCreateView START");
         mMainView = inflater.inflate(R.layout.fragment_list_word, container, false);
-        ProviderWrapper pw = new ProviderWrapper(getContext());
-        ArrayList<Word> arrayList = pw.getListWord();
+        ArrayList<Word> arrayList = getWordList();
         //Show Recyclerview
         mRecycler = (RecyclerView) mMainView.findViewById(R.id.recycler);
         mRecycler.setVisibility(View.VISIBLE);
@@ -101,6 +104,14 @@ public class FragmentListWord extends BaseFragment {
         return mMainView;
     }
 
+    private ArrayList<Word> getWordList() {
+        ProviderWrapper pw = new ProviderWrapper(getContext());
+        if (mIsArchivedScreen) {
+            return pw.getArchivedListWord();
+        } else {
+            return pw.getListWord();
+        }
+    }
     //Get Adapter of RecyclerView. Current is DictionaryAdapter instance
     public DictionaryAdapter getWordAdapter() {
         return (DictionaryAdapter) mRecycler.getAdapter();
