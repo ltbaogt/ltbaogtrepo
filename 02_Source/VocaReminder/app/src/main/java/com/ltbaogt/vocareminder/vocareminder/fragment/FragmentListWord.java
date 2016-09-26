@@ -182,6 +182,7 @@ public class FragmentListWord extends BaseFragment {
 
                 if (mIsArchivedScreen) {
                     bl.deleteForever(w.getWordId());
+                    Toast.makeText(getContext(),String.format(getString(R.string.message_word_was_deleted), w.getWordName()),Toast.LENGTH_SHORT).show();
                 } else {
                     bl.deleteWordById(w.getWordId());
                     showSnackbarForDeletionWord(bl, w, position);
@@ -193,7 +194,7 @@ public class FragmentListWord extends BaseFragment {
                 if (getActivity() != null) {
                     final CoordinatorLayout coordinatorLayout = ((MainActivity) getActivity()).getCoordinatorLayout();
                     Snackbar snackbar = Snackbar.make(coordinatorLayout,
-                            String.format(getResources().getString(R.string.message_word_was_deleted),
+                            String.format(getResources().getString(R.string.message_word_was_archived),
                                     w.getWordName()),
                             Snackbar.LENGTH_LONG)
                             .setAction(getResources().getString(R.string.snackbar_button_undo),

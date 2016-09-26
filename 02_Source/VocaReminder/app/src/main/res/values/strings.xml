@@ -26,6 +26,7 @@
     <string name="word_sentence">Sentence</string>
     <string name="action_preview">Preview</string>
     <string name="message_word_was_deleted">You deleted %s</string>
+    <string name="message_word_was_archived">You archived %s</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_setting">Settings</string>
     <string name="nav_vocabularies">Vocabularies</string>
