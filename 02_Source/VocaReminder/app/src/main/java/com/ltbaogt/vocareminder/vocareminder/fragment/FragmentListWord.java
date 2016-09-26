@@ -138,6 +138,7 @@ public class FragmentListWord extends BaseFragment {
 
     public void updateLayoutNoWord() {
         Log.d(TAG, ">>>updateLayoutNoWord START");
+        if (mIsArchivedScreen) return;
         View btnAdd = mMainView.findViewById(R.id.noword_layout);
         if (getWordAdapter() != null && getWordAdapter().getItemCount() <= 0) {
 
@@ -178,8 +179,13 @@ public class FragmentListWord extends BaseFragment {
                 int position = viewHolder.getAdapterPosition();
                 Word w = getWordAdapter().removeWord(position);
                 OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
-                bl.deleteWordById(w.getWordId());
-                showSnackbarForDeletionWord(bl, w, position);
+
+                if (mIsArchivedScreen) {
+                    bl.deleteForever(w.getWordId());
+                } else {
+                    bl.deleteWordById(w.getWordId());
+                    showSnackbarForDeletionWord(bl, w, position);
+                }
             }
 
             //Show snackbar for deletion, user can undo after deleting
@@ -211,11 +217,15 @@ public class FragmentListWord extends BaseFragment {
             private void undoDeleteWord(OALBLL bl, CoordinatorLayout layout, Word w, int atPosition) {
                 bl.undoWordById(w.getWordId());
                 getWordAdapter().insertWordAtIndex(w,atPosition);
-                updateLayoutNoWord();
-                Snackbar snackbar1 = Snackbar.make(layout,
-                        String.format(getResources().getString(R.string.snackbar_word_restored), w.getWordName()),
-                        Snackbar.LENGTH_SHORT);
-                snackbar1.show();
+                try {
+                    updateLayoutNoWord();
+                    Snackbar snackbar1 = Snackbar.make(layout,
+                            String.format(getResources().getString(R.string.snackbar_word_restored), w.getWordName()),
+                            Snackbar.LENGTH_SHORT);
+                    snackbar1.show();
+                } catch (IllegalStateException ex) {
+                    Log.e(TAG, ">>>undoDeleteWord Word was undo but layout cannot update. Reason: Screen is transited");
+                }
 
             }
         };

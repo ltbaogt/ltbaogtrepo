@@ -53,6 +53,10 @@ public class OALBLL {
         dbHelp.deleteWordById(id);
     }
 
+    public void deleteForever(int id) {
+        OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
+        dbHelp.deleteForever(id);
+    }
     public ArrayList<Word> getAllWordsOrderByNameInList() {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
         return dbHelp.getAllWordsOrderByNameInList();

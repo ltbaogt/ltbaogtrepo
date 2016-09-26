@@ -304,6 +304,12 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         db.update(TABLE_NAME_TBL_WORD,cv, COL_WORD_ID + "=" + "?",new String[]{id + ""});
         db.close();
     }
+
+    //Delete word forever, cannot undo
+    public void deleteForever(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=?", new String[]{String.valueOf(id)});
+    }
     public int[] getListWordId() {
         int[] reList = null;
         SQLiteDatabase db = getWritableDatabase();
