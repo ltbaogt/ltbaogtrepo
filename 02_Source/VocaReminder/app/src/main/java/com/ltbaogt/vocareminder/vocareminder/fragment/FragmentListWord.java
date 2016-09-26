@@ -1,5 +1,11 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,6 +35,7 @@ import java.util.ArrayList;
 public class FragmentListWord extends BaseFragment {
 
     public static final String TAG = Define.TAG + "FragmentListWord";
+    private static final int ITEM_WORD_MARGIN = 20;
     private RecyclerView mRecycler;
 //    private RecyclerView mRecyclerTag;
     private View mMainView;
@@ -228,6 +235,38 @@ public class FragmentListWord extends BaseFragment {
                     Log.e(TAG, ">>>undoDeleteWord Word was undo but layout cannot update. Reason: Screen is transited");
                 }
 
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Bitmap icon;
+                Paint p = new Paint();
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    Log.d(TAG, String.format(">>>onChildDraw Dx= %1$.2f" +
+                            ", Dy= %2$.2f" +
+                            ", itemView.Left= %3$d" +
+                            ", itemView.Top= %4$d" +
+                            ", itemView.Right= %5$d" +
+                            ", itemView.Bottom= %6$d", dX, dY, itemView.getLeft(),
+                            itemView.getTop(),
+                            itemView.getRight(),
+                            itemView.getBottom()
+                    ));
+                    if (dX < 0) {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
+                        c.drawRect(background, p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_trash);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         };
 
