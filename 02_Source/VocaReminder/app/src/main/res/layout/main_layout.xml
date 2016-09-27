@@ -27,6 +27,7 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <FrameLayout
                 android:layout_above="@+id/ad_banner_layout"
                 android:id="@+id/main_content"
@@ -39,6 +40,12 @@
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
+            <ProgressBar
+                android:visibility="invisible"
+                android:id="@+id/loading_indicator"
+                android:layout_centerInParent="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 

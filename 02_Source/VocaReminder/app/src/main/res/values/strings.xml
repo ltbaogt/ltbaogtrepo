@@ -47,5 +47,8 @@
     <string name="snackbar_word_restored">Word %1s is restored</string>
     <string name="pronunciation_you_can">Pronunciation. You can!</string>
     <string name="nav_hello">Hello</string>
+    <string name="popup_title_explain_why_grant_write_external_storage">In order to perform Backup/Restore, you need grant app read/write your external storage.</string>
+    <string name="snackbar_backup_completed">Backup is completed</string>
+    <string name="snackbar_restore_completed">Restore is completed</string>
 
 </resources>

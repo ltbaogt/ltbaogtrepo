@@ -1,17 +1,19 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
-import android.app.ActivityManager;
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -21,17 +23,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
-import com.google.android.gms.ads.AdActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private final static String ARCHIVED_FRAGMENT_TAG = "fragment_archived";
     private static final String BACKUP_FOLDER = "/reminder";
     private static final String BACKUP_FILE = "/reminder.json";
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP = 1;
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_RESOTRE = 2;
     Toolbar mToolbar;
     DrawerLayout mDrawer;
 
@@ -330,7 +332,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
         });
     }
+
+    private ProgressBar getLoadingIndicator() {
+        return ((ProgressBar)findViewById(R.id.loading_indicator));
+    }
     public void backup() {
+        getLoadingIndicator().setVisibility(View.VISIBLE);
         OALBLL bl = new OALBLL(getApplicationContext());
         ArrayList<ConvertWord> words = convertToAnonymousWord(bl.getAllWordsOrderByNameInList());
         Gson gsonParser = new Gson();
@@ -371,30 +378,42 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            getLoadingIndicator().setVisibility(View.GONE);
+            showSnackBar(R.string.snackbar_backup_completed);
         }
     }
 
     public void backupVocabulary(View v) {
         Log.d(TAG, ">>>backupVocabulary START");
-        showConfirmDialog(R.string.popup_title_backup_vocabularies, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                backup();
-            }
-        });
+        if (canWriteExternalStorage()) {
+            showConfirmDialog(R.string.popup_title_backup_vocabularies, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    backup();
+                }
+            });
+        } else {
+            showReqPrmWriteExtStoragePopup(REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP);
+        }
         Log.d(TAG, ">>>backupVocabulary END");
     }
 
     public void restoreVocabulary(View v) {
-        showConfirmDialog(R.string.popup_title_restore_vocabularies, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                restore();
-            }
-        });
+        if (canWriteExternalStorage()) {
+            showConfirmDialog(R.string.popup_title_restore_vocabularies, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    restore();
+                }
+            });
+        } else {
+            showReqPrmWriteExtStoragePopup(REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_RESOTRE);
+        }
     }
 
     public void restore() {
+        getLoadingIndicator().setVisibility(View.VISIBLE);
         OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
         try {
             if (db.getCount() <= 0) {
@@ -419,10 +438,25 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 Log.d(TAG, "You have vocabulary in database");
             }
             db.close();
+
         } catch (Exception e) {
             Log.d(TAG, "An Error occurs when restoring");
+        } finally {
+            getLoadingIndicator().setVisibility(View.GONE);
+            showSnackBar(R.string.snackbar_restore_completed);
         }
     }
+
+    private void showReqPrmWriteExtStoragePopup(final int requestFeatureCode) {
+        showConfirmDialog(R.string.popup_title_explain_why_grant_write_external_storage, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        requestFeatureCode);
+            }
+        });
+    }
+
     public void startVRService() {
         mProviderWrapper.setServiceRunningStatus(OALService.SERVICE_RUNNING_YES);
         startService(new Intent(this, OALService.class));
@@ -546,4 +580,33 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         }
     }
 
+    private boolean canWriteExternalStorage() {
+        boolean canWrite;
+        int isGranted = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        canWrite = (isGranted == PackageManager.PERMISSION_GRANTED)? true : false;
+        Log.d(TAG, ">>>canWriteExternalStorage can write external storage= " + canWrite);
+        return canWrite;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, ">>>onRequestPermissionsResult grantResult= " + grantResults[0]);
+        if (REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP == requestCode) {
+            if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                backup();
+            }
+        } else if (REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_RESOTRE == requestCode) {
+            if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                restore();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void showSnackBar(int strId) {
+        String str = getString(strId);
+        Snackbar snackbar = Snackbar.make(getCoordinatorLayout(), str, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
 }
