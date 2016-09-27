@@ -247,16 +247,16 @@ public class FragmentListWord extends BaseFragment {
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
 
-                    Log.d(TAG, String.format(">>>onChildDraw Dx= %1$.2f" +
-                            ", Dy= %2$.2f" +
-                            ", itemView.Left= %3$d" +
-                            ", itemView.Top= %4$d" +
-                            ", itemView.Right= %5$d" +
-                            ", itemView.Bottom= %6$d", dX, dY, itemView.getLeft(),
-                            itemView.getTop(),
-                            itemView.getRight(),
-                            itemView.getBottom()
-                    ));
+//                    Log.d(TAG, String.format(">>>onChildDraw Dx= %1$.2f" +
+//                            ", Dy= %2$.2f" +
+//                            ", itemView.Left= %3$d" +
+//                            ", itemView.Top= %4$d" +
+//                            ", itemView.Right= %5$d" +
+//                            ", itemView.Bottom= %6$d", dX, dY, itemView.getLeft(),
+//                            itemView.getTop(),
+//                            itemView.getRight(),
+//                            itemView.getBottom()
+//                    ));
                     if (dX < 0) {
                         p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
