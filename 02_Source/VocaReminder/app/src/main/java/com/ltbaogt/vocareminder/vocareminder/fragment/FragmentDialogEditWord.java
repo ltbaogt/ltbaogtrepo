@@ -142,7 +142,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     public void speak() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "ABC");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.pronunciation_you_can));
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);

@@ -45,5 +45,6 @@
     <string name="share_via">Share via</string>
     <string name="snackbar_button_undo">UNDO</string>
     <string name="snackbar_word_restored">Word %1s is restored</string>
+    <string name="pronunciation_you_can">Pronunciation. You can!</string>
 
 </resources>
