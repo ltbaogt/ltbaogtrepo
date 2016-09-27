@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private static final String BACKUP_FILE = "/reminder.json";
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP = 1;
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_RESOTRE = 2;
+    public static final int REQUEST_CODE_SETTING_DRAW_OVERLAY = 3;
     Toolbar mToolbar;
     DrawerLayout mDrawer;
 
@@ -184,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
+        mFragmentSetting = new FragmentSetting();
         drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentListWord, mFragmentSetting));
     }
 
@@ -229,10 +234,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
-                    setting = new FragmentSetting();
-                    mainActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_content, setting, EDIT_FRAGMENT_TAG)
-                            .commit();
+                    if (setting != null) {
+                        mainActivity.getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_content, setting, EDIT_FRAGMENT_TAG)
+                                .commit();
+                    }
                     drawer.closeDrawers();
                     break;
                 case R.id.about:
@@ -314,8 +320,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     mNumberOfClick = 0;
                     mInterstitialAd.loadAd(mAdRequest);
                 } else {
-                    Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
-                    sendBroadcast(previewIntent);
+                    if (canDrawOverlays()) {
+                        Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
+                        sendBroadcast(previewIntent);
+                    } else {
+                        startActivityForDrawOverlay();
+                    }
                 }
                 break;
         }
@@ -608,5 +618,42 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         String str = getString(strId);
         Snackbar snackbar = Snackbar.make(getCoordinatorLayout(), str, Snackbar.LENGTH_SHORT);
         snackbar.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CODE_SETTING_DRAW_OVERLAY == requestCode) {
+            if(canDrawOverlays()) {
+                Log.d(TAG, "onActivityResult app can draw overlay from now");
+                if (mFragmentSetting != null) {
+                    mFragmentSetting.setStartStopServiceToggle(true);
+                    startVRService();
+                }
+            } else {
+                Log.d(TAG, "onActivityResult app doesn't be granted to draw overlay");
+                if (mFragmentSetting != null) {
+                    mFragmentSetting.setStartStopServiceToggle(false);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Check App can draw overlay or not
+     */
+    private boolean canDrawOverlays() {
+        boolean canDraw = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            canDraw = Settings.canDrawOverlays(this);
+        }
+        Log.d(TAG, ">>>canDrawOverlays canDraw= " + canDraw);
+        return canDraw;
+    }
+
+    public void startActivityForDrawOverlay() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, MainActivity.REQUEST_CODE_SETTING_DRAW_OVERLAY);
     }
 }

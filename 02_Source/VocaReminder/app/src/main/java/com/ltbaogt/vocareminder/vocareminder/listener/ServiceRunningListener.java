@@ -2,6 +2,10 @@ package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -30,12 +34,28 @@ public class ServiceRunningListener implements CompoundButton.OnCheckedChangeLis
         if (mActivity != null && mActivity.get() != null && mActivity.get() instanceof MainActivity) {
             MainActivity activity = ((MainActivity) mActivity.get());
             if (b) {
-                activity.startVRService();
+                if (canDrawOverlays()) {
+                    activity.startVRService();
+                } else {
+                    activity.startActivityForDrawOverlay();
+                }
             } else {
                 activity.stopVRService();
             }
         } else {
             Log.d(TAG, "Unable to start/stop service");
         }
+    }
+
+    /**
+     * Check App can draw overlay or not
+     */
+    private boolean canDrawOverlays() {
+        boolean canDraw = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            canDraw = Settings.canDrawOverlays(mActivity.get().getApplicationContext());
+        }
+        Log.d(TAG, ">>>canDrawOverlays canDraw= " + canDraw);
+        return canDraw;
     }
 }

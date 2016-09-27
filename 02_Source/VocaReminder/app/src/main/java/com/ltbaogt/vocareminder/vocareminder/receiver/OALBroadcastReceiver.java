@@ -158,11 +158,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
         //TOAST: ability to view notification
         //lp.type = WindowManager.LayoutParams.TYPE_TOAST;
         //SYSTEM_ERROR: doesn't ability to view notification
-        if (Build.VERSION.SDK_INT >= 23) {
-            layoutParam.type = WindowManager.LayoutParams.TYPE_TOAST;
-        } else {
-            layoutParam.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-        }
+        layoutParam.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         layoutParam.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         //Setup in/out animation for reminder
         layoutParam.windowAnimations = android.R.style.Animation_Toast;

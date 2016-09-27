@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,4 +110,9 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
         return false;
     }
 
+    public void setStartStopServiceToggle(boolean isStart) {
+        Log.d("AAA", ">>>setStartStopServiceToggle START");
+        mSwitchServiceRunning.setChecked(isStart);
+        Log.d("AAA", ">>>setStartStopServiceToggle END");
+    }
 }
