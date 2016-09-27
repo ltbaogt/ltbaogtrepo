@@ -18,7 +18,7 @@
         android:id="@+id/tv_email"
         android:textColor="@color/bg_color"
         android:textSize="18sp"
-        android:text="ltbaogt@gmail.com"
+        android:text="@string/nav_hello"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

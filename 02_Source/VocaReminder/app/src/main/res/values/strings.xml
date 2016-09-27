@@ -46,5 +46,6 @@
     <string name="snackbar_button_undo">UNDO</string>
     <string name="snackbar_word_restored">Word %1s is restored</string>
     <string name="pronunciation_you_can">Pronunciation. You can!</string>
+    <string name="nav_hello">Hello</string>
 
 </resources>
