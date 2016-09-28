@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -175,7 +176,7 @@ public class FragmentListWord extends BaseFragment {
 
     private void setRecyclerViewItemTouchListener() {
         ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT) {
+                0, getSwipeDirections()) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -183,6 +184,18 @@ public class FragmentListWord extends BaseFragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                switch (direction) {
+                    case ItemTouchHelper.RIGHT:
+                        handleSwipeRight(viewHolder);
+                        break;
+                    default:
+                        handleSwipeLeft(viewHolder);
+                        break;
+                }
+
+            }
+
+            private void handleSwipeLeft(RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
                 Word w = getWordAdapter().removeWord(position);
                 OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
@@ -196,6 +209,16 @@ public class FragmentListWord extends BaseFragment {
                 }
             }
 
+            private void handleSwipeRight(RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+                Word w = getWordAdapter().removeWord(position);
+                OALBLL bl = new OALBLL(FragmentListWord.this.getContext());
+
+                if (mIsArchivedScreen) {
+                    bl.undoWordById(w.getWordId());
+                    Toast.makeText(getContext(),String.format(getString(R.string.snackbar_word_restored), w.getWordName()),Toast.LENGTH_SHORT).show();
+                }
+            }
             //Show snackbar for deletion, user can undo after deleting
             private void showSnackbarForDeletionWord(final OALBLL bl, final Word w, final int atPosition) {
                 if (getActivity() != null) {
@@ -257,9 +280,17 @@ public class FragmentListWord extends BaseFragment {
 //                            itemView.getRight(),
 //                            itemView.getBottom()
 //                    ));
-                    if (dX < 0) {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
+                    if (dX > 0) {
+                        p.setColor(getResources().getColor(R.color.green));
+                        RectF background = new RectF((float) itemView.getLeft() + ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() + dX - 20, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
+                        c.drawRect(background, p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_unarchieved);
+                        float leftEdge = (float) itemView.getLeft() + 3*ITEM_WORD_MARGIN;
+                        RectF icon_dest = new RectF(leftEdge,(float) itemView.getTop() + width, leftEdge + 48,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    } else if (dX < 0) {
+                        p.setColor(getResources().getColor(R.color.red));
+                        RectF background = new RectF((float) itemView.getRight() + dX - 5*ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_trash);
                         RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
@@ -274,6 +305,13 @@ public class FragmentListWord extends BaseFragment {
         itemTouchHelper.attachToRecyclerView(mRecycler);
     }
 
+    private int getSwipeDirections() {
+        if (mIsArchivedScreen) {
+            return ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+        } else {
+            return ItemTouchHelper.LEFT;
+        }
+    }
 //    //Show Tag panel
 //    public void toggleTagPanel() {
 //        if (mTagPanel != null) {
