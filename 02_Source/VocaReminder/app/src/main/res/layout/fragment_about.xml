@@ -32,6 +32,7 @@
                 android:text="@string/short_description" />
 
             <TextView
+                android:autoLink="web|email"
                 android:id="@+id/tv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

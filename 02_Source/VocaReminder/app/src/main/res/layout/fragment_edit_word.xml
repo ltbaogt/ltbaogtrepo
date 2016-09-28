@@ -15,7 +15,7 @@
         <ImageView
             android:layout_marginTop="7dp"
             android:id="@+id/btn_cancel"
-            android:src="@drawable/ic_arrow_left_bold"
+            android:src="@drawable/ic_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -24,11 +24,10 @@
         <ImageView
             android:layout_marginTop="10dp"
             android:id="@+id/btn_save"
-            android:src="@drawable/ic_book_plus"
+            android:src="@drawable/ic_add_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Save" />
+            android:layout_alignParentRight="true" />
 
         <ImageView
             android:layout_marginTop="7dp"
@@ -37,7 +36,7 @@
             android:id="@+id/btn_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_btn_speak_now" />
+            android:src="@drawable/ic_voice_reg" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/layout_et_name"
@@ -63,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:src="@drawable/ic_voice" />
+                android:src="@drawable/ic_pronun" />
 
             <ProgressBar
 
@@ -94,6 +93,7 @@
         android:layout_marginBottom="10dp" />
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/et_sentence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
