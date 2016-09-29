@@ -27,7 +27,6 @@ public class Define {
     public static final String REF_SCREEN_SIZE_WIDTH = "screen_size_width";
     public static final String REF_SCREEN_SIZE_HEIGHT = "screen_size_height";
     public static final String REF_KEY = "service_sharedreferenced";
-    public static final String BACKUP_PATH = "backup_file_path";
     public static final String EXTRA_QUICK_ADD = "extra_quick_add";
     public static final int CLICK_COUNT_TO_SHOW_FULL_ADD = 5;
     public static final String WORD_INIT_NAME = "What is your word ?";

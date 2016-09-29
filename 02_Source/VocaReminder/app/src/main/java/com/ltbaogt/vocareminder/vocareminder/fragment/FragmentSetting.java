@@ -3,6 +3,7 @@ package com.ltbaogt.vocareminder.vocareminder.fragment;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnCheckNotificationQuickAdd;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
+
+import java.io.File;
 
 /**
  * Created by My PC on 09/08/2016.
@@ -55,12 +58,8 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mSwitchServiceRunning.setChecked((((serviceStatus == OALService.SERVICE_RUNNING_YES) && isServiceRunning()) ? true:false));
             mBackupDesription = (TextView) v.findViewById(R.id.backup_description);
             mRestoreDescription = (TextView) v.findViewById(R.id.restore_description);
-            String backupFilePath = getActivity().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE).getString(Define.BACKUP_PATH, "Not set");
-            if (backupFilePath != null) {
-                backupFilePath = backupFilePath.split("\\.")[0];
-            }
-            mBackupDesription.setText(backupFilePath);
-            mRestoreDescription.setText(backupFilePath);
+            mBackupDesription.setText(getBackupFile());
+            mRestoreDescription.setText(getBackupFile());
 
             mSwitchQuickAdd = (Switch) v.findViewById(R.id.setting_quick_add_switch);
             mSwitchQuickAdd.setOnCheckedChangeListener(new OnCheckNotificationQuickAdd());
@@ -114,5 +113,24 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
         Log.d("AAA", ">>>setStartStopServiceToggle START");
         mSwitchServiceRunning.setChecked(isStart);
         Log.d("AAA", ">>>setStartStopServiceToggle END");
+    }
+
+    private String getBackupFile() {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            String backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + MainActivity.BACKUP_FOLDER + MainActivity.BACKUP_FILE;
+            File backupFile = new File(backupFilePath);
+            if (backupFile.exists()) {
+                return backupFile.getName();
+            }
+            return "Not set";
+        } else {
+            return "SDCard doesn't exist";
+        }
+    }
+
+    public void setBackupFile(String backup) {
+        mBackupDesription.setText(backup);
+        mRestoreDescription.setText(backup);
     }
 }

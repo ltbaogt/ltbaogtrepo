@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
     private final static String ABOUT_FRAGMENT_TAG = "fragment_about";
     private final static String ARCHIVED_FRAGMENT_TAG = "fragment_archived";
-    private static final String BACKUP_FOLDER = "/reminder";
-    private static final String BACKUP_FILE = "/reminder.json";
+    public static final String BACKUP_FOLDER = "/reminder";
+    public static final String BACKUP_FILE = "/reminder.voca";
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP = 1;
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_RESOTRE = 2;
     public static final int REQUEST_CODE_SETTING_DRAW_OVERLAY = 3;
@@ -380,10 +380,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
             bw.close();
             fw.close();
-            getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE)
-                    .edit()
-                    .putString(Define.BACKUP_PATH, backFilePath)
-                    .commit();
+            if (mFragmentSetting != null) {
+                mFragmentSetting.setBackupFile(backupFile.getName());
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -427,13 +426,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
         try {
             if (db.getCount() <= 0) {
-                String backupFilePath = getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE)
-                        .getString(Define.BACKUP_PATH, "");
-                if (backupFilePath.isEmpty()) {
-                    backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER + BACKUP_FILE;
-                }
-                File backupFile = new File(backupFilePath);
-                if (backupFile.exists()) {
+                File backupFile = isBackupExisted();
+                if (backupFile != null) {
                     BufferedReader br = new BufferedReader(new FileReader(backupFile));
                     String object;
                     Gson jsonParser = new Gson();
@@ -442,10 +436,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                         db.insertWord(w);
                     }
                 } else {
-                    Log.d(TAG, "Cannot find backup file");
+                    Log.d(TAG, "Cannot find backup file. Reason: Backup doesn't exist");
                 }
             } else {
-                Log.d(TAG, "You have vocabulary in database");
+                Log.d(TAG, "Nothing to backup");
             }
             db.close();
 
@@ -454,6 +448,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } finally {
             getLoadingIndicator().setVisibility(View.GONE);
             showSnackBar(R.string.snackbar_restore_completed);
+        }
+    }
+
+    private File isBackupExisted() {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            String backupFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + MainActivity.BACKUP_FOLDER + MainActivity.BACKUP_FILE;
+            File backupFile = new File(backupFilePath);
+            if (backupFile.exists()) {
+                return backupFile;
+            }
+            return null;
+        } else {
+            return null;
         }
     }
 
