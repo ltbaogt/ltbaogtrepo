@@ -17,7 +17,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -53,11 +52,11 @@ import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
+import com.ltbaogt.vocareminder.vocareminder.utils.FragmentList;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,10 +65,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements FragmentDialogEditWord.OnCreateOrUpdateWodListener {
 
     public static final String TAG = Define.TAG + "MainActivity";
-    private final static String MAIN_FRAGMENT_TAG = "fragment_main";
-    private final static String EDIT_FRAGMENT_TAG = "fragment_edit_word";
-    private final static String ABOUT_FRAGMENT_TAG = "fragment_about";
-    private final static String ARCHIVED_FRAGMENT_TAG = "fragment_archived";
+
     public static final String BACKUP_FOLDER = "/reminder";
     public static final String BACKUP_FILE = "/reminder.voca";
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP = 1;
@@ -77,9 +73,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public static final int REQUEST_CODE_SETTING_DRAW_OVERLAY = 3;
     Toolbar mToolbar;
     DrawerLayout mDrawer;
-
-    private FragmentListWord mFragmentListWord;
-    private FragmentSetting mFragmentSetting;
 
     private ProviderWrapper mProviderWrapper;
 
@@ -90,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private InterstitialAd mInterstitialAd;
     private AdRequest mAdRequest;
+    private FragmentList mFragmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +92,26 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(mToolbar);
-        mFragmentListWord = new FragmentListWord();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentListWord, MAIN_FRAGMENT_TAG).commit();
+        initFragments();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG).commit();
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
         loadAdBanner();
         //getOnwer();
+    }
+
+    private void initFragments() {
+        mFragmentList = new FragmentList();
+        FragmentListWord listWord = new FragmentListWord();
+        FragmentListWord archivedList = new FragmentListWord();
+        archivedList.isArchivedSrceen(true);
+        FragmentSetting setting = new FragmentSetting();
+        FragmentAbout fa = new FragmentAbout();
+
+        mFragmentList.setFragmentForKey(listWord, FragmentList.MAIN_FRAGMENT_TAG);
+        mFragmentList.setFragmentForKey(archivedList, FragmentList.ARCHIVED_FRAGMENT_TAG);
+        mFragmentList.setFragmentForKey(setting, FragmentList.EDIT_FRAGMENT_TAG);
+        mFragmentList.setFragmentForKey(fa, FragmentList.ABOUT_FRAGMENT_TAG);
     }
 
     public CoordinatorLayout getCoordinatorLayout() {
@@ -188,8 +196,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     private void setupDrawer() {
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
-        mFragmentSetting = new FragmentSetting();
-        drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentListWord, mFragmentSetting));
+        drawer.setNavigationItemSelectedListener(new NavigationViewListener(this, mDrawer, mFragmentList));
     }
 
     @Override
@@ -197,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Log.d(TAG, ">>>onSave SRART");
         //Fragment that is holding RecyclerView.
         // This fragment will invoke RecyclerView get its adapter to add new Word to Adapter's ArrayList
-        mFragmentListWord.addNewWord(w);
+        mFragmentList.getVocabularyFragment().addNewWord(w);
         Log.d(TAG, ">>>onSave END");
     }
 
@@ -205,55 +212,54 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public void onUpdate(Word w) {
         //Fragment that is holding RecyclerView.
         // This fragment will invoke RecyclerView get its adapter to update Word in Adapter's ArrayList
-        mFragmentListWord.updateWord(w);
+        mFragmentList.getVocabularyFragment().updateWord(w);
     }
 
     //Using static class instead of static class in order to GC
     private static class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
 
         private DrawerLayout drawer;
-        private Fragment list;
-        private Fragment setting;
         private MainActivity mainActivity;
-        public NavigationViewListener(MainActivity c, DrawerLayout d, Fragment m, Fragment e) {
-            drawer = d;
-            list = m;
-            setting = e;
+        FragmentList fragmentList;
+        public NavigationViewListener(MainActivity c, DrawerLayout d, FragmentList fList) {
             mainActivity = c;
+            drawer = d;
+            fragmentList = fList;
         }
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             int id = item.getItemId();
             switch (id) {
                 case R.id.home:
-                    if (list != null) {
+                    if (fragmentList.getVocabularyFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, list, MAIN_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
-                    if (setting != null) {
+                    if (fragmentList.getSettingFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, setting, EDIT_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getSettingFragment(), FragmentList.EDIT_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
                     break;
                 case R.id.about:
-                    FragmentAbout fa = new FragmentAbout();
-                    mainActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_content, fa, ABOUT_FRAGMENT_TAG)
-                            .commit();
+                    if (fragmentList.getAboutFragment() != null) {
+                        mainActivity.getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_content, fragmentList.getAboutFragment(), FragmentList.ABOUT_FRAGMENT_TAG)
+                                .commit();
+                    }
                     drawer.closeDrawers();
                     break;
                 case R.id.trash:
-                    FragmentListWord archivedList = new FragmentListWord();
-                    archivedList.isArchivedSrceen(true);
-                    mainActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_content, archivedList, ARCHIVED_FRAGMENT_TAG)
-                            .commit();
+                    if (fragmentList.getArchievedFragment() != null) {
+                        mainActivity.getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_content, fragmentList.getArchievedFragment(), FragmentList.ARCHIVED_FRAGMENT_TAG)
+                                .commit();
+                    }
                     drawer.closeDrawers();
                     break;
                 case R.id.logout:
@@ -280,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mFragmentListWord.getWordAdapter().getFilter().filter(newText);
+                mFragmentList.getVocabularyFragment().getWordAdapter().getFilter().filter(newText);
                 return true;
             }
         });
@@ -302,14 +308,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 showDialogNewWord(new Word());
                 break;
             case R.id.action_filter_raw_word:
-                if (mFragmentListWord != null) {
+                if (mFragmentList.getVocabularyFragment() != null) {
                     if (getString(R.string.action_filter_raw_word)
                             .equalsIgnoreCase(item.getTitle().toString())) {
-                        mFragmentListWord.filterRawWords();
+                        mFragmentList.getVocabularyFragment().filterRawWords();
                         item.setTitle(R.string.action_filter_no_filter);
                     } else if (getString(R.string.action_filter_no_filter)
                             .equalsIgnoreCase(item.getTitle().toString())) {
-                        mFragmentListWord.noFilter();
+                        mFragmentList.getVocabularyFragment().noFilter();
                         item.setTitle(R.string.action_filter_raw_word);
                     }
                 }
@@ -362,29 +368,35 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             if (storageDirectory.exists()) {
                 Log.d(TAG, ">>>backupVocabulary location is found");
             } else {
-                storageDirectory.mkdir();
+                boolean directoryCreated = storageDirectory.mkdir();
                 Log.d(TAG, ">>>backupVocabulary create new directory <reminder>");
+                if (directoryCreated) {
+                    String backFilePath = storagePath + BACKUP_FILE;
+                    File backupFile = new File(backFilePath);
+                    if (backupFile.exists()) {
+                        Log.d(TAG, ">>>backupVocabulary override old file");
+                    } else {
+                        boolean fileCreated = backupFile.createNewFile();
+                        if (fileCreated) {
+                            FileWriter fw = new FileWriter(backupFile);
+                            BufferedWriter bw = new BufferedWriter(fw);
+                            for (ConvertWord w : words) {
+                                bw.write(gsonParser.toJson(w));
+                                bw.newLine();
+                            }
+                            bw.close();
+                            fw.close();
+                            if (mFragmentList.getSettingFragment() != null) {
+                                mFragmentList.getSettingFragment().setBackupFile(backupFile.getName());
+                            }
+                        } else {
+                            Log.d(TAG, ">>>backup cannot create backup file");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, ">>>backup cannot create backup directory");
+                }
             }
-            String backFilePath = storagePath + BACKUP_FILE;
-            File backupFile = new File(backFilePath);
-            if (backupFile.exists()) {
-                Log.d(TAG, ">>>backupVocabulary override old file");
-            } else {
-                backupFile.createNewFile();
-            }
-            FileWriter fw = new FileWriter(backupFile);
-            BufferedWriter bw = new BufferedWriter(fw);
-            for (ConvertWord w : words) {
-                bw.write(gsonParser.toJson(w));
-                bw.newLine();
-            }
-            bw.close();
-            fw.close();
-            if (mFragmentSetting != null) {
-                mFragmentSetting.setBackupFile(backupFile.getName());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -509,9 +521,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Release resource
-        mFragmentListWord = null;
-        mFragmentSetting = null;
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(null);
         Log.d(TAG, ">>>onDestroy START");
@@ -568,14 +577,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         return convertedList;
     }
 
-    private ArrayList<Word> convertToWord(ArrayList<ConvertWord> list) {
-        ArrayList<Word> convertedList = new ArrayList<>();
-        for (ConvertWord w : list) {
-            Word word = ConvertWord.toWord(w);
-            convertedList.add(word);
-        }
-        return convertedList;
-    }
+//    private ArrayList<Word> convertToWord(ArrayList<ConvertWord> list) {
+//        ArrayList<Word> convertedList = new ArrayList<>();
+//        for (ConvertWord w : list) {
+//            Word word = ConvertWord.toWord(w);
+//            convertedList.add(word);
+//        }
+//        return convertedList;
+//    }
 
     @Override
     public void onBackPressed() {
@@ -601,7 +610,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private boolean canWriteExternalStorage() {
         boolean canWrite;
         int isGranted = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        canWrite = (isGranted == PackageManager.PERMISSION_GRANTED)? true : false;
+        canWrite = (isGranted == PackageManager.PERMISSION_GRANTED);
         Log.d(TAG, ">>>canWriteExternalStorage can write external storage= " + canWrite);
         return canWrite;
     }
@@ -633,14 +642,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         if (REQUEST_CODE_SETTING_DRAW_OVERLAY == requestCode) {
             if(canDrawOverlays()) {
                 Log.d(TAG, "onActivityResult app can draw overlay from now");
-                if (mFragmentSetting != null) {
-                    mFragmentSetting.setStartStopServiceToggle(true);
+                if (mFragmentList.getSettingFragment() != null) {
+                    mFragmentList.getSettingFragment().setStartStopServiceToggle(true);
                     startVRService();
                 }
             } else {
                 Log.d(TAG, "onActivityResult app doesn't be granted to draw overlay");
-                if (mFragmentSetting != null) {
-                    mFragmentSetting.setStartStopServiceToggle(false);
+                if (mFragmentList.getSettingFragment() != null) {
+                    mFragmentList.getSettingFragment().setStartStopServiceToggle(false);
                 }
             }
         }
@@ -660,8 +669,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void startActivityForDrawOverlay() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, MainActivity.REQUEST_CODE_SETTING_DRAW_OVERLAY);
+        if (Build.VERSION.SDK_INT >= 23) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, MainActivity.REQUEST_CODE_SETTING_DRAW_OVERLAY);
+        } else {
+            Log.d(TAG, ">>>startActivityForDrawOverlay don't need request");
+        }
     }
 }
