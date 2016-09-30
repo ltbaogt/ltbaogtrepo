@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(mToolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initFragments();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG).commit();
         setupDrawer();
@@ -233,7 +234,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 case R.id.home:
                     if (fragmentList.getVocabularyFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, fragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getVocabularyFragment())
+                                .addToBackStack(FragmentList.MAIN_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
@@ -241,7 +243,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 case R.id.settings:
                     if (fragmentList.getSettingFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, fragmentList.getSettingFragment(), FragmentList.EDIT_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getSettingFragment())
+                                .addToBackStack(FragmentList.EDIT_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
@@ -249,7 +252,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 case R.id.about:
                     if (fragmentList.getAboutFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, fragmentList.getAboutFragment(), FragmentList.ABOUT_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getAboutFragment())
+                                .addToBackStack(FragmentList.ABOUT_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
@@ -257,7 +261,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 case R.id.trash:
                     if (fragmentList.getArchievedFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, fragmentList.getArchievedFragment(), FragmentList.ARCHIVED_FRAGMENT_TAG)
+                                .replace(R.id.main_content, fragmentList.getArchievedFragment())
+                                .addToBackStack(FragmentList.ARCHIVED_FRAGMENT_TAG)
                                 .commit();
                     }
                     drawer.closeDrawers();
