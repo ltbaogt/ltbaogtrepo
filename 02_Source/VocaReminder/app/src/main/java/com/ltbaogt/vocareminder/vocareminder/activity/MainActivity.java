@@ -17,6 +17,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -94,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initFragments();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, mFragmentList.getVocabularyFragment(), FragmentList.MAIN_FRAGMENT_TAG)
+                .addToBackStack(FragmentList.MAIN_FRAGMENT_TAG)
+                .commit();
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
         loadAdBanner();
@@ -232,15 +235,21 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             int id = item.getItemId();
             switch (id) {
                 case R.id.home:
-                    if (fragmentList.getVocabularyFragment() != null) {
-                        mainActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.main_content, fragmentList.getVocabularyFragment())
-                                .addToBackStack(FragmentList.MAIN_FRAGMENT_TAG)
-                                .commit();
+                    if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        popTopFragment();
+                        if (fragmentList.getVocabularyFragment() != null) {
+                            mainActivity.getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.main_content, fragmentList.getVocabularyFragment())
+                                    .addToBackStack(FragmentList.MAIN_FRAGMENT_TAG)
+                                    .commit();
+                        }
                     }
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
+                    if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        popTopFragment();
+                    }
                     if (fragmentList.getSettingFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_content, fragmentList.getSettingFragment())
@@ -250,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.about:
+                    if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        popTopFragment();
+                    }
                     if (fragmentList.getAboutFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_content, fragmentList.getAboutFragment())
@@ -259,6 +271,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.trash:
+                    if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        popTopFragment();
+                    }
                     if (fragmentList.getArchievedFragment() != null) {
                         mainActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_content, fragmentList.getArchievedFragment())
@@ -274,7 +289,24 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             return true;
         }
 
+        private boolean popTopFragment() {
+            FragmentManager fm = mainActivity.getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                int index = fm.getBackStackEntryCount() - 1;
+                FragmentManager.BackStackEntry bse = fm.getBackStackEntryAt(index);
+                String tag = bse.getName();
+                Log.d(TAG, ">>>popTopFragment pop Top Fragment= " + tag);
+                boolean isPop = fm.popBackStackImmediate();
+                fm.beginTransaction().commit();
+                Log.d(TAG, ">>>popTopFragment pop Top Fragment= " + tag
+                        + " withResult= " + isPop);
+                return isPop;
+            }
+            return false;
+        }
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, ">>>onCreateOptionsMenu START");
@@ -596,8 +628,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers();
             return;
+        } else if (FragmentList.MAIN_FRAGMENT_TAG.equals(getTopFragmentTag())) {
+            finish();
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     public boolean isOnline() {
@@ -682,4 +717,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             Log.d(TAG, ">>>startActivityForDrawOverlay don't need request");
         }
     }
+
+    private String getTopFragmentTag() {
+        String top = "";
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            int index = fm.getBackStackEntryCount() - 1;
+            FragmentManager.BackStackEntry bse = fm.getBackStackEntryAt(index);
+            top = bse.getName();
+
+        }
+        Log.d(TAG, ">>>getTopFragmentTag topFragment= " + top);
+        return top;
+    }
+
 }
