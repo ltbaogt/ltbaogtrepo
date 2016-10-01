@@ -291,18 +291,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
         private boolean popTopFragment() {
             FragmentManager fm = mainActivity.getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                int index = fm.getBackStackEntryCount() - 1;
-                FragmentManager.BackStackEntry bse = fm.getBackStackEntryAt(index);
-                String tag = bse.getName();
-                Log.d(TAG, ">>>popTopFragment pop Top Fragment= " + tag);
-                boolean isPop = fm.popBackStackImmediate();
-                fm.beginTransaction().commit();
-                Log.d(TAG, ">>>popTopFragment pop Top Fragment= " + tag
-                        + " withResult= " + isPop);
-                return isPop;
-            }
-            return false;
+            //If you are using .replace(....)
+            //Must popBackStackImmediate instead of popBackStackImmediate(...)
+            boolean isPop = fm.popBackStackImmediate();
+            return isPop;
         }
     }
 
