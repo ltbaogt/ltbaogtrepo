@@ -289,12 +289,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             return true;
         }
 
-        private boolean popTopFragment() {
+        private void popTopFragment() {
             FragmentManager fm = mainActivity.getSupportFragmentManager();
             //If you are using .replace(....)
-            //Must popBackStackImmediate instead of popBackStackImmediate(...)
-            boolean isPop = fm.popBackStackImmediate();
-            return isPop;
+            //Must popBackStackImmediate/popBackStack instead of popBackStackImmediate(...)/popBackStack(...)
+            fm.popBackStack();
         }
     }
 
