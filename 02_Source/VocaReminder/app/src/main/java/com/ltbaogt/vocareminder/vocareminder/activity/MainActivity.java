@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             int id = item.getItemId();
+            mainActivity.invalidateOptionsMenu();
             switch (id) {
                 case R.id.home:
                     if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
@@ -303,6 +304,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Log.d(TAG, ">>>onCreateOptionsMenu START");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        String tag = getTopFragmentTag();
+        if (!FragmentList.MAIN_FRAGMENT_TAG.equals(tag)
+                && !FragmentList.ARCHIVED_FRAGMENT_TAG.equals(tag)) {
+            menu.findItem(R.id.action_search).setVisible(false);
+        }
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
