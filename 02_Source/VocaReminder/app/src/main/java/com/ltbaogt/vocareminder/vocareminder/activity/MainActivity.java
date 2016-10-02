@@ -305,10 +305,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         String tag = getTopFragmentTag();
+
         if (!FragmentList.MAIN_FRAGMENT_TAG.equals(tag)
                 && !FragmentList.ARCHIVED_FRAGMENT_TAG.equals(tag)) {
             menu.findItem(R.id.action_search).setVisible(false);
         }
+
+        boolean isHomeShowUp = true;
+        if (FragmentList.MAIN_FRAGMENT_TAG.equals(tag)) {
+            isHomeShowUp = false;
+            getSupportActionBar().setTitle(R.string.app_name);
+        } else {
+            getSupportActionBar().setTitle(R.string.app_name_short);
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeShowUp);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -338,6 +348,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         //int id = item.getItemId();
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
             case R.id.action_add:
                 showDialogNewWord(new Word());
                 break;
@@ -628,6 +641,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } else if (FragmentList.MAIN_FRAGMENT_TAG.equals(getTopFragmentTag())) {
             finish();
         } else {
+            invalidateOptionsMenu();
             super.onBackPressed();
         }
     }

@@ -50,5 +50,6 @@
     <string name="popup_title_explain_why_grant_write_external_storage">In order to perform Backup/Restore, you need grant app read/write your external storage.</string>
     <string name="snackbar_backup_completed">Backup is completed</string>
     <string name="snackbar_restore_completed">Restore is completed</string>
+    <string name="app_name_short">VR</string>
 
 </resources>
