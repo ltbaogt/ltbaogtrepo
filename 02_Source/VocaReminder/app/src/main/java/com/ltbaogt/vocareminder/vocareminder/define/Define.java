@@ -34,4 +34,6 @@ public class Define {
     public static final String WORD_INIT_DESCRIPTION = "Let's describe this word";
     public static final String MARKET_URI = "market://details?id=";
     public static final String MARKET_URL = "https://play.google.com/store/apps/details?id=";
+    public static final String EXTRA_INDEX = "index";
+    public static final String EXTRA_MEANING = "meaning";
 }

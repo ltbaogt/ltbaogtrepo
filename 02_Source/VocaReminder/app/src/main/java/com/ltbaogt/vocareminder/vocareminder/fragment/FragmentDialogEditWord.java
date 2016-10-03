@@ -43,6 +43,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -252,55 +253,67 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getInfo() {
-        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
-            @Override
-            public void onFinishLoad(Document doc) {
-                mLoading.setVisibility(View.INVISIBLE);
-                mBtnGetInfo.setVisibility(View.VISIBLE);
+//        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
+//            @Override
+//            public void onFinishLoad(Document doc) {
+//                mLoading.setVisibility(View.INVISIBLE);
+//                mBtnGetInfo.setVisibility(View.VISIBLE);
+//
+//                final String mp3Url = HttpUtil.getMp3Url(doc);
+//                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
+//                if (mp3Url != null) {
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                MediaPlayer mediaPlayer = new MediaPlayer();
+//                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                                mediaPlayer.setDataSource(mp3Url);
+//                                mediaPlayer.prepare();
+//                                mediaPlayer.start();
+//                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                                    @Override
+//                                    public void onCompletion(MediaPlayer mediaPlayer) {
+//                                        mediaPlayer.stop();
+//                                        mediaPlayer.release();
+//                                    }
+//                                });
+//                            } catch (Exception e) {
+//                                Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
+//                            }
+//                        }
+//                    }).start();
+//                } else {
+//                    showToast(R.string.word_not_found);
+//                }
+//
+//                String pronun = HttpUtil.getPronunciation(doc);
+//                if (pronun != null && mEtPronunciation != null) {
+//                    mEtPronunciation.setText(pronun);
+//                    mWord.setPronunciation(pronun);
+//                } else {
+//                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.TOP,0,0);
+//                    toast.show();
+//                }
+//
+//            }
+//        };
+//        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
+//        task.execute();
+        String pronun = "This is Pronun";
+        ArrayList<HashMap<String, String>> array = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            HashMap<String, String> itemInfo = new HashMap<>();
+            itemInfo.put(Define.EXTRA_INDEX, "0");
+            itemInfo.put(Define.EXTRA_MEANING, "meaning " + i);
+            array.add(itemInfo);
+        }
 
-                final String mp3Url = HttpUtil.getMp3Url(doc);
-                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
-                if (mp3Url != null) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                MediaPlayer mediaPlayer = new MediaPlayer();
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                mediaPlayer.setDataSource(mp3Url);
-                                mediaPlayer.prepare();
-                                mediaPlayer.start();
-                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                    @Override
-                                    public void onCompletion(MediaPlayer mediaPlayer) {
-                                        mediaPlayer.stop();
-                                        mediaPlayer.release();
-                                    }
-                                });
-                            } catch (Exception e) {
-                                Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
-                            }
-                        }
-                    }).start();
-                } else {
-                    showToast(R.string.word_not_found);
-                }
-
-                String pronun = HttpUtil.getPronunciation(doc);
-                if (pronun != null && mEtPronunciation != null) {
-                    mEtPronunciation.setText(pronun);
-                    mWord.setPronunciation(pronun);
-                } else {
-                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP,0,0);
-                    toast.show();
-                }
-
-            }
-        };
-        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
-        task.execute();
-
+        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
+        infoFgm.setArrayList(array);
+        infoFgm.setPronun(pronun);
+        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
     }
 
     private void showToast(final int strId) {
