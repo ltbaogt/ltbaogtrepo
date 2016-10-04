@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.adapter.MeaningAdapter;
+import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.HashMap;
  * Created by MyPC on 03/10/2016.
  */
 public class FragmentSuggestInfo extends DialogFragment {
-    private ArrayList<HashMap<String, String>> mArrayMeaning;
+    private ArrayList<HashMapItem> mArrayMeaning;
     private String mPronun;
 
     @Nullable
@@ -43,7 +44,7 @@ public class FragmentSuggestInfo extends DialogFragment {
         rv.setAdapter(ma);
     }
 
-    public void setArrayList(ArrayList<HashMap<String, String>> array) {
+    public void setArrayList(ArrayList<HashMapItem> array) {
         mArrayMeaning = array;
     }
 

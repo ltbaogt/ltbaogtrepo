@@ -38,6 +38,7 @@ import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -302,12 +303,20 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 //        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
 //        task.execute();
         String pronun = "This is Pronun";
-        ArrayList<HashMap<String, String>> array = new ArrayList<>();
+        ArrayList<HashMapItem> array = new ArrayList<>();
+        HashMapItem pNext = null;
         for (int i = 0; i < 5; i++) {
-            HashMap<String, String> itemInfo = new HashMap<>();
+            HashMapItem itemInfo = new HashMapItem();
             itemInfo.put(Define.EXTRA_INDEX, "0");
             itemInfo.put(Define.EXTRA_MEANING, "meaning " + i);
             array.add(itemInfo);
+//            if (nextItem != null) {
+//                itemInfo.setNextItem(nextItem);
+//            } else {
+//                nextItem = itemInfo;
+//            }
+            itemInfo.setNextItem(pNext);
+            pNext = itemInfo;
         }
 
         FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
