@@ -19,12 +19,12 @@ import java.util.ArrayList;
 public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHolder> {
 private static final String TAG = Define.TAG + "MeaningAdapter";
     private ArrayList<HashMapItem> mMeaningArray;
-    private int maxCurrent = 0;
-    private HashMapItem pHead;
+    //private int maxCurrent = 0;
+    //private HashMapItem pHead;
 
     public MeaningAdapter(ArrayList<HashMapItem> arr) {
         mMeaningArray = arr;
-        pHead = mMeaningArray.get(mMeaningArray.size() - 1);
+        //pHead = mMeaningArray.get(mMeaningArray.size() - 1);
     }
 
     @Override
@@ -38,20 +38,20 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final HashMapItem hasmapItem = mMeaningArray.get(position);
         holder.mCbChoose.setText("" + hasmapItem.getIndex());
-        holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    maxCurrent++;
-                    hasmapItem.inscreaseIndexTo(maxCurrent);
-                } else {
-                    pHead.descreaseIndexFrom(hasmapItem.getIndex());
-                    maxCurrent--;
-                    hasmapItem.inscreaseIndexTo(0);
-                }
-                notifyDataSetChanged();
-            }
-        });
+//        holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (b) {
+//                    maxCurrent++;
+//                    hasmapItem.inscreaseIndexTo(maxCurrent);
+//                } else {
+//                    pHead.descreaseIndexFrom(hasmapItem.getIndex());
+//                    maxCurrent--;
+//                    hasmapItem.inscreaseIndexTo(0);
+//                }
+//                notifyDataSetChanged();
+//            }
+//        });
     }
 
     @Override
