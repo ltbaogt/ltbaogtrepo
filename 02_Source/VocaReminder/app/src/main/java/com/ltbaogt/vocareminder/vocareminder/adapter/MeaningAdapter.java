@@ -1,20 +1,17 @@
 package com.ltbaogt.vocareminder.vocareminder.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by MyPC on 03/10/2016.
@@ -28,7 +25,6 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
     public MeaningAdapter(ArrayList<HashMapItem> arr) {
         mMeaningArray = arr;
         pHead = mMeaningArray.get(mMeaningArray.size() - 1);
-//        pHead = mMeaningArray.get(0);
     }
 
     @Override
@@ -49,7 +45,6 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
                     maxCurrent++;
                     hasmapItem.inscreaseIndexTo(maxCurrent);
                 } else {
-//                    updateIndex(hasmapItem, 0);
                     pHead.descreaseIndexFrom(hasmapItem.getIndex());
                     maxCurrent--;
                     hasmapItem.inscreaseIndexTo(0);
@@ -58,18 +53,6 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
             }
         });
     }
-
-//    private void updateIndex(HashMapItem item, int withValue) {
-//        int oldValue = Integer.valueOf(item.get(Define.EXTRA_INDEX));
-//        item.put(Define.EXTRA_INDEX, String.valueOf(withValue));
-//        for (int i = 0 ;i < mMeaningArray.size(); i++) {
-//            HashMapItem cItem = mMeaningArray.get(i);
-//            int currentValue = Integer.valueOf(cItem.get(Define.EXTRA_INDEX));
-//            if (item != cItem && currentValue > oldValue) {
-//                cItem.put(Define.EXTRA_INDEX, String.valueOf(--currentValue));
-//            }
-//        }
-//    }
 
     @Override
     public int getItemCount() {
