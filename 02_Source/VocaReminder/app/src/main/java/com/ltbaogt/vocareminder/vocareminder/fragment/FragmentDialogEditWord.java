@@ -254,14 +254,15 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getInfo() {
-//        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
-//            @Override
-//            public void onFinishLoad(Document doc) {
-//                mLoading.setVisibility(View.INVISIBLE);
-//                mBtnGetInfo.setVisibility(View.VISIBLE);
-//
-//                final String mp3Url = HttpUtil.getMp3Url(doc);
-//                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
+        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
+            @Override
+            public void onFinishLoad(Document doc) {
+                mLoading.setVisibility(View.INVISIBLE);
+                mBtnGetInfo.setVisibility(View.VISIBLE);
+
+                //mp3 url
+                final String mp3Url = HttpUtil.getMp3Url(doc);
+                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
 //                if (mp3Url != null) {
 //                    new Thread(new Runnable() {
 //                        @Override
@@ -287,8 +288,14 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 //                } else {
 //                    showToast(R.string.word_not_found);
 //                }
-//
-//                String pronun = HttpUtil.getPronunciation(doc);
+
+                //Pronunciation string
+                String pronun = HttpUtil.getPronunciation(doc);
+                ArrayList<HashMapItem> array = HttpUtil.getMeanings(doc);
+                FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
+                infoFgm.setArrayList(array);
+                infoFgm.setPronun(pronun);
+                infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
 //                if (pronun != null && mEtPronunciation != null) {
 //                    mEtPronunciation.setText(pronun);
 //                    mWord.setPronunciation(pronun);
@@ -297,32 +304,33 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 //                    toast.setGravity(Gravity.TOP,0,0);
 //                    toast.show();
 //                }
-//
-//            }
-//        };
-//        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
-//        task.execute();
-        String pronun = "This is Pronun";
-        ArrayList<HashMapItem> array = new ArrayList<>();
-        HashMapItem pNext = null;
-        for (int i = 0; i < 5; i++) {
-            HashMapItem itemInfo = new HashMapItem();
-            itemInfo.put(Define.EXTRA_INDEX, "0");
-            itemInfo.put(Define.EXTRA_MEANING, "meaning " + i);
-            array.add(itemInfo);
-//            if (nextItem != null) {
-//                itemInfo.setNextItem(nextItem);
-//            } else {
-//                nextItem = itemInfo;
-//            }
-            itemInfo.setNextItem(pNext);
-            pNext = itemInfo;
-        }
 
-        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
-        infoFgm.setArrayList(array);
-        infoFgm.setPronun(pronun);
-        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+            }
+        };
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
+        task.execute();
+
+//        String pronun = "This is Pronun";
+//        ArrayList<HashMapItem> array = new ArrayList<>();
+//        HashMapItem pNext = null;
+//        for (int i = 0; i < 5; i++) {
+//            HashMapItem itemInfo = new HashMapItem();
+//            itemInfo.put(Define.EXTRA_INDEX, "0");
+//            itemInfo.put(Define.EXTRA_MEANING, "meaning " + i);
+//            array.add(itemInfo);
+////            if (nextItem != null) {
+////                itemInfo.setNextItem(nextItem);
+////            } else {
+////                nextItem = itemInfo;
+////            }
+//            itemInfo.setNextItem(pNext);
+//            pNext = itemInfo;
+//        }
+//
+//        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
+//        infoFgm.setArrayList(array);
+//        infoFgm.setPronun(pronun);
+//        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
     }
 
     private void showToast(final int strId) {

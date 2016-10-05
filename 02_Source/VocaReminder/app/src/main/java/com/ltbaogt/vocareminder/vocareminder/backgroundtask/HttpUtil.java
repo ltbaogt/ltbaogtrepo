@@ -4,21 +4,27 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by ppp on 31/08/2016.
  */
 public class HttpUtil {
+    private static final String TAG = Define.TAG + "HttpUtil";
     public static final String url = "http://dictionary.cambridge.org/dictionary/english/";
     public static final String mp3Tag = "span.circle.circle-btn.sound.audio_play_button.uk";
     public static final String mp3TagDataSrcMp3 = "data-src-mp3";
 
     public static final String pronunTag = "span.pron";
+    public static final String meaningTag = ".def";
 
     public interface OnFinishLoadWordDefine {
         void onFinishLoad(Document doc);
@@ -39,6 +45,29 @@ public class HttpUtil {
         }catch (NullPointerException e) {
             return null;
         }
+    }
+    public static ArrayList<HashMapItem> getMeanings(Document doc) {
+        try {
+            ArrayList<HashMapItem> array = new ArrayList<>();
+            Elements elements = doc.select(meaningTag);
+            Log.d(TAG, ">>>getMeaning size=" + elements.size());
+            for(Element e : elements) {
+                String meaning = formatMeaning(e.text());
+                HashMapItem item = new HashMapItem();
+                item.put(Define.EXTRA_MEANING, meaning);
+                item.setIndex(0);
+                array.add(item);
+                Log.d(TAG, ">>>getMeaning meaning=" + meaning);
+            }
+            return array;
+        }catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public static String formatMeaning(String s) {
+        String retString = s.substring(0,1).toUpperCase() + s.substring(1);
+        return "- " + retString.substring(0, s.length() - 1);
     }
 
     public static class LoadWordDefine extends AsyncTask<String, Void, Document> {

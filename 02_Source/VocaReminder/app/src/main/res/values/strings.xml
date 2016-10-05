@@ -51,5 +51,6 @@
     <string name="snackbar_backup_completed">Backup is completed</string>
     <string name="snackbar_restore_completed">Restore is completed</string>
     <string name="app_name_short">VR</string>
+    <string name="choose_meaning_from_list">Choose suggested meaning from below:</string>
 
 </resources>

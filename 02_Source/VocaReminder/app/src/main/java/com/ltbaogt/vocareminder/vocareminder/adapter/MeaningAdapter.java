@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,9 @@ import java.util.ArrayList;
  * Created by MyPC on 03/10/2016.
  */
 public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHolder> {
-private static final String TAG = Define.TAG + "MeaningAdapter";
+    private static final String TAG = Define.TAG + "MeaningAdapter";
     private ArrayList<HashMapItem> mMeaningArray;
+    private int selectedPosition = -1;
     //private int maxCurrent = 0;
     //private HashMapItem pHead;
 
@@ -36,8 +38,18 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+        Log.d("AAA", "bindedPosition= " + position);
         final HashMapItem hasmapItem = mMeaningArray.get(position);
-        holder.mCbChoose.setText("" + hasmapItem.getIndex());
+        holder.mCbChoose.setOnCheckedChangeListener(null);
+        holder.mCbChoose.setChecked(selectedPosition == position);
+        holder.mCbChoose.setText("" + hasmapItem.get(Define.EXTRA_MEANING));
+        holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                selectedPosition = holder.getAdapterPosition();
+                notifyDataSetChanged();
+            }
+        });
 //        holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -61,7 +73,6 @@ private static final String TAG = Define.TAG + "MeaningAdapter";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         protected CheckBox mCbChoose;
-
         public MyViewHolder(View itemView) {
             super(itemView);
             mCbChoose = (CheckBox) itemView.findViewById(R.id.checkBox);

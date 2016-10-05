@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:text="New CheckBox" />
+        android:gravity="center|left" />
 
 </LinearLayout>
