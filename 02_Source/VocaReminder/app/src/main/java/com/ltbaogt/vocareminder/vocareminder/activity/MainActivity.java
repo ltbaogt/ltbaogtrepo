@@ -148,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         adView.setAdUnitId(getString(R.string.ad_unit_banner));
         adBanner.addView(adView);
 
-        mAdRequest = new AdRequest.Builder().addTestDevice("EA2540727A561FCA20EE335403F98E81").build();
+//        mAdRequest = new AdRequest.Builder().addTestDevice("EA2540727A561FCA20EE335403F98E81").build();
+        mAdRequest = new AdRequest.Builder().build();
         adView.loadAd(mAdRequest);
 
         mInterstitialAd = new InterstitialAd(getApplicationContext());

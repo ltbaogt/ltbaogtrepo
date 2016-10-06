@@ -36,6 +36,7 @@ import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
+import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
@@ -259,43 +260,25 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             public void onFinishLoad(Document doc) {
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
-
-                //mp3 url
-                final String mp3Url = HttpUtil.getMp3Url(doc);
-                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
+//
+//                //mp3 url
+//                final String mp3Url = HttpUtil.getMp3Url(doc);
+//                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
 //                if (mp3Url != null) {
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                MediaPlayer mediaPlayer = new MediaPlayer();
-//                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//                                mediaPlayer.setDataSource(mp3Url);
-//                                mediaPlayer.prepare();
-//                                mediaPlayer.start();
-//                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                                    @Override
-//                                    public void onCompletion(MediaPlayer mediaPlayer) {
-//                                        mediaPlayer.stop();
-//                                        mediaPlayer.release();
-//                                    }
-//                                });
-//                            } catch (Exception e) {
-//                                Log.d(TAG, ">>>onFinishLoad play mp3 error" + Log.getStackTraceString(e));
-//                            }
-//                        }
-//                    }).start();
+//
 //                } else {
 //                    showToast(R.string.word_not_found);
 //                }
 
                 //Pronunciation string
-                String pronun = HttpUtil.getPronunciation(doc);
-                ArrayList<HashMapItem> array = HttpUtil.getMeanings(doc);
+//                String pronun = HttpUtil.getPronunciation(doc);
+
+                ArrayList<WordEntity> listEntryWord = HttpUtil.getWordInfo(doc);
                 FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
-                infoFgm.setArrayList(array);
-                infoFgm.setPronun(pronun);
-                infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+                infoFgm.setArrayList(listEntryWord);
+                if (getActivity() != null) {
+                    infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+                }
 //                if (pronun != null && mEtPronunciation != null) {
 //                    mEtPronunciation.setText(pronun);
 //                    mWord.setPronunciation(pronun);

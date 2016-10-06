@@ -8,20 +8,25 @@
         android:id="@+id/scope_pronun"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <TextView
+            android:textSize="20sp"
+            android:id="@+id/sg_word_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_below="@id/sg_word_name"
             android:id="@+id/sg_pronun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:layout_marginTop="1dp"
             android:layout_marginLeft="10dp"
+            android:layout_alignTop="@id/sg_pronun"
             android:layout_toRightOf="@id/sg_pronun"
             android:id="@+id/sg_ipa"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/ic_eye"/>
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_access_point"/>
 
         <TextView
             android:id="@+id/sg_cap_choose_word_from_list"
@@ -36,10 +41,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scope_pronun">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/sg_list_meaning"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/meaning_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 </RelativeLayout>

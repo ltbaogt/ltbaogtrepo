@@ -19,16 +19,19 @@ import java.util.ArrayList;
  */
 public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHolder> {
     private static final String TAG = Define.TAG + "MeaningAdapter";
-    private ArrayList<HashMapItem> mMeaningArray;
+    private ArrayList<String> mMeaningArray;
     private int selectedPosition = -1;
     //private int maxCurrent = 0;
     //private HashMapItem pHead;
 
-    public MeaningAdapter(ArrayList<HashMapItem> arr) {
+    public MeaningAdapter(ArrayList<String> arr) {
         mMeaningArray = arr;
         //pHead = mMeaningArray.get(mMeaningArray.size() - 1);
     }
 
+    public int getSelectedIndex() {
+        return selectedPosition;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -39,10 +42,10 @@ public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHo
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Log.d("AAA", "bindedPosition= " + position);
-        final HashMapItem hasmapItem = mMeaningArray.get(position);
+        final String itemMeaning = mMeaningArray.get(position);
         holder.mCbChoose.setOnCheckedChangeListener(null);
         holder.mCbChoose.setChecked(selectedPosition == position);
-        holder.mCbChoose.setText("" + hasmapItem.get(Define.EXTRA_MEANING));
+        holder.mCbChoose.setText("" + itemMeaning);
         holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
