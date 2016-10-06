@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, ">>>onCreateOptionsMenu START");
+        Log.d(TAG, ">>>onCreateOptionsMenu STARTT");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         String tag = getTopFragmentTag();
