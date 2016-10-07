@@ -21,6 +21,7 @@ public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHo
     private static final String TAG = Define.TAG + "MeaningAdapter";
     private ArrayList<String> mMeaningArray;
     private int selectedPosition = -1;
+    private OnCheckMeaningListener mCheckListener;
     //private int maxCurrent = 0;
     //private HashMapItem pHead;
 
@@ -29,6 +30,13 @@ public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHo
         //pHead = mMeaningArray.get(mMeaningArray.size() - 1);
     }
 
+    public interface OnCheckMeaningListener {
+        void onCheckMeaning(int selectedPosition);
+    }
+
+    public void setOnCheckMeaningListener(OnCheckMeaningListener l) {
+        mCheckListener = l;
+    }
     public int getSelectedIndex() {
         return selectedPosition;
     }
@@ -51,6 +59,9 @@ public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHo
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 selectedPosition = holder.getAdapterPosition();
                 notifyDataSetChanged();
+                if (mCheckListener != null) {
+                    mCheckListener.onCheckMeaning(selectedPosition);
+                }
             }
         });
 //        holder.mCbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

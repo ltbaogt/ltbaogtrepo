@@ -8,34 +8,36 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.adapter.MeaningAdapter;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
+import com.ltbaogt.vocareminder.vocareminder.customview.PageIndicator;
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.listener.VROnPageChangeListener;
 import com.ltbaogt.vocareminder.vocareminder.pager.SlidePageFragment;
-import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by MyPC on 03/10/2016.
  */
 public class FragmentSuggestInfo extends DialogFragment {
+    private static final String TAG = Define.TAG + "FragmentSuggestInfo";
     private ArrayList<WordEntity> mArrayMeaning;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-
+    private PageIndicator mPageIndicator;
+//    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,7 +46,20 @@ public class FragmentSuggestInfo extends DialogFragment {
         TextView tvWrdName = (TextView) v.findViewById(R.id.sg_word_name);
         TextView tvPronun = (TextView) v.findViewById(R.id.sg_pronun);
         ImageView imgIpa = (ImageView) v.findViewById(R.id.sg_ipa);
+        ImageView imgAccept = (ImageView) v.findViewById(R.id.accept_this_suggestion);
+        imgAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currentEntityIndex = mPageIndicator.getCurrentPage();
+                Log.d(TAG, ">>>onClick currentEntityIndex= " + currentEntityIndex);
+                String selectedMeaning = mArrayMeaning.get(currentEntityIndex).getSelectedMeaning();
+                Toast.makeText(getContext(),"currentEntityIndex= " + selectedMeaning, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mPageIndicator = (PageIndicator) v.findViewById(R.id.page_indicator);
+
         if (mArrayMeaning != null && mArrayMeaning.size() > 0) {
+            mPageIndicator.setNumberPages(mArrayMeaning.size());
             final WordEntity entity = mArrayMeaning.get(0);
             tvWrdName.setText(entity.wordName);
             tvPronun.setText(entity.pronunciation);
@@ -56,7 +71,6 @@ public class FragmentSuggestInfo extends DialogFragment {
             });
 
         }
-//
         createPager(v);
         return v;
     }
@@ -65,12 +79,21 @@ public class FragmentSuggestInfo extends DialogFragment {
         mPager = (ViewPager) v.findViewById(R.id.meaning_pager);
         mPagerAdapter = new SlidePagePagerAdapter(getChildFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-
+        VROnPageChangeListener pageChangeListener = new VROnPageChangeListener(mPageIndicator);
+        mPager.removeOnPageChangeListener(pageChangeListener);
+        mPager.addOnPageChangeListener(pageChangeListener);
     }
 
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        Log.d(TAG, ">>> onAttachFragment");
+        if (mPager != null) {
+            mPageIndicator.setCurrentPage(mPager.getCurrentItem());
+        }
+    }
 
-
-    public void setArrayList( ArrayList<WordEntity> array) {
+    public void setArrayList(ArrayList<WordEntity> array) {
         mArrayMeaning = array;
     }
 
@@ -82,7 +105,7 @@ public class FragmentSuggestInfo extends DialogFragment {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("AAA", ">>>getItem");
+            Log.d(TAG, ">>>getItem position= " + position);
             SlidePageFragment pageFragment = new SlidePageFragment();
             pageFragment.setEntity(mArrayMeaning.get(position));
             return pageFragment;
@@ -92,5 +115,23 @@ public class FragmentSuggestInfo extends DialogFragment {
         public int getCount() {
             return mArrayMeaning.size();
         }
+
+//        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            Log.d(TAG, ">>>instantiateItem position= " + position);
+//            super.instantiateItem(container, position);
+////            SlidePageFragment f = (SlidePageFragment)
+//            SlidePageFragment pageFragment = new SlidePageFragment();
+//            pageFragment.setEntity(mArrayMeaning.get(position));
+//            registeredFragments.put(position, pageFragment);
+//            return pageFragment;
+//        }
+//
+//        @Override
+//        public void destroyItem(ViewGroup container, int position, Object object) {
+//            Log.d(TAG, ">>>destroyItem position= " + position);
+//            registeredFragments.remove(position);
+//            super.destroyItem(container, position, object);
+//        }
     }
 }

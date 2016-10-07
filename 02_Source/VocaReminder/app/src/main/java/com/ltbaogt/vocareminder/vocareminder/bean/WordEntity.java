@@ -33,4 +33,8 @@ public class WordEntity {
         }
         return ret;
     }
+
+    public String getSelectedMeaning() {
+        return meanings.get(selectedMeaning);
+    }
 }
