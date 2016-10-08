@@ -1,17 +1,12 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.database.sqlite.SQLiteConstraintException;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
-
-import java.io.Serializable;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 /**
  * Created by My PC on 05/08/2016.
@@ -30,6 +25,8 @@ public class Word implements Parcelable {
     private int mCount;
     private int mGroup_ID;
     private boolean mDeleted;
+    private String mPosition;
+    private String mMp3Url;
 
     public Word() {
         mWordId = -1;
@@ -42,6 +39,8 @@ public class Word implements Parcelable {
         mCount = 0;
         mGroup_ID = 1;
         mDeleted = false;
+        mPosition = "";
+        mMp3Url = "";
     }
 
     public Word(int id,
@@ -53,7 +52,9 @@ public class Word implements Parcelable {
                 int priority,
                 int count,
                 int groupId,
-                boolean deleted) {
+                boolean deleted,
+                String position,
+                String mp3Url) {
         mWordId = id;
         mWordName = name;
         mPronunciation = pronunciation;
@@ -64,6 +65,8 @@ public class Word implements Parcelable {
         mCount = count;
         mGroup_ID = groupId;
         mDeleted = deleted;
+        mPosition = position;
+        mMp3Url = mp3Url;
     }
 
     protected Word(Parcel in) {
@@ -77,6 +80,8 @@ public class Word implements Parcelable {
         mCount = in.readInt();
         mGroup_ID = in.readInt();
         mDeleted = in.readByte() != 0;
+        mPosition = in.readString();
+        mMp3Url = in.readString();
     }
 
 //    //TODO: What is it?
@@ -175,6 +180,24 @@ public class Word implements Parcelable {
         this.mDeleted = Deleted;
     }
 
+    public void setPosition(String pos) {
+        mPosition = pos;
+    }
+
+    public String getPosition() {
+        return mPosition;
+    }
+
+    public void setMp3Url(String url) {
+        if (VRStringUtil.isStringNullOrEmpty(url)) return;
+        url = url.trim();
+        mMp3Url = url;
+    }
+
+
+    public String getMp3Url() {
+        return mMp3Url;
+    }
     @Override
     public String toString() {
         String str = "Word={"
@@ -188,6 +211,8 @@ public class Word implements Parcelable {
                 + ", Count= " + getCount()
                 + ", GroupId= " + getGroup_ID()
                 + ", isDeleted= " + isDeleted()
+                + ", Position= " + getPosition()
+                + ", Mp3Url= " + getMp3Url()
                 + " }";
         return str;
 
@@ -210,6 +235,8 @@ public class Word implements Parcelable {
         dest.writeInt(getCount());
         dest.writeInt(getGroup_ID());
         dest.writeInt(isDeleted() ? 1 : 0);
+        dest.writeString(getPosition());
+        dest.writeString(getMp3Url());
     }
 
 }

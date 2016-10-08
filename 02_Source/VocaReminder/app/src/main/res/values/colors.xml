@@ -32,4 +32,6 @@
     <color name="brown">#7A5547</color>
     <color name="grey">#9D9D9D</color>
     <color name="green_grey">#FF00BCD4</color>
+    <color name="color_word_title">#000000</color>
+    <color name="color_word_ipa">#304ffe</color>
 </resources>

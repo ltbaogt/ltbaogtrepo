@@ -41,6 +41,8 @@ public class ProviderWrapper {
                 w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
                 w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
                 w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
+                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
                 list.add(w);
             } while (words.moveToNext());
         }
@@ -59,6 +61,8 @@ public class ProviderWrapper {
                 w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
                 w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
                 w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
+                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
                 list.add(w);
             } while (words.moveToNext());
         }
@@ -76,6 +80,8 @@ public class ProviderWrapper {
                 w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
                 w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
                 w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
+                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
+                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
             }
             words.close();
         }

@@ -28,6 +28,11 @@ public class ConvertWord {
     private int i;
     //    private boolean mDeleted;
     private boolean j;
+    //    private boolean mPosition;
+    private String k;
+    //    private boolean mMp3Url;
+    private String l;
+
     public ConvertWord(int id,
                        String name,
                        String pronunciation,
@@ -37,7 +42,9 @@ public class ConvertWord {
                        int priority,
                        int count,
                        int groupId,
-                       boolean deleted) {
+                       boolean deleted,
+                       String position,
+                       String mp3Url) {
         a = id;
         //    private String mWordName;
         b = name;
@@ -57,6 +64,8 @@ public class ConvertWord {
         i = groupId;
         //    private boolean mDeleted;
         j = deleted;
+        k = position;
+        l = mp3Url;
     }
     public int getWordId() {
         return a;
@@ -88,6 +97,13 @@ public class ConvertWord {
     public boolean isDeleted() {
         return j;
     }
+    public String getPosition() {
+        return k;
+    }
+    public String getMp3Url() {
+        return l;
+    }
+
     public static ConvertWord fromWord(Word w) {
         return new ConvertWord(
                 w.getWordId(),
@@ -99,7 +115,9 @@ public class ConvertWord {
                 w.getPriority(),
                 w.getCount(),
                 w.getGroup_ID(),
-                w.isDeleted()
+                w.isDeleted(),
+                w.getPosition(),
+                w.getMp3Url()
         );
     }
 
@@ -114,7 +132,10 @@ public class ConvertWord {
                 w.getPriority(),
                 w.getCount(),
                 w.getGroup_ID(),
-                w.isDeleted()
+                w.isDeleted(),
+                w.getPosition(),
+                w.getMp3Url()
+
         );
     }
 }

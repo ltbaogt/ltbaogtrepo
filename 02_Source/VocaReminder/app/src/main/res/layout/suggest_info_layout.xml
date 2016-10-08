@@ -10,18 +10,22 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:layout_marginTop="3dp"
             android:id="@+id/accept_this_suggestion"
             android:layout_alignParentRight="true"
-            android:background="@color/yellow"
+            android:background="@drawable/accept_state"
             android:layout_width="24dp"
             android:layout_height="24dp" />
         <TextView
+            android:textColor="@color/color_word_title"
             android:id="@+id/sg_word_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp" />
+            android:textSize="25sp" />
 
         <TextView
+            android:textColor="@color/color_word_ipa"
+            android:textSize="18sp"
             android:id="@+id/sg_pronun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,12 +33,12 @@
 
         <ImageView
             android:id="@+id/sg_ipa"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignTop="@id/sg_pronun"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/sg_pronun"
-            android:background="@drawable/ic_access_point" />
+            android:background="@drawable/speaker_state" />
 
         <TextView
             android:id="@+id/sg_cap_choose_word_from_list"

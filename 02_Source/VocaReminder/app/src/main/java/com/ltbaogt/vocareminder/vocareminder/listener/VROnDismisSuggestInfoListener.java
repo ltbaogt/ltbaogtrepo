@@ -18,8 +18,12 @@ public class VROnDismisSuggestInfoListener implements FragmentSuggestInfo.Accept
 
     @Override
     public void onDismiss(WordEntity entity) {
-        mViewHolder.etWordName.setText(entity.wordName);
-        mViewHolder.etPronunciation.setText(entity.pronunciation);
-        mViewHolder.etMeaning.setText(entity.getSelectedMeaning());
+        if (mViewHolder != null && entity != null) {
+            mViewHolder.etWordName.setText(entity.wordName);
+            mViewHolder.etPronunciation.setText(entity.pronunciation);
+            mViewHolder.etMeaning.setText(entity.getSelectedMeaning());
+            mViewHolder.etPosition.setText(entity.position);
+            mViewHolder.mp3Url = entity.mp3URL;
+        }
     }
 }

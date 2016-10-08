@@ -51,7 +51,7 @@ public class PageIndicator extends LinearLayout {
         if (inflater != null) {
             LinearLayout v = (LinearLayout) inflater.inflate(R.layout.page_indicator_layout, this);
             mIndicators = (LinearLayout) v.findViewById(R.id.outter_layout);
-            LayoutParams lp = new LinearLayout.LayoutParams(20, 20);
+            LayoutParams lp = new LinearLayout.LayoutParams(10, 10);
             lp.setMargins(5, 0, 0, 0);
             for (int i = 0; i < mPage; i++) {
                 View page = new View(getContext());

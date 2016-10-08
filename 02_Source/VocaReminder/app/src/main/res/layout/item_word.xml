@@ -45,18 +45,36 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_toLeftOf="@id/view_anchor"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/tv_pronunciation"
+            <LinearLayout
+                android:id="@+id/layout_pronunciation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/tv_title_wordname"
-                android:layout_alignRight="@id/tv_title_wordname"
                 android:layout_alignLeft="@id/tv_title_wordname"
-                android:gravity="left|top"
-                android:textSize="15sp"
-                android:layout_marginBottom="3dp"/>
+                android:layout_alignRight="@id/tv_title_wordname"
+                android:layout_below="@id/tv_title_wordname"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:textStyle="italic"
+                    android:id="@+id/tv_pronunciation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="left|top"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/img_ipa_speak"
+                    android:clickable="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/speaker_state" />
+            </LinearLayout>
+
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

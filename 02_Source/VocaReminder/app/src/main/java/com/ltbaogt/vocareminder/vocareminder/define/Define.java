@@ -32,6 +32,7 @@ public class Define {
     public static final String WORD_INIT_NAME = "What is your word ?";
     public static final String WORD_INIT_PRONUNCIATION = "How to spell it";
     public static final String WORD_INIT_DESCRIPTION = "Let's describe this word";
+    public static final String WORD_INIT_POSITION = "Where is the position ?";
     public static final String MARKET_URI = "market://details?id=";
     public static final String MARKET_URL = "https://play.google.com/store/apps/details?id=";
     public static final String EXTRA_INDEX = "index";

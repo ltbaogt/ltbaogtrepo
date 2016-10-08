@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
@@ -18,6 +19,7 @@ import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.listener.OnClickIpaSpeaker;
 
 import java.util.ArrayList;
 
@@ -113,7 +115,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Log.d(TAG, ">>>onBindViewHolder START");
-        Word w = mArrayList.get(position);
+        final Word w = mArrayList.get(holder.getAdapterPosition());
         Log.d(TAG, ">>>onBindViewHolder " + w.toString());
 
         holder.mWordName.setTypeface(mTypeFaceBold);
@@ -125,12 +127,14 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
             @Override
             public void onClick(View view) {
                 if (mContext instanceof MainActivity) {
-                    Word w = mArrayList.get(holder.getAdapterPosition());
+
                     ((MainActivity) mContext).showDialogEditWord(w);
                 }
             }
         });
         holder.mPronunciation.setText(w.getPronunciation());
+        OnClickIpaSpeaker onClickIpaSpeaker= new OnClickIpaSpeaker(w.getMp3Url());
+        holder.setIpaSpeakOnClickListener(onClickIpaSpeaker);
         Log.d(TAG, ">>>onBindViewHolder END");
     }
 
@@ -178,8 +182,9 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
         protected TextView mWordName;
         protected CardView mSingleItem;
-        protected  TextView mMeaning;
+        protected TextView mMeaning;
         protected TextView mPronunciation;
+        protected ImageView mIpaSpeak;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -187,6 +192,12 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
             mMeaning = (TextView) itemView.findViewById(R.id.tv_meaning);
             mSingleItem = (CardView) itemView.findViewById(R.id.cardview);
             mPronunciation = (TextView) itemView.findViewById(R.id.tv_pronunciation);
+            mIpaSpeak = (ImageView) itemView.findViewById(R.id.img_ipa_speak);
         }
+
+        public void setIpaSpeakOnClickListener(OnClickIpaSpeaker l) {
+            mIpaSpeak.setOnClickListener(l);
+        }
+
     }
 }

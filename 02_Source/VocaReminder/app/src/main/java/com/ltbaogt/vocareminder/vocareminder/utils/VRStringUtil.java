@@ -21,6 +21,9 @@ public class VRStringUtil {
     }
 
     public static void playMp3File(final String url) {
+        if (isStringNullOrEmpty(url)) {
+            Log.d(TAG, ">>>playMp3File URL not found");
+        }
         new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -30,11 +33,13 @@ public class VRStringUtil {
                                 mediaPlayer.setDataSource(url);
                                 mediaPlayer.prepare();
                                 mediaPlayer.start();
+                                Log.d(TAG, ">>>playMp3File START");
                                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                     @Override
                                     public void onCompletion(MediaPlayer mediaPlayer) {
                                         mediaPlayer.stop();
                                         mediaPlayer.release();
+                                        Log.d(TAG, ">>>playMp3File STOP");
                                     }
                                 });
                             } catch (Exception e) {
@@ -46,5 +51,12 @@ public class VRStringUtil {
 
     public static String formatMeaning(String s) {
         return "- " + VRStringUtil.UpperFirstCharacterOrString(s);
+    }
+
+    public static boolean isStringNullOrEmpty(String s) {
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

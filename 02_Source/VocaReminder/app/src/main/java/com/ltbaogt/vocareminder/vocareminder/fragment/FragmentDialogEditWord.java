@@ -41,6 +41,7 @@ import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
 import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -107,6 +108,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             mViewHolder.etWordName = (EditText) v.findViewById(R.id.et_name);
             mViewHolder.etMeaning = (EditText) v.findViewById(R.id.et_meaning);
             mViewHolder.etPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
+            mViewHolder.etPosition = (EditText) v.findViewById(R.id.et_position);
             //Set title for dialog
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             //Get word instance
@@ -117,19 +119,24 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mViewHolder.etWordName.setHint(mWord.getWordName());
                 mViewHolder.etPronunciation.setHint(mWord.getPronunciation());
                 mViewHolder.etMeaning.setHint(mWord.getDefault_Meaning());
+                mViewHolder.etPosition.setHint(Define.WORD_INIT_POSITION);
             } else {
                 mViewHolder.etWordName.setText(mWord.getWordName());
-                if (TextUtils.isEmpty(mWord.getPronunciation())) {
-                    mViewHolder.etPronunciation.setHint(Define.WORD_INIT_PRONUNCIATION);
-                } else {
+                if (!VRStringUtil.isStringNullOrEmpty(mWord.getPronunciation())) {
                     mViewHolder.etPronunciation.setText(mWord.getPronunciation());
                 }
-
-                if (TextUtils.isEmpty(mWord.getDefault_Meaning())) {
-                    mViewHolder.etMeaning.setHint(Define.WORD_INIT_DESCRIPTION);
-                } else {
+                if (!VRStringUtil.isStringNullOrEmpty(mWord.getDefault_Meaning())) {
                     mViewHolder.etMeaning.setText(mWord.getDefault_Meaning());
+
                 }
+                if (!VRStringUtil.isStringNullOrEmpty(mWord.getPosition())) {
+                    mViewHolder.etPosition.setText(mWord.getPosition());
+
+                }
+                mViewHolder.etWordName.setHint(Define.WORD_INIT_NAME);
+                mViewHolder.etMeaning.setHint(Define.WORD_INIT_DESCRIPTION);
+                mViewHolder.etPronunciation.setHint(Define.WORD_INIT_PRONUNCIATION);
+                mViewHolder.etPosition.setHint(Define.WORD_INIT_POSITION);
             }
             mViewHolder.etWordName.requestFocus();
             //showKeyboard();
@@ -205,6 +212,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 String wordName = mViewHolder.etWordName.getText().toString().trim();
                 String wordPronun = mViewHolder.etPronunciation.getText().toString().trim();
                 String wordMeaning = mViewHolder.etMeaning.getText().toString().trim();
+                String wordPosition = mViewHolder.etPosition.getText().toString().trim();
                 //Word name is empty
                 if ("".equalsIgnoreCase(wordName)) {
                     Toast toast = Toast.makeText(getActivity(), R.string.word_is_empty, Toast.LENGTH_SHORT);
@@ -222,6 +230,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mWord.setWordName(wordName);
                 mWord.setPronunciation(wordPronun);
                 mWord.setDefault_Meaning(wordMeaning);
+                mWord.setPosition(wordPosition);
+                mWord.setMp3Url(mViewHolder.mp3Url);
                 OALBLL bl = new OALBLL(view.getContext());
                 if (mWord.getWordId() == -1) {
                     bl.addNewWord(mWord);
@@ -334,5 +344,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         public EditText etPronunciation;
         public EditText etMeaning;
         public EditText etSentence;
+        public EditText etPosition;
+        public String mp3Url;
     }
 }

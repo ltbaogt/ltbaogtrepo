@@ -59,9 +59,11 @@ public class FragmentSuggestInfo extends DialogFragment {
             public void onClick(View view) {
                 int currentEntityIndex = mPageIndicator.getCurrentPage();
                 Log.d(TAG, ">>>onClick currentEntityIndex= " + currentEntityIndex);
-                WordEntity selectedEntity = mArrayMeaning.get(currentEntityIndex);
-                if (mAcceptSuggestionListener != null) {
-                    mAcceptSuggestionListener.onDismiss(selectedEntity);
+                if (currentEntityIndex >= 0) {
+                    WordEntity selectedEntity = mArrayMeaning.get(currentEntityIndex);
+                    if (mAcceptSuggestionListener != null) {
+                        mAcceptSuggestionListener.onDismiss(selectedEntity);
+                    }
                 }
                 getDialog().dismiss();
             }

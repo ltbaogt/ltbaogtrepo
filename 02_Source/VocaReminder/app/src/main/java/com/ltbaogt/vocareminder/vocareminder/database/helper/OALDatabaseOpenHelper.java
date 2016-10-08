@@ -42,6 +42,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public static final int COL_COUNT_INDEX = 7;
     public static final int COL_GROUP_ID_INDEX = 8;
     public static final int COL_DELETED_INDEX = 9;
+    public static final int COL_POSITION_INDEX = 10;
+    public static final int COL_MP3_URL_INDEX = 11;
 
     public static final String COL_WORD_ID = "Word_ID";
     public static final String COL_WORDNAME = "WordName";
@@ -53,6 +55,9 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public static final String COL_COUNT = "Count";
     public static final String COL_GROUP_ID = "Group_ID";
     public static final String COL_DELETED = "Deleted";
+    public static final String COL_POSITION = "Position";
+    public static final String COL_MP3_URL = "Mp3Url";
+
     //private static final String COL_LASTUPDATE= "LastUpdate";
 
     private static final String TABLE_NAME_TBL_TAG = "tbl_Group_ID";
@@ -182,6 +187,8 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         cv.put(COL_COUNT, w.getCount());
         cv.put(COL_GROUP_ID, w.getGroup_ID());
         cv.put(COL_DELETED, w.isDeleted());
+        cv.put(COL_POSITION, w.getPosition());
+        cv.put(COL_MP3_URL, w.getMp3Url());
         return cv;
     }
 
@@ -283,7 +290,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
         int count = db.update(TABLE_NAME_TBL_WORD, getContentValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
-        Log.d(TAG, ">>>updateWord count= " + count);
+        Log.d(TAG, ">>>updateWord word= " + w.toString());
     }
     public void deleteWordById(int id) {
         Log.d(TAG,">>>deleteWordById START, id= " + id);
