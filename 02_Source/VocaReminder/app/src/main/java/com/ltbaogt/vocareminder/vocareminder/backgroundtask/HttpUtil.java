@@ -74,7 +74,7 @@ public class HttpUtil {
                     Elements defEls = entryBodyEl.select(TAG_DEFINE);
                     if (defEls != null && defEls.size() > 0) {
                         for (Element e : defEls) {
-                            wordEntry.meanings.add(formatMeaning(e.text()));
+                            wordEntry.addMeaning(e.text());
                         }
                     } else {
                         //Unable to fetch definition of Word
@@ -105,35 +105,6 @@ public class HttpUtil {
         }catch (NullPointerException e) {
             return null;
         }
-    }
-
-
-
-    public static ArrayList<HashMapItem> getMeanings(Document doc) {
-        try {
-            ArrayList<HashMapItem> array = new ArrayList<>();
-            Elements elements = doc.select(meaningTag);
-            Log.d(TAG, ">>>getMeaning size=" + elements.size());
-            for(Element e : elements) {
-                String meaning = formatMeaning(e.text());
-                HashMapItem item = new HashMapItem();
-                item.put(Define.EXTRA_MEANING, meaning);
-                item.setIndex(0);
-                array.add(item);
-                Log.d(TAG, ">>>getMeaning meaning=" + meaning);
-            }
-            return array;
-        }catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    public static String formatMeaning(String s) {
-        int lastIndexColon = s.lastIndexOf(':');
-        if (lastIndexColon == s.length() - 1) {
-            s = s.substring(0, s.length() - 1);
-        }
-        return "- " + VRStringUtil.UpperFirstCharacterOrString(s);
     }
 
     public static class LoadWordDefine extends AsyncTask<String, Void, Document> {

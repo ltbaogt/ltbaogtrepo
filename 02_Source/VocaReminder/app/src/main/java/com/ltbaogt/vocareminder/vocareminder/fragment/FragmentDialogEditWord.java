@@ -39,6 +39,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
 import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import org.jsoup.Jsoup;
@@ -57,16 +58,14 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private static final String TAG = Define.TAG + "FragmentDialogEditWord";
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1;
     private Word mWord;
-    private EditText mEtWordName;
-    private EditText mEtPronunciation;
-    private EditText mEtMeaning;
-    private EditText mEtSentence;
     private ImageView mBtnCancel;
     private ImageView mBtnSave;
     private ImageView mBtnGetInfo;
     private OnCreateOrUpdateWodListener mOnCreateOrUpdateWodListener;
     private ProgressBar mLoading;
     private ImageView mBtnVoice;
+
+    private ViewHolder mViewHolder;
 
     public interface OnCreateOrUpdateWodListener {
         void onSave(Word w);
@@ -92,6 +91,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         mBtnCancel.setOnClickListener(this);
         mBtnSave.setOnClickListener(this);
         mBtnGetInfo.setOnClickListener(this);
+        mViewHolder = new ViewHolder();
         if (checkVoiceRecognition()) {
             mBtnVoice = (ImageView) v.findViewById(R.id.btn_voice);
             mBtnVoice.setVisibility(View.VISIBLE);
@@ -104,9 +104,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 //        //mBtnCancel.setText(btn1Title);
 //        mBtnSave.setText(btn2Title);
         if (b != null) {
-            mEtWordName = (EditText) v.findViewById(R.id.et_name);
-            mEtMeaning = (EditText) v.findViewById(R.id.et_meaning);
-            mEtPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
+            mViewHolder.etWordName = (EditText) v.findViewById(R.id.et_name);
+            mViewHolder.etMeaning = (EditText) v.findViewById(R.id.et_meaning);
+            mViewHolder.etPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
             //Set title for dialog
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             //Get word instance
@@ -114,24 +114,24 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             //Get popup type add new of update
             int popupType = b.getInt(Define.POPUP_TYPE, Define.POPUP_NEW_WORD);
             if (popupType == Define.POPUP_NEW_WORD) {
-                mEtWordName.setHint(mWord.getWordName());
-                mEtPronunciation.setHint(mWord.getPronunciation());
-                mEtMeaning.setHint(mWord.getDefault_Meaning());
+                mViewHolder.etWordName.setHint(mWord.getWordName());
+                mViewHolder.etPronunciation.setHint(mWord.getPronunciation());
+                mViewHolder.etMeaning.setHint(mWord.getDefault_Meaning());
             } else {
-                mEtWordName.setText(mWord.getWordName());
+                mViewHolder.etWordName.setText(mWord.getWordName());
                 if (TextUtils.isEmpty(mWord.getPronunciation())) {
-                    mEtPronunciation.setHint(Define.WORD_INIT_PRONUNCIATION);
+                    mViewHolder.etPronunciation.setHint(Define.WORD_INIT_PRONUNCIATION);
                 } else {
-                    mEtPronunciation.setText(mWord.getPronunciation());
+                    mViewHolder.etPronunciation.setText(mWord.getPronunciation());
                 }
 
                 if (TextUtils.isEmpty(mWord.getDefault_Meaning())) {
-                    mEtMeaning.setHint(Define.WORD_INIT_DESCRIPTION);
+                    mViewHolder.etMeaning.setHint(Define.WORD_INIT_DESCRIPTION);
                 } else {
-                    mEtMeaning.setText(mWord.getDefault_Meaning());
+                    mViewHolder.etMeaning.setText(mWord.getDefault_Meaning());
                 }
             }
-            mEtWordName.requestFocus();
+            mViewHolder.etWordName.requestFocus();
             //showKeyboard();
         }
         return v;
@@ -170,8 +170,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 String voiceInText = textMatchList.get(0);
                 if (!voiceInText.isEmpty()) {
                     voiceInText = voiceInText.substring(0,1).toUpperCase() + voiceInText.substring(1);
-                    mEtWordName.setText("");
-                    mEtWordName.setText(String.valueOf(voiceInText));
+                    mViewHolder.etWordName.setText("");
+                    mViewHolder.etWordName.setText(String.valueOf(voiceInText));
                 }
             }
         } else {
@@ -202,9 +202,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         int id = view.getId();
         switch (id) {
             case R.id.btn_save:
-                String wordName = mEtWordName.getText().toString().trim();
-                String wordPronun = mEtPronunciation.getText().toString().trim();
-                String wordMeaning = mEtMeaning.getText().toString().trim();
+                String wordName = mViewHolder.etWordName.getText().toString().trim();
+                String wordPronun = mViewHolder.etPronunciation.getText().toString().trim();
+                String wordMeaning = mViewHolder.etMeaning.getText().toString().trim();
                 //Word name is empty
                 if ("".equalsIgnoreCase(wordName)) {
                     Toast toast = Toast.makeText(getActivity(), R.string.word_is_empty, Toast.LENGTH_SHORT);
@@ -278,6 +278,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 infoFgm.setArrayList(listEntryWord);
                 if (getActivity() != null) {
                     infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+                    infoFgm.setAcceptSuggestionListener(new VROnDismisSuggestInfoListener(mViewHolder));
                 }
 //                if (pronun != null && mEtPronunciation != null) {
 //                    mEtPronunciation.setText(pronun);
@@ -290,7 +291,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 
             }
         };
-        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mEtWordName.getText().toString(), onloadFinish);
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mViewHolder.etWordName.getText().toString(), onloadFinish);
         task.execute();
 
 //        String pronun = "This is Pronun";
@@ -326,5 +327,12 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             }
         });
 
+    }
+
+    public class ViewHolder {
+        public EditText etWordName;
+        public EditText etPronunciation;
+        public EditText etMeaning;
+        public EditText etSentence;
     }
 }

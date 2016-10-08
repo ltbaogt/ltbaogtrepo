@@ -43,4 +43,8 @@ public class VRStringUtil {
                         }
                     }).start();
     }
+
+    public static String formatMeaning(String s) {
+        return "- " + VRStringUtil.UpperFirstCharacterOrString(s);
+    }
 }

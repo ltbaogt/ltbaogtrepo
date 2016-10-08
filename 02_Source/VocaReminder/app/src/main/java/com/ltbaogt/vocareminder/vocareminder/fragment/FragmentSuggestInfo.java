@@ -37,7 +37,14 @@ public class FragmentSuggestInfo extends DialogFragment {
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
     private PageIndicator mPageIndicator;
-//    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    private AcceptSuggestionListener mAcceptSuggestionListener;
+    public interface AcceptSuggestionListener {
+        void onDismiss(WordEntity entity);
+    }
+
+    public void setAcceptSuggestionListener(AcceptSuggestionListener l) {
+        mAcceptSuggestionListener = l;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,8 +59,11 @@ public class FragmentSuggestInfo extends DialogFragment {
             public void onClick(View view) {
                 int currentEntityIndex = mPageIndicator.getCurrentPage();
                 Log.d(TAG, ">>>onClick currentEntityIndex= " + currentEntityIndex);
-                String selectedMeaning = mArrayMeaning.get(currentEntityIndex).getSelectedMeaning();
-                Toast.makeText(getContext(),"currentEntityIndex= " + selectedMeaning, Toast.LENGTH_SHORT).show();
+                WordEntity selectedEntity = mArrayMeaning.get(currentEntityIndex);
+                if (mAcceptSuggestionListener != null) {
+                    mAcceptSuggestionListener.onDismiss(selectedEntity);
+                }
+                getDialog().dismiss();
             }
         });
         mPageIndicator = (PageIndicator) v.findViewById(R.id.page_indicator);
@@ -134,4 +144,5 @@ public class FragmentSuggestInfo extends DialogFragment {
 //            super.destroyItem(container, position, object);
 //        }
     }
+
 }

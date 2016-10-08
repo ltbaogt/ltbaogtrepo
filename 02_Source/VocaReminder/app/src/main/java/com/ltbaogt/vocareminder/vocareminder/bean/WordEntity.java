@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.util.ArrayList;
 
@@ -23,18 +24,30 @@ public class WordEntity {
                 + " mp3Url = " + mp3URL
                 + " posistion = " + position
                 + " meaning = {" + printMeaning() + "}"
-                +"}";
+                + "}";
+    }
+
+
+    public void addMeaning(String s) {
+        int lastIndexColon = s.lastIndexOf(':');
+        if (lastIndexColon == s.length() - 1) {
+            s = s.substring(0, s.length() - 1);
+        }
+        meanings.add(VRStringUtil.UpperFirstCharacterOrString(s.trim()));
     }
 
     public String printMeaning() {
         String ret = "";
         for (String s : meanings) {
-            ret+= '\n' + s ;
+            ret += '\n' + s;
         }
         return ret;
     }
 
     public String getSelectedMeaning() {
-        return meanings.get(selectedMeaning);
+        if (selectedMeaning < 0 || selectedMeaning >= meanings.size()) {
+            return "";
+        }
+        return VRStringUtil.formatMeaning(meanings.get(selectedMeaning));
     }
 }
