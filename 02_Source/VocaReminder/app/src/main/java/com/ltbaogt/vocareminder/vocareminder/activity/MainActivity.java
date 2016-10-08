@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -403,11 +405,15 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         showConfirmDialog(withStringResId, listener );
     }
 
-    private ProgressBar getLoadingIndicator() {
-        return ((ProgressBar)findViewById(R.id.loading_indicator));
+    private ProgressDialog createProgressDialog() {
+        ProgressDialog pdialog = new ProgressDialog(this); // this = YourActivity
+        pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pdialog.setMessage("Loading. Please wait...");
+        pdialog.setIndeterminate(true);
+        pdialog.setCanceledOnTouchOutside(false);
+        return pdialog;
     }
     public void backup() {
-        getLoadingIndicator().setVisibility(View.VISIBLE);
         OALBLL bl = new OALBLL(getApplicationContext());
         ArrayList<ConvertWord> words = convertToAnonymousWord(bl.getAllWordsOrderByNameInList());
         Gson gsonParser = new Gson();
@@ -460,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            getLoadingIndicator().setVisibility(View.GONE);
             showSnackBar(R.string.snackbar_backup_completed);
         }
     }
@@ -494,7 +499,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void restore() {
-        getLoadingIndicator().setVisibility(View.VISIBLE);
         final OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
         try {
             if (db.getCount() > 0) {
@@ -513,7 +517,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } catch (Exception e) {
             Log.d(TAG, ">>>restore An Error occurs when restoring");
         } finally {
-            getLoadingIndicator().setVisibility(View.GONE);
             db.close();
         }
     }
@@ -536,7 +539,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } catch (Exception e) {
             Log.d(TAG, ">>>restore An Error occurs when restoring");
         } finally {
-            getLoadingIndicator().setVisibility(View.GONE);
             showSnackBar(R.string.snackbar_restore_completed);
         }
     }
