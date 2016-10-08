@@ -46,7 +46,7 @@ public class AppProvider extends ContentProvider {
         Cursor c = null;
         OALDatabaseOpenHelper dbHepler = new OALDatabaseOpenHelper(getContext());
         if (URI_MATCHER.match(uri) == WORD_LIST) {
-            c = dbHepler.getAllWordsOrderByNameInCursor();
+            c = dbHepler.getAllWordsOrderByNameInCursor(false);
         } else if (URI_MATCHER.match(uri) == ARCHIVED_LIST) {
             c = dbHepler.getArchivedWordsOrderByNameInCursor();
         } else if (URI_MATCHER.match(uri) == WORD_ID) {

@@ -388,13 +388,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void createNewDB(View v) {
-        showConfirmDialog(R.string.clean_up_vocabularies, new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener onClick = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                OALBLL.delDatabase(MainActivity.this);
-                OALBLL.initDatabase(MainActivity.this);
+                OALBLL.delDatabase(getApplicationContext());
+                OALBLL.initDatabase(getApplicationContext());
             }
-        });
+        };
+        createNewDB(R.string.clean_up_vocabularies, onClick);
+
+    }
+
+    private void createNewDB(int withStringResId, DialogInterface.OnClickListener listener) {
+        showConfirmDialog(withStringResId, listener );
     }
 
     private ProgressBar getLoadingIndicator() {
@@ -407,44 +413,50 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Gson gsonParser = new Gson();
         try {
             if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                Log.d(TAG, ">>>backupVocabulary SDCard isn't found");
+                Log.d(TAG, ">>>backup SDCard isn't found");
                 return;
             }
             String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER;
-            Log.d(TAG, ">>>backupVocabulary" + storagePath);
+            Log.d(TAG, ">>>backup " + storagePath);
             File storageDirectory = new File(storagePath);
+            boolean directoryCreated;
             if (storageDirectory.exists()) {
-                Log.d(TAG, ">>>backupVocabulary location is found");
+                Log.d(TAG, ">>>backup location is found");
+                directoryCreated = true;
             } else {
-                boolean directoryCreated = storageDirectory.mkdir();
-                Log.d(TAG, ">>>backupVocabulary create new directory <reminder>");
-                if (directoryCreated) {
-                    String backFilePath = storagePath + BACKUP_FILE;
-                    File backupFile = new File(backFilePath);
-                    if (backupFile.exists()) {
-                        Log.d(TAG, ">>>backupVocabulary override old file");
-                    } else {
-                        boolean fileCreated = backupFile.createNewFile();
-                        if (fileCreated) {
-                            FileWriter fw = new FileWriter(backupFile);
-                            BufferedWriter bw = new BufferedWriter(fw);
-                            for (ConvertWord w : words) {
-                                bw.write(gsonParser.toJson(w));
-                                bw.newLine();
-                            }
-                            bw.close();
-                            fw.close();
-                            if (mFragmentList.getSettingFragment() != null) {
-                                mFragmentList.getSettingFragment().setBackupFile(backupFile.getName());
-                            }
-                        } else {
-                            Log.d(TAG, ">>>backup cannot create backup file");
-                        }
-                    }
-                } else {
-                    Log.d(TAG, ">>>backup cannot create backup directory");
-                }
+                directoryCreated = storageDirectory.mkdir();
+                Log.d(TAG, ">>>backup create new directory <reminder>");
             }
+            if (directoryCreated) {
+                String backFilePath = storagePath + BACKUP_FILE;
+                File backupFile = new File(backFilePath);
+                boolean fileCreated;
+                if (backupFile.exists()) {
+                    Log.d(TAG, ">>>backup override old file");
+                    fileCreated = true;
+                } else {
+                    fileCreated = backupFile.createNewFile();
+                }
+                if (fileCreated) {
+                    FileWriter fw = new FileWriter(backupFile);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    for (ConvertWord w : words) {
+                        bw.write(gsonParser.toJson(w));
+                        bw.newLine();
+                    }
+                    bw.close();
+                    fw.close();
+                    if (mFragmentList.getSettingFragment() != null) {
+                        mFragmentList.getSettingFragment().setBackupFile(backupFile.getName());
+                    }
+                    Log.d(TAG, ">>>backup backup completed");
+                } else {
+                    Log.d(TAG, ">>>backup cannot create backup file");
+                }
+            } else {
+                Log.d(TAG, ">>>backup cannot create backup directory");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -483,28 +495,46 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     public void restore() {
         getLoadingIndicator().setVisibility(View.VISIBLE);
-        OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
+        final OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
         try {
-            if (db.getCount() <= 0) {
-                File backupFile = isBackupExisted();
-                if (backupFile != null) {
-                    BufferedReader br = new BufferedReader(new FileReader(backupFile));
-                    String object;
-                    Gson jsonParser = new Gson();
-                    while ((object = br.readLine()) != null) {
-                        Word w = ConvertWord.toWord(jsonParser.fromJson(object, ConvertWord.class));
-                        db.insertWord(w);
+            if (db.getCount() > 0) {
+                DialogInterface.OnClickListener onClick = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        OALBLL.delDatabase(getApplicationContext());
+                        OALBLL.initDatabase(getApplicationContext());
+                        doBackup(db);
                     }
-                } else {
-                    Log.d(TAG, "Cannot find backup file. Reason: Backup doesn't exist");
-                }
+                };
+                createNewDB(R.string.restore_pernalty, onClick);
             } else {
-                Log.d(TAG, "Nothing to backup");
+                doBackup(db);
             }
-            db.close();
-
         } catch (Exception e) {
-            Log.d(TAG, "An Error occurs when restoring");
+            Log.d(TAG, ">>>restore An Error occurs when restoring");
+        } finally {
+            getLoadingIndicator().setVisibility(View.GONE);
+            db.close();
+        }
+    }
+
+    private void doBackup(OALDatabaseOpenHelper db) {
+        try {
+            File backupFile = isBackupExisted();
+            if (backupFile != null) {
+                BufferedReader br = new BufferedReader(new FileReader(backupFile));
+                String object;
+                Gson jsonParser = new Gson();
+                while ((object = br.readLine()) != null) {
+                    Word w = ConvertWord.toWord(jsonParser.fromJson(object, ConvertWord.class));
+                    db.insertWord(w);
+                }
+                Log.d(TAG, ">>>restore completed");
+            } else {
+                Log.d(TAG, ">>>restore Cannot find restore file. Reason: Backup doesn't exist");
+            }
+        } catch (Exception e) {
+            Log.d(TAG, ">>>restore An Error occurs when restoring");
         } finally {
             getLoadingIndicator().setVisibility(View.GONE);
             showSnackBar(R.string.snackbar_restore_completed);

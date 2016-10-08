@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,6 +15,35 @@ import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 @SuppressLint("ParcelCreator")
 public class Word implements Parcelable {
+
+    public static final String TABLE_NAME_TBL_WORD = "tbl_Word";
+    public static final int COL_WORD_ID_INDEX = 0;
+    public static final int COL_WORDNAME_INDEX = 1;
+    public static final int COL_PRONUNCIATION_INDEX = 2;
+    public static final int COL_TYPE_ID_INDEX = 3;
+    public static final int COL_DEFAULT_MEANING_INDEX = 4;
+    public static final int COL_SENTENCE_INDEX = 5;
+    public static final int COL_PRIORITY_INDEX = 6;
+    public static final int COL_COUNT_INDEX = 7;
+    public static final int COL_GROUP_ID_INDEX = 8;
+    public static final int COL_DELETED_INDEX = 9;
+    public static final int COL_POSITION_INDEX = 10;
+    public static final int COL_MP3_URL_INDEX = 11;
+
+    public static final String COL_WORD_ID = "Word_ID";
+    public static final String COL_WORDNAME = "WordName";
+    public static final String COL_PRONUNCIATION = "Pronunciation";
+    public static final String COL_TYPE_ID = "Type_ID";
+    public static final String COL_DEFAULT_MEANING = "Default_Meaning";
+    public static final String COL_SENTENCE = "Sentence";
+    public static final String COL_PRIORITY = "Priority";
+    public static final String COL_COUNT = "Count";
+    public static final String COL_GROUP_ID = "Group_ID";
+    public static final String COL_DELETED = "Deleted";
+    public static final String COL_POSITION = "Position";
+    public static final String COL_MP3_URL = "Mp3Url";
+    public static final String WHERE_DELETE = COL_DELETED + "= 0";
+    public static final String WHERE_ARCHIVED = COL_DELETED + "= 1";
 
     private int mWordId;
     private String mWordName;
@@ -239,4 +269,13 @@ public class Word implements Parcelable {
         dest.writeString(getMp3Url());
     }
 
+    public void initFromCursor(Cursor cs) {
+        this.setWordId(cs.getInt(COL_WORD_ID_INDEX));
+        this.setWordName(cs.getString(COL_WORDNAME_INDEX));
+        this.setPronunciation(cs.getString(COL_PRONUNCIATION_INDEX));
+        this.setDefault_Meaning(cs.getString(COL_DEFAULT_MEANING_INDEX));
+        this.setDeleted((cs.getInt(COL_DELETED_INDEX) == 1));
+        this.setPosition(cs.getString(COL_POSITION_INDEX));
+        this.setMp3Url(cs.getString(COL_MP3_URL_INDEX));
+    }
 }

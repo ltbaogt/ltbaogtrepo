@@ -3,7 +3,6 @@ package com.ltbaogt.vocareminder.vocareminder.provider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -12,10 +11,8 @@ import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
-import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -37,12 +34,7 @@ public class ProviderWrapper {
         if (words.moveToFirst()) {
             do {
                 Word w = new Word();
-                w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
-                w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
-                w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
-                w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
-                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
-                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
+                w.initFromCursor(words);
                 list.add(w);
             } while (words.moveToNext());
         }
@@ -54,19 +46,15 @@ public class ProviderWrapper {
         ArrayList<Word> list = new ArrayList<>();
         Uri uri = Uri.parse(AppContact.CONTENT_URI + "/archived");
         Cursor words = mContext.getContentResolver().query(uri, WordProvider.PROJECTION_ALL, null, null, null);
-        if (words.moveToFirst()) {
+        if (words != null && words.moveToFirst()) {
             do {
                 Word w = new Word();
-                w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
-                w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
-                w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
-                w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
-                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
-                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
+                w.initFromCursor(words);
                 list.add(w);
             } while (words.moveToNext());
+            words.close();
         }
-        words.close();
+
         return list;
     }
 
@@ -76,12 +64,7 @@ public class ProviderWrapper {
         Cursor words = mContext.getContentResolver().query(uri, WordProvider.PROJECTION_ALL, null, null, null);
         if (words != null) {
             if (words.moveToFirst()) {
-                w.setWordId(words.getInt(OALDatabaseOpenHelper.COL_WORD_ID_INDEX));
-                w.setWordName(words.getString(OALDatabaseOpenHelper.COL_WORDNAME_INDEX));
-                w.setPronunciation(words.getString(OALDatabaseOpenHelper.COL_PRONUNCIATION_INDEX));
-                w.setDefault_Meaning(words.getString(OALDatabaseOpenHelper.COL_DEFAULT_MEANING_INDEX));
-                w.setPosition(words.getString(OALDatabaseOpenHelper.COL_POSITION_INDEX));
-                w.setMp3Url(words.getString(OALDatabaseOpenHelper.COL_MP3_URL_INDEX));
+                w.initFromCursor(words);
             }
             words.close();
         }
@@ -120,8 +103,7 @@ public class ProviderWrapper {
     }
 
     public int getDismissTime() {
-        int time = getIntValueForKey(Define.DISMISS_TIME);
-        return time;
+        return getIntValueForKey(Define.DISMISS_TIME);
     }
 
     public void updateDismissTime(int time) {

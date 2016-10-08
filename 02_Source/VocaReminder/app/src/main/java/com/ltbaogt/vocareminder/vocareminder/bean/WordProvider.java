@@ -23,14 +23,14 @@ public class WordProvider extends Word {
             "/vnd.com.ltbaogt.vocareminder.app_word";
 
     public static final String[] PROJECTION_ALL =
-            {OALDatabaseOpenHelper.COL_WORD_ID
-            ,OALDatabaseOpenHelper.COL_COUNT
-            ,OALDatabaseOpenHelper.COL_DEFAULT_MEANING
-            ,OALDatabaseOpenHelper.COL_DELETED
-            ,OALDatabaseOpenHelper.COL_GROUP_ID
-            ,OALDatabaseOpenHelper.COL_PRIORITY
-            ,OALDatabaseOpenHelper.COL_PRONUNCIATION
-            ,OALDatabaseOpenHelper.COL_SENTENCE
-            ,OALDatabaseOpenHelper.COL_TYPE_ID
-            ,OALDatabaseOpenHelper.COL_WORDNAME};
+            {Word.COL_WORD_ID
+            ,Word.COL_COUNT
+            ,Word.COL_DEFAULT_MEANING
+            ,Word.COL_DELETED
+            ,Word.COL_GROUP_ID
+            ,Word.COL_PRIORITY
+            ,Word.COL_PRONUNCIATION
+            ,Word.COL_SENTENCE
+            ,Word.COL_TYPE_ID
+            ,Word.COL_WORDNAME};
 }

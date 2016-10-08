@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
-import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,40 +31,12 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "db.s3db";
     private static final String DATABASE_PATH_SUFFIX = "/databases/";
 
-    public static final String TABLE_NAME_TBL_WORD = "tbl_Word";
-    public static final int COL_WORD_ID_INDEX = 0;
-    public static final int COL_WORDNAME_INDEX = 1;
-    public static final int COL_PRONUNCIATION_INDEX = 2;
-    public static final int COL_TYPE_ID_INDEX = 3;
-    public static final int COL_DEFAULT_MEANING_INDEX = 4;
-    public static final int COL_SENTENCE_INDEX = 5;
-    public static final int COL_PRIORITY_INDEX = 6;
-    public static final int COL_COUNT_INDEX = 7;
-    public static final int COL_GROUP_ID_INDEX = 8;
-    public static final int COL_DELETED_INDEX = 9;
-    public static final int COL_POSITION_INDEX = 10;
-    public static final int COL_MP3_URL_INDEX = 11;
-
-    public static final String COL_WORD_ID = "Word_ID";
-    public static final String COL_WORDNAME = "WordName";
-    public static final String COL_PRONUNCIATION = "Pronunciation";
-    public static final String COL_TYPE_ID = "Type_ID";
-    public static final String COL_DEFAULT_MEANING = "Default_Meaning";
-    public static final String COL_SENTENCE = "Sentence";
-    public static final String COL_PRIORITY = "Priority";
-    public static final String COL_COUNT = "Count";
-    public static final String COL_GROUP_ID = "Group_ID";
-    public static final String COL_DELETED = "Deleted";
-    public static final String COL_POSITION = "Position";
-    public static final String COL_MP3_URL = "Mp3Url";
-
     //private static final String COL_LASTUPDATE= "LastUpdate";
 
     private static final String TABLE_NAME_TBL_TAG = "tbl_Group_ID";
     private static final int COL_TAG_ID_INDEX = 0;
     private static final int COL_TAG_NAME_INDEX = 1;
-    private static final String WHERE_DELETE = COL_DELETED + "= 0";
-    private static final String WHERE_ARCHIVED = COL_DELETED + "= 1";
+
 
 
     private Context mContext;
@@ -163,13 +135,13 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             if (candidateId <= Integer.MAX_VALUE && candidateId >= Integer.MIN_VALUE) {
                 newWord.setWordId(candidateId);
                 ContentValues cv = getContentValues(newWord);
-                db.insert(TABLE_NAME_TBL_WORD, null, cv);
+                db.insert(Word.TABLE_NAME_TBL_WORD, null, cv);
             }
             db.close();
         } else {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = getContentValues(newWord);
-            db.insert(TABLE_NAME_TBL_WORD, null, cv);
+            db.insert(Word.TABLE_NAME_TBL_WORD, null, cv);
         }
 
         Log.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
@@ -177,18 +149,18 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     private ContentValues getContentValues(Word w) {
         ContentValues cv = new ContentValues();
-        cv.put(COL_WORD_ID, w.getWordId());
-        cv.put(COL_WORDNAME, w.getWordName());
-        cv.put(COL_PRONUNCIATION, w.getPronunciation());
-        cv.put(COL_TYPE_ID, w.getType_ID());
-        cv.put(COL_DEFAULT_MEANING, w.getDefault_Meaning());
-        cv.put(COL_SENTENCE, w.getSentence());
-        cv.put(COL_PRIORITY, w.getPriority());
-        cv.put(COL_COUNT, w.getCount());
-        cv.put(COL_GROUP_ID, w.getGroup_ID());
-        cv.put(COL_DELETED, w.isDeleted());
-        cv.put(COL_POSITION, w.getPosition());
-        cv.put(COL_MP3_URL, w.getMp3Url());
+        cv.put(Word.COL_WORD_ID, w.getWordId());
+        cv.put(Word.COL_WORDNAME, w.getWordName());
+        cv.put(Word.COL_PRONUNCIATION, w.getPronunciation());
+        cv.put(Word.COL_TYPE_ID, w.getType_ID());
+        cv.put(Word.COL_DEFAULT_MEANING, w.getDefault_Meaning());
+        cv.put(Word.COL_SENTENCE, w.getSentence());
+        cv.put(Word.COL_PRIORITY, w.getPriority());
+        cv.put(Word.COL_COUNT, w.getCount());
+        cv.put(Word.COL_GROUP_ID, w.getGroup_ID());
+        cv.put(Word.COL_DELETED, w.isDeleted());
+        cv.put(Word.COL_POSITION, w.getPosition());
+        cv.put(Word.COL_MP3_URL, w.getMp3Url());
         return cv;
     }
 
@@ -197,10 +169,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         Cursor cs = getWordByIdInCursor(id);
         if (cs.moveToFirst()) {
             Word w = new Word();
-            w.setWordId(cs.getInt(COL_WORD_ID_INDEX));
-            w.setWordName(cs.getString(COL_WORDNAME_INDEX));
-            w.setPronunciation(cs.getString(COL_PRONUNCIATION_INDEX));
-            w.setDefault_Meaning(cs.getString(COL_DEFAULT_MEANING_INDEX));
+            w.initFromCursor(cs);
             Log.d(TAG, ">>>getWordById Word= " + w.toString());
             return w;
         }
@@ -211,7 +180,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public Cursor getWordByIdInCursor(int id) {
         Log.d(TAG, ">>>getWordById id= " + id);
         SQLiteDatabase db = getWritableDatabase();
-        String sqlString = "select * from " + TABLE_NAME_TBL_WORD + " where " + COL_WORD_ID + " = ?";
+        String sqlString = "select * from " + Word.TABLE_NAME_TBL_WORD + " where " + Word.COL_WORD_ID + " = ?";
         Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
         cs.moveToFirst();
         db.close();
@@ -222,7 +191,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         int ret = -1;
         try {
             SQLiteDatabase db = getWritableDatabase();
-            Cursor c = db.rawQuery("select count(*) from " + TABLE_NAME_TBL_WORD, null);
+            Cursor c = db.rawQuery("select count(*) from " + Word.TABLE_NAME_TBL_WORD, null);
             if (c.moveToFirst()) {
                 ret = c.getInt(0);
             }
@@ -239,13 +208,11 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public ArrayList<Word> getAllWords() {
         ArrayList<Word> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
-        Cursor c = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD +" order by " + COL_WORD_ID, null);
+        Cursor c = db.rawQuery("select * from " + Word.TABLE_NAME_TBL_WORD +" order by " + Word.COL_WORD_ID, null);
         if (c.moveToFirst()) {
             do{
                 Word w = new Word();
-                w.setWordId(c.getInt(COL_WORD_ID_INDEX));
-                w.setWordName(c.getString(COL_WORDNAME_INDEX));
-                w.setDefault_Meaning(c.getString(COL_DEFAULT_MEANING_INDEX));
+                w.initFromCursor(c);
                 list.add(w);
             } while(c.moveToNext());
         }
@@ -256,14 +223,11 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public ArrayList<Word> getAllWordsOrderByNameInList() {
         ArrayList<Word> list = new ArrayList<>();
-        Cursor c = getAllWordsOrderByNameInCursor();
+        Cursor c = getAllWordsOrderByNameInCursor(false);
         if (c.moveToFirst()) {
             do{
                 Word w = new Word();
-                w.setWordId(c.getInt(COL_WORD_ID_INDEX));
-                w.setWordName(c.getString(COL_WORDNAME_INDEX));
-                w.setPronunciation(c.getString(COL_PRONUNCIATION_INDEX));
-                w.setDefault_Meaning(c.getString(COL_DEFAULT_MEANING_INDEX));
+                w.initFromCursor(c);
                 list.add(w);
             } while(c.moveToNext());
         }
@@ -271,9 +235,26 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public Cursor getAllWordsOrderByNameInCursor() {
+    public ArrayList<Word> getAllWordsForBackup() {
+        ArrayList<Word> list = new ArrayList<>();
+        Cursor c = getAllWordsOrderByNameInCursor(true);
+        if (c.moveToFirst()) {
+            do{
+                Word w = new Word();
+                w.initFromCursor(c);
+                list.add(w);
+            } while(c.moveToNext());
+        }
+        c.close();
+        return list;
+    }
+    public Cursor getAllWordsOrderByNameInCursor(boolean isIncludeDel) {
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + WHERE_DELETE + " order by " + COL_WORDNAME, null);
+        String sql = "select * from " + Word.TABLE_NAME_TBL_WORD + " where " + Word.WHERE_DELETE + " order by " + Word.COL_WORDNAME;
+        if (isIncludeDel) {
+            sql = "select * from " + Word.TABLE_NAME_TBL_WORD + " order by " + Word.COL_WORDNAME;
+        }
+        Cursor cs = db.rawQuery(sql, null);
         cs.moveToFirst();
         db.close();
         return cs;
@@ -281,7 +262,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public Cursor getArchivedWordsOrderByNameInCursor() {
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("select * from " + TABLE_NAME_TBL_WORD + " where " + WHERE_ARCHIVED + " order by " + COL_WORDNAME, null);
+        Cursor cs = db.rawQuery("select * from " + Word.TABLE_NAME_TBL_WORD + " where " + Word.WHERE_ARCHIVED + " order by " + Word.COL_WORDNAME, null);
         cs.moveToFirst();
         db.close();
         return cs;
@@ -289,7 +270,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
 
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
-        int count = db.update(TABLE_NAME_TBL_WORD, getContentValues(w), COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
+        db.update(Word.TABLE_NAME_TBL_WORD, getContentValues(w), Word.COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
         Log.d(TAG, ">>>updateWord word= " + w.toString());
     }
     public void deleteWordById(int id) {
@@ -307,25 +288,25 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     private void updateDeletion(int id, int state) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COL_DELETED, state);
-        db.update(TABLE_NAME_TBL_WORD,cv, COL_WORD_ID + "=" + "?",new String[]{id + ""});
+        cv.put(Word.COL_DELETED, state);
+        db.update(Word.TABLE_NAME_TBL_WORD,cv, Word.COL_WORD_ID + "=" + "?",new String[]{id + ""});
         db.close();
     }
 
     //Delete word forever, cannot undo
     public void deleteForever(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_NAME_TBL_WORD, COL_WORD_ID + "=?", new String[]{String.valueOf(id)});
+        db.delete(Word.TABLE_NAME_TBL_WORD, Word.COL_WORD_ID + "=?", new String[]{String.valueOf(id)});
     }
     public int[] getListWordId() {
         int[] reList = null;
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.query(TABLE_NAME_TBL_WORD,new String[]{COL_WORD_ID},WHERE_DELETE, null, null,null, null);
+        Cursor cs = db.query(Word.TABLE_NAME_TBL_WORD,new String[]{Word.COL_WORD_ID}, Word.WHERE_DELETE, null, null,null, null);
         int i = 0;
         if (cs.moveToFirst()) {
             reList = new int[cs.getCount()];
             do {
-                reList[i] = cs.getInt(COL_WORD_ID_INDEX);
+                reList[i] = cs.getInt(Word.COL_WORD_ID_INDEX);
                 Log.d(TAG, ">>>getListWordId Word[" + i + "]= " + reList[i]);
                 i++;
             } while (cs.moveToNext());
@@ -374,7 +355,6 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(Setting.COL_VALUE, value);
-        int ret = db.update(Setting.TABLE_NAME, cv,Setting.COL_NAME + " = ?", new String[]{key});
-        return ret;
+        return db.update(Setting.TABLE_NAME, cv,Setting.COL_NAME + " = ?", new String[]{key});
     }
 }

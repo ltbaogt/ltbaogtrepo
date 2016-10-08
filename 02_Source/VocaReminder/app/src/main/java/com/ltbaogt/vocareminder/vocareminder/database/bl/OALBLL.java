@@ -59,7 +59,7 @@ public class OALBLL {
     }
     public ArrayList<Word> getAllWordsOrderByNameInList() {
         OALDatabaseOpenHelper dbHelp = new OALDatabaseOpenHelper(mContext);
-        return dbHelp.getAllWordsOrderByNameInList();
+        return dbHelp.getAllWordsForBackup();
     }
 
 //    public Word randomWord() {
