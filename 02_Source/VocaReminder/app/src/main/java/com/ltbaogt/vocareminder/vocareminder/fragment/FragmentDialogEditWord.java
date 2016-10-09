@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
@@ -248,7 +250,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 if (((MainActivity)getActivity()).isOnline()) {
                     mLoading.setVisibility(View.VISIBLE);
                     mBtnGetInfo.setVisibility(View.INVISIBLE);
-                    getInfo();
+                    getInfo(mViewHolder.etWordName.getText().toString());
                 } else {
                     showToast(R.string.you_are_offline);
                 }
@@ -259,24 +261,20 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         }
     }
 
-    private void getInfo() {
+    private void getInfo(String wordName) {
+        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
             public void onFinishLoad(Document doc) {
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
 
-                ArrayList<WordEntity> listEntryWord = HttpUtil.getWordInfo(doc);
+                ArrayList<WordEntity> listEntryWord = siteInstance.getWordInfo(doc);
 
                 if (getActivity() != null) {
                     if (listEntryWord.size() <= 0) {
-                        FragmentSuggestion fs = new FragmentSuggestion();
-                        SparseArray<String> array = new SparseArray<>();
-                        for(int i = 0;i < 50; i++) {
-                            array.put(i, "aaaa" + i);
-                        }
-                        fs.setArray(array);
-                        fs.show(getActivity().getSupportFragmentManager(), "suggestions");
+                        getSuggestions();
                     } else {
                         FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
                         infoFgm.setArrayList(listEntryWord);
@@ -286,7 +284,33 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 }
             }
         };
-        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mViewHolder.etWordName.getText().toString(), onloadFinish);
+
+        //Request http
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(siteInstance.getUrl(),
+                wordName,
+                onloadFinish);
+        task.execute();
+    }
+
+    private void getSuggestions() {
+        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        //Request done
+        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
+            @Override
+            public void onFinishLoad(Document doc) {
+                mLoading.setVisibility(View.INVISIBLE);
+                mBtnGetInfo.setVisibility(View.VISIBLE);
+                SparseArray<String> array = siteInstance.getSuggestions(doc);
+                FragmentSuggestion fs = new FragmentSuggestion();
+                fs.setArray(array);
+                fs.show(getActivity().getSupportFragmentManager(), "suggestions_2");
+            }
+        };
+
+        //Request http
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(siteInstance.getSuggestionUrl(),
+                mViewHolder.etWordName.getText().toString(),
+                onloadFinish);
         task.execute();
     }
 
