@@ -19,6 +19,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,11 +100,6 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             mBtnVoice.setOnClickListener(this);
         }
 
-
-//        String btn1Title = b.getString(Define.POPUP_BUTTON_01, "--");
-//        String btn2Title = b.getString(Define.POPUP_BUTTON_02, "--");
-//        //mBtnCancel.setText(btn1Title);
-//        mBtnSave.setText(btn2Title);
         if (b != null) {
             mViewHolder.etWordName = (EditText) v.findViewById(R.id.et_name);
             mViewHolder.etMeaning = (EditText) v.findViewById(R.id.et_meaning);
@@ -171,7 +167,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (textMatchList.size() > 0) {
                 String voiceInText = textMatchList.get(0);
@@ -189,7 +185,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
 
     private void showKeyboard() {
         Activity activity = getActivity();
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
@@ -197,7 +193,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         Log.d(TAG, ">>>hideKeyboard START");
         try {
             Activity activity = getActivity();
-            InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         } catch (NullPointerException e) {
             Log.d(TAG, "Unable to hide keyboard");
@@ -224,7 +220,6 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                             FragmentDialogEditWord.this.getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(0).start();
                         }
                     }).start();
-//                    getDialog().getWindow().getDecorView().animate().translationX(-100).setDuration(2000).start();
                     return;
                 }
                 mWord.setWordName(wordName);
@@ -270,61 +265,29 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             public void onFinishLoad(Document doc) {
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
-//
-//                //mp3 url
-//                final String mp3Url = HttpUtil.getMp3Url(doc);
-//                Log.d(TAG, ">>>onFinishLoad= " + mp3Url);
-//                if (mp3Url != null) {
-//
-//                } else {
-//                    showToast(R.string.word_not_found);
-//                }
-
-                //Pronunciation string
-//                String pronun = HttpUtil.getPronunciation(doc);
 
                 ArrayList<WordEntity> listEntryWord = HttpUtil.getWordInfo(doc);
-                FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
-                infoFgm.setArrayList(listEntryWord);
-                if (getActivity() != null) {
-                    infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
-                    infoFgm.setAcceptSuggestionListener(new VROnDismisSuggestInfoListener(mViewHolder));
-                }
-//                if (pronun != null && mEtPronunciation != null) {
-//                    mEtPronunciation.setText(pronun);
-//                    mWord.setPronunciation(pronun);
-//                } else {
-//                    Toast toast = Toast.makeText(getActivity(), R.string.word_not_found, Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.TOP,0,0);
-//                    toast.show();
-//                }
 
+                if (getActivity() != null) {
+                    if (listEntryWord.size() <= 0) {
+                        FragmentSuggestion fs = new FragmentSuggestion();
+                        SparseArray<String> array = new SparseArray<>();
+                        for(int i = 0;i < 50; i++) {
+                            array.put(i, "aaaa" + i);
+                        }
+                        fs.setArray(array);
+                        fs.show(getActivity().getSupportFragmentManager(), "suggestions");
+                    } else {
+                        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
+                        infoFgm.setArrayList(listEntryWord);
+                        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+                        infoFgm.setAcceptSuggestionListener(new VROnDismisSuggestInfoListener(mViewHolder));
+                    }
+                }
             }
         };
         HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(mViewHolder.etWordName.getText().toString(), onloadFinish);
         task.execute();
-
-//        String pronun = "This is Pronun";
-//        ArrayList<HashMapItem> array = new ArrayList<>();
-//        HashMapItem pNext = null;
-//        for (int i = 0; i < 5; i++) {
-//            HashMapItem itemInfo = new HashMapItem();
-//            itemInfo.put(Define.EXTRA_INDEX, "0");
-//            itemInfo.put(Define.EXTRA_MEANING, "meaning " + i);
-//            array.add(itemInfo);
-////            if (nextItem != null) {
-////                itemInfo.setNextItem(nextItem);
-////            } else {
-////                nextItem = itemInfo;
-////            }
-//            itemInfo.setNextItem(pNext);
-//            pNext = itemInfo;
-//        }
-//
-//        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
-//        infoFgm.setArrayList(array);
-//        infoFgm.setPronun(pronun);
-//        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
     }
 
     private void showToast(final int strId) {
