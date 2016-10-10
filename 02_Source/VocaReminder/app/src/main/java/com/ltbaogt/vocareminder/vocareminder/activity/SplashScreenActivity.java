@@ -1,13 +1,13 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,22 +21,15 @@ import com.ltbaogt.vocareminder.vocareminder.listener.DatabaseCreatedListener;
  */
 public class SplashScreenActivity extends Activity {
 
-    public static final int MESSAGE_WHAT_CREATE_DATABASE = 1;
+    private static final String TAG = Define.TAG + "SplashScreenActivity";
     public static final int MESSAGE_WHAT_DATABASE_CREATED = 2;
-    private SplashHandler mHandler;
     private DatabaseCreatedListener mOnDbCreated;
 
     public static class SplashHandler extends Handler {
         private Activity mActivity;
-        private DatabaseCreatedListener mDatabaseCreatedListener;
 
         public SplashHandler(Activity ctx) {
             mActivity = ctx;
-
-        }
-
-        public void setDatabaseCreatedListener(DatabaseCreatedListener listener) {
-            mDatabaseCreatedListener = listener;
         }
 
         @Override
@@ -51,12 +44,9 @@ public class SplashScreenActivity extends Activity {
                         mActivity.getApplicationContext().startActivity(mainActivity);
                         mActivity.finish();
                         mActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        Log.d(TAG, ">>>onDatabaseCreated END");
                     }
-                }, 500);
-            } else if (what == MESSAGE_WHAT_CREATE_DATABASE) {
-                OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(mActivity.getApplicationContext());
-                db.setOnDatabaseCreateCompleted(mDatabaseCreatedListener);
-                db.openDatabase();
+                }, 1000);
             }
         }
     }
@@ -66,10 +56,7 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashscreen_layout);
         appLogoAmination();
-
-        mHandler = new SplashHandler(this);
-        mOnDbCreated = new DatabaseCreatedListener(mHandler);
-        mHandler.setDatabaseCreatedListener(mOnDbCreated);
+        mOnDbCreated = new DatabaseCreatedListener(new SplashHandler(this));
     }
 
     private void appLogoAmination() {
@@ -86,6 +73,13 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler.sendEmptyMessage(MESSAGE_WHAT_CREATE_DATABASE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
+                db.setOnDatabaseCreateCompleted(mOnDbCreated);
+                db.openDatabase();
+            }
+        }).start();
     }
 }
