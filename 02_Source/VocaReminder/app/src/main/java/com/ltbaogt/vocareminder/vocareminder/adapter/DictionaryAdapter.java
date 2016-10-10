@@ -20,6 +20,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnClickIpaSpeaker;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.util.ArrayList;
 
@@ -123,6 +124,8 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
         holder.mMeaning.setTypeface(mTypeFaceRegular);
         holder.mMeaning.setText(w.getDefault_Meaning());
+        int ipaSpeakVisible = VRStringUtil.isStringNullOrEmpty(w.getMp3Url()) ? View.GONE : View.VISIBLE;
+        holder.mIpaSpeak.setVisibility(ipaSpeakVisible);
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
