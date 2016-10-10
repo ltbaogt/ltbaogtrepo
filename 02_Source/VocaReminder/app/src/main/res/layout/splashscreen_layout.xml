@@ -4,24 +4,24 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color">
 
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/app_logo"
         android:layout_marginTop="200dp"
         android:layout_centerHorizontal="true"
-        android:text="@string/splash_name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="40sp" />
+        android:src="@drawable/drawable_about"
+        android:layout_width="96dp"
+        android:alpha="0"
+        android:layout_height="96dp" />
 
     <TextView
         android:id="@+id/slogan"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:textSize="20sp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_name"
+        android:layout_below="@id/app_logo"
         android:text="@string/splash_slogan"
+        android:alpha="0"
         android:textColor="@color/colorPrimary" />
 </RelativeLayout>

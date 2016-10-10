@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
@@ -64,16 +65,22 @@ public class SplashScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashscreen_layout);
-        AssetManager assetManager = getApplicationContext().getAssets();
-        Typeface typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
-        TextView tvName = (TextView) findViewById(R.id.app_name);
-        tvName.setTypeface(typeface);
-        typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
-        TextView tvSlogan = (TextView) findViewById(R.id.slogan);
-        tvSlogan.setTypeface(typeface);
+        appLogoAmination();
+
         mHandler = new SplashHandler(this);
         mOnDbCreated = new DatabaseCreatedListener(mHandler);
         mHandler.setDatabaseCreatedListener(mOnDbCreated);
+    }
+
+    private void appLogoAmination() {
+        ImageView imgLogo = (ImageView) findViewById(R.id.app_logo);
+        imgLogo.animate().alpha(1).setDuration(1000).start();
+        AssetManager assetManager = getApplicationContext().getAssets();
+        Typeface typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
+        typeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_REGILAR);
+        TextView tvSlogan = (TextView) findViewById(R.id.slogan);
+        tvSlogan.setTypeface(typeface);
+        tvSlogan.animate().alpha(1).setDuration(1000).start();
     }
 
     @Override
