@@ -78,7 +78,9 @@ public class SplashScreenActivity extends Activity {
             public void run() {
                 OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
                 db.setOnDatabaseCreateCompleted(mOnDbCreated);
+                Log.d(TAG, ">>>Initialize database START");
                 db.openDatabase();
+                Log.d(TAG, ">>>Initialize database END");
             }
         }).start();
     }
