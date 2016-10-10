@@ -2,28 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/search_for"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sg_tittle" />
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="200dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@drawable/popup_suggest_line" />
+    </FrameLayout>
+
 
     <TextView
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/similar_words" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="275dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/suggestions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
     </ScrollView>
 
 </LinearLayout>

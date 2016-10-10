@@ -290,6 +290,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                     SparseArray<String> array = siteInstance.getSuggestions(doc);
                     FragmentSuggestion fs = new FragmentSuggestion();
                     fs.setWordInfoViewHolder(mViewHolder);
+                    fs.setWordName(mViewHolder.etWordName.getText().toString());
                     fs.setArray(array);
                     fs.show(getActivity().getSupportFragmentManager(), "suggestions_2");
                 }

@@ -32,6 +32,7 @@ public class FragmentSuggestion extends DialogFragment {
     private LinearLayout mSuggestions;
     private LayoutInflater mInflater;
     private SparseArray<String> mArraySuggestion;
+    private String mWordName;
     private ViewHolder mHolder;
     private FragmentDialogEditWord.ViewHolder mWordInfoViewHolder;
 
@@ -39,6 +40,9 @@ public class FragmentSuggestion extends DialogFragment {
         mWordInfoViewHolder = holder;
     }
 
+    public void setWordName(String str) {
+        mWordName = str;
+    }
     private View.OnClickListener mOnClickItem = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -52,12 +56,13 @@ public class FragmentSuggestion extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
-        View v = mInflater.inflate(R.layout.fragment_popup_suggestions, container, false);
+        View v = mInflater.inflate(R.layout.fragment_popup_suggestions, container, true);
+        mHolder = new ViewHolder();
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        mHolder.searchFor = (TextView) v.findViewById(R.id.search_for);
+        mHolder.searchFor.setText(String.format(getString(R.string.sg_tittle), mWordName));
         mSuggestions = (LinearLayout) v.findViewById(R.id.suggestions);
-        mHolder = new ViewHolder();
         createSuggestionItems(mArraySuggestion.size());
         return v;
     }
@@ -69,11 +74,12 @@ public class FragmentSuggestion extends DialogFragment {
     private void createSuggestionItems(int num) {
         if (mSuggestions == null) return;
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        lp.setMargins(10, 0, 10, 10);
         for (int i = 0; i < num; i++) {
             mHolder.item = (LinearLayout) mInflater.inflate(R.layout.suggestion_item, mSuggestions, false);
             mHolder.stt = ((TextView) mHolder.item.findViewById(R.id.tv_stt));
-            mHolder.stt.setText("" + mArraySuggestion.keyAt(i));
+            mHolder.stt.setText("" + (mArraySuggestion.keyAt(i) + 1));
 
             mHolder.suggestion = ((TextView) mHolder.item.findViewById(R.id.tv_suggestion));
             mHolder.suggestion.setText("" + mArraySuggestion.valueAt(i));
@@ -119,6 +125,7 @@ public class FragmentSuggestion extends DialogFragment {
 
     private class ViewHolder {
         LinearLayout item;
+        TextView searchFor;
         TextView stt;
         TextView suggestion;
     }
