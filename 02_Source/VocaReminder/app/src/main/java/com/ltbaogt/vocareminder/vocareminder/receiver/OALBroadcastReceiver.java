@@ -69,6 +69,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             if (callState != TelephonyManager.CALL_STATE_IDLE) {
                 return;
             }
+            dismissReminderLayout();
             //if (mReminderLayout != null) return;
             //Setup Gesture action when reminder layout inflated
             setupContentView();
@@ -102,6 +103,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     private void dismissReminderLayout() {
         Log.d(TAG, ">>>dismissReminderLayout");
         try {
+            Log.d(TAG, ">>>dismissReminderLayout is null " + (getWeakPreferenceMainLayout() == null));
             if (getWeakPreferenceMainLayout() != null) {
                 getWindowManager().removeViewImmediate(getWeakPreferenceMainLayout());
                 getWeakPreferenceMainLayout().setOnTouchListener(null);
@@ -112,7 +114,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
                 }
             }
         } catch (IllegalArgumentException e) {
-
+            Log.e(TAG, ">>>dismissReminderLayout " + Log.getStackTraceString(e));
         }
     }
 
@@ -196,9 +198,11 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
     }
 
     private View getWeakPreferenceMainLayout() {
-        if (mReminderLayout == null || mReminderLayout.get() == null) {
+        if (mReminderLayout == null) {
+            Log.d(TAG, ">>>getWeakPreferenceMainLayout holder is null");
             return null;
         } else {
+            Log.d(TAG, ">>>getWeakPreferenceMainLayout holder is not null, depended on element");
             return mReminderLayout.get();
         }
     }
