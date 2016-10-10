@@ -175,6 +175,9 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
         } else {
             Log.d(TAG, "Dictionary is empty");
         }
+        mReminderLayout.get().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_IMMERSIVE);
         getWindowManager().addView(getWeakPreferenceMainLayout(), layoutParam);
     }
 
