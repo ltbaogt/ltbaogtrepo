@@ -87,14 +87,15 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
     public SparseArray<String> getSuggestions(Document doc) {
         SparseArray<String> array = new SparseArray<>();
 
-        //<li> tags
-        Elements suggestionEls = doc.select(suggestionTag);
-        Log.d(TAG, ">>>getSuggestions suggestionEls.size= " + suggestionEls.size());
-        for (int i = 0;i < suggestionEls.size(); i++) {
-            array.put(i, getPrefix(suggestionEls.get(i)));
-            array.put(i, getPrefixItem(suggestionEls.get(i)));
+        if (doc != null) {
+            //<li> tags
+            Elements suggestionEls = doc.select(suggestionTag);
+            Log.d(TAG, ">>>getSuggestions suggestionEls.size= " + suggestionEls.size());
+            for (int i = 0; i < suggestionEls.size(); i++) {
+                array.put(i, getPrefix(suggestionEls.get(i)));
+                array.put(i, getPrefixItem(suggestionEls.get(i)));
+            }
         }
-
         return array;
     }
 

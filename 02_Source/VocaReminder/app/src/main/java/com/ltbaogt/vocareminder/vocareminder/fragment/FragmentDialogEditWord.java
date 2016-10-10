@@ -1,23 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -25,9 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -43,14 +32,11 @@ import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
-import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -298,12 +284,15 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
             public void onFinishLoad(Document doc) {
-                mLoading.setVisibility(View.INVISIBLE);
-                mBtnGetInfo.setVisibility(View.VISIBLE);
-                SparseArray<String> array = siteInstance.getSuggestions(doc);
-                FragmentSuggestion fs = new FragmentSuggestion();
-                fs.setArray(array);
-                fs.show(getActivity().getSupportFragmentManager(), "suggestions_2");
+                if (getActivity() != null) {
+                    mLoading.setVisibility(View.INVISIBLE);
+                    mBtnGetInfo.setVisibility(View.VISIBLE);
+                    SparseArray<String> array = siteInstance.getSuggestions(doc);
+                    FragmentSuggestion fs = new FragmentSuggestion();
+                    fs.setWordInfoViewHolder(mViewHolder);
+                    fs.setArray(array);
+                    fs.show(getActivity().getSupportFragmentManager(), "suggestions_2");
+                }
             }
         };
 

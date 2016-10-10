@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.SparseArray;
@@ -10,8 +11,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
+import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
+import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
+
+import org.jsoup.nodes.Document;
+
+import java.util.ArrayList;
 
 /**
  * Created by MyPC on 09/10/2016.
@@ -21,7 +32,22 @@ public class FragmentSuggestion extends DialogFragment {
     private LinearLayout mSuggestions;
     private LayoutInflater mInflater;
     private SparseArray<String> mArraySuggestion;
+    private ViewHolder mHolder;
+    private FragmentDialogEditWord.ViewHolder mWordInfoViewHolder;
 
+    public void setWordInfoViewHolder(FragmentDialogEditWord.ViewHolder holder) {
+        mWordInfoViewHolder = holder;
+    }
+
+    private View.OnClickListener mOnClickItem = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getTag() instanceof String) {
+                String suggestion = (String) view.getTag();
+                getInfo(suggestion);
+            }
+        }
+    };
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,6 +57,7 @@ public class FragmentSuggestion extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         mSuggestions = (LinearLayout) v.findViewById(R.id.suggestions);
+        mHolder = new ViewHolder();
         createSuggestionItems(mArraySuggestion.size());
         return v;
     }
@@ -44,10 +71,55 @@ public class FragmentSuggestion extends DialogFragment {
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < num; i++) {
-            LinearLayout item = (LinearLayout) mInflater.inflate(R.layout.suggestion_item, mSuggestions, false);
-            ((TextView) item.findViewById(R.id.tv_stt)).setText("" + mArraySuggestion.keyAt(i));
-            ((TextView) item.findViewById(R.id.tv_suggestion)).setText("" + mArraySuggestion.valueAt(i));
-            mSuggestions.addView(item, lp);
+            mHolder.item = (LinearLayout) mInflater.inflate(R.layout.suggestion_item, mSuggestions, false);
+            mHolder.stt = ((TextView) mHolder.item.findViewById(R.id.tv_stt));
+            mHolder.stt.setText("" + mArraySuggestion.keyAt(i));
+
+            mHolder.suggestion = ((TextView) mHolder.item.findViewById(R.id.tv_suggestion));
+            mHolder.suggestion.setText("" + mArraySuggestion.valueAt(i));
+            mHolder.item.setTag(mArraySuggestion.valueAt(i));
+            mHolder.item.setOnClickListener(mOnClickItem);
+            mSuggestions.addView(mHolder.item, lp);
         }
+    }
+
+    private void getInfo(String wordName) {
+        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        //Request done
+        HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
+            @Override
+            public void onFinishLoad(Document doc) {
+
+                ArrayList<WordEntity> listEntryWord = siteInstance.getWordInfo(doc);
+
+                if (getActivity() != null) {
+                    if (listEntryWord.size() > 0) {
+                        FragmentSuggestInfo infoFgm = new FragmentSuggestInfo();
+                        infoFgm.setArrayList(listEntryWord);
+                        infoFgm.show(getActivity().getSupportFragmentManager(), "suggestInfoTag");
+                        infoFgm.setAcceptSuggestionListener(new VROnDismisSuggestInfoListener(mWordInfoViewHolder));
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                FragmentSuggestion.this.dismiss();
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+        };
+
+        //Request http
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(siteInstance.getUrl(),
+                wordName,
+                onloadFinish);
+        task.execute();
+    }
+
+    private class ViewHolder {
+        LinearLayout item;
+        TextView stt;
+        TextView suggestion;
     }
 }

@@ -1,5 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -38,6 +39,7 @@ public class FragmentSuggestInfo extends DialogFragment {
     private PagerAdapter mPagerAdapter;
     private PageIndicator mPageIndicator;
     private AcceptSuggestionListener mAcceptSuggestionListener;
+
     public interface AcceptSuggestionListener {
         void onDismiss(WordEntity entity);
     }
@@ -86,6 +88,7 @@ public class FragmentSuggestInfo extends DialogFragment {
         createPager(v);
         return v;
     }
+
 
     private void createPager(View v) {
         mPager = (ViewPager) v.findViewById(R.id.meaning_pager);
