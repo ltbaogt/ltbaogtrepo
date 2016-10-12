@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
@@ -48,12 +45,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private static final String TAG = Define.TAG + "FragmentDialogEditWord";
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1;
     private Word mWord;
-    private ImageView mBtnCancel;
-    private ImageView mBtnSave;
     private ImageView mBtnGetInfo;
     private OnCreateOrUpdateWodListener mOnCreateOrUpdateWodListener;
     private ProgressBar mLoading;
-    private ImageView mBtnVoice;
 
     private ViewHolder mViewHolder;
 
@@ -74,18 +68,18 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_word, container, false);
         Bundle b = getArguments();
-        mBtnCancel = (ImageView) v.findViewById(R.id.btn_cancel);
-        mBtnSave = (ImageView) v.findViewById(R.id.btn_save);
+        ImageView btnCancel = (ImageView) v.findViewById(R.id.btn_cancel);
+        ImageView btnSave = (ImageView) v.findViewById(R.id.btn_save);
         mBtnGetInfo = (ImageView) v.findViewById(R.id.btn_get_info);
         mLoading = (ProgressBar) v.findViewById(R.id.ctrlActivityIndicator);
-        mBtnCancel.setOnClickListener(this);
-        mBtnSave.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
         mBtnGetInfo.setOnClickListener(this);
         mViewHolder = new ViewHolder();
         if (checkVoiceRecognition()) {
-            mBtnVoice = (ImageView) v.findViewById(R.id.btn_voice);
-            mBtnVoice.setVisibility(View.VISIBLE);
-            mBtnVoice.setOnClickListener(this);
+            ImageView btnVoice = (ImageView) v.findViewById(R.id.btn_voice);
+            btnVoice.setVisibility(View.VISIBLE);
+            btnVoice.setOnClickListener(this);
         }
 
         if (b != null) {
@@ -137,10 +131,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     public boolean checkVoiceRecognition() {
         PackageManager pm = getActivity().getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-        if (activities.size() == 0) {
-            return false;
-        }
-        return true;
+        return activities.size() != 0;
     }
 
     public void speak() {
@@ -199,9 +190,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 String wordPosition = mViewHolder.etPosition.getText().toString().trim();
                 //Word name is empty
                 if ("".equalsIgnoreCase(wordName)) {
-                    Toast toast = Toast.makeText(getActivity(), R.string.word_is_empty, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP,0,0);
-                    toast.show();
+                    VRStringUtil.showToast(getContext(), R.string.word_is_empty);
                     getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(50).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -233,12 +222,12 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 dismiss();
                 break;
             case R.id.btn_get_info:
-                if (((MainActivity)getActivity()).isOnline()) {
+                if (VRStringUtil.isOnline(getContext())) {
                     mLoading.setVisibility(View.VISIBLE);
                     mBtnGetInfo.setVisibility(View.INVISIBLE);
                     getInfo(mViewHolder.etWordName.getText().toString());
                 } else {
-                    showToast(R.string.you_are_offline);
+                    VRStringUtil.showToast(getContext(), R.string.you_are_offline);
                 }
                 break;
             case R.id.btn_voice:
@@ -304,23 +293,10 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         task.execute();
     }
 
-    private void showToast(final int strId) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast toast = Toast.makeText(getActivity(), strId, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP,0,0);
-                toast.show();
-            }
-        });
-
-    }
-
     public class ViewHolder {
         public EditText etWordName;
         public EditText etPronunciation;
         public EditText etMeaning;
-        public EditText etSentence;
         public EditText etPosition;
         public String mp3Url;
     }

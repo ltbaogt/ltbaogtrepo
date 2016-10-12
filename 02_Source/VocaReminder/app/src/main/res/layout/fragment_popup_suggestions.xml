@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingLeft="5dp"
+    android:paddingRight="5dp"
     android:paddingTop="5dp">
 
     <TextView
@@ -37,11 +39,23 @@
         android:gravity="center"
         android:text="@string/similar_words" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/suggestion"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="280dp"
         android:layout_below="@id/description"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp">
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_width="32dp"
+            android:layout_height="32dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:background="@android:color/white"
+            android:id="@+id/suggestion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 
 </RelativeLayout>

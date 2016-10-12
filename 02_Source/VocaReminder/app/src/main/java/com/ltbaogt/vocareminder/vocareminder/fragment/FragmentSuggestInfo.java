@@ -1,6 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -10,14 +9,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
@@ -36,7 +33,6 @@ public class FragmentSuggestInfo extends DialogFragment {
     private static final String TAG = Define.TAG + "FragmentSuggestInfo";
     private ArrayList<WordEntity> mArrayMeaning;
     private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private PageIndicator mPageIndicator;
     private AcceptSuggestionListener mAcceptSuggestionListener;
 
@@ -92,8 +88,8 @@ public class FragmentSuggestInfo extends DialogFragment {
 
     private void createPager(View v) {
         mPager = (ViewPager) v.findViewById(R.id.meaning_pager);
-        mPagerAdapter = new SlidePagePagerAdapter(getChildFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+        PagerAdapter pagerAdapter = new SlidePagePagerAdapter(getChildFragmentManager());
+        mPager.setAdapter(pagerAdapter);
         VROnPageChangeListener pageChangeListener = new VROnPageChangeListener(mPageIndicator);
         mPager.removeOnPageChangeListener(pageChangeListener);
         mPager.addOnPageChangeListener(pageChangeListener);

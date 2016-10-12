@@ -3,10 +3,8 @@ package com.ltbaogt.vocareminder.vocareminder.fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -27,6 +25,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
+
 import java.util.ArrayList;
 
 /**
@@ -269,17 +268,6 @@ public class FragmentListWord extends BaseFragment {
                     View itemView = viewHolder.itemView;
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
-
-//                    Log.d(TAG, String.format(">>>onChildDraw Dx= %1$.2f" +
-//                            ", Dy= %2$.2f" +
-//                            ", itemView.Left= %3$d" +
-//                            ", itemView.Top= %4$d" +
-//                            ", itemView.Right= %5$d" +
-//                            ", itemView.Bottom= %6$d", dX, dY, itemView.getLeft(),
-//                            itemView.getTop(),
-//                            itemView.getRight(),
-//                            itemView.getBottom()
-//                    ));
                     if (dX > 0) {
                         p.setColor(getResources().getColor(R.color.green));
                         RectF background = new RectF((float) itemView.getLeft() + ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() + dX - 20, (float) itemView.getBottom() - ITEM_WORD_MARGIN);

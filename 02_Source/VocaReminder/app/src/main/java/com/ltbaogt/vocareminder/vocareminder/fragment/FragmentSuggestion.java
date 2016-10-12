@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictiona
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import org.jsoup.nodes.Document;
 
@@ -35,11 +37,17 @@ public class FragmentSuggestion extends DialogFragment {
     private SparseArray<String> mArraySuggestion;
     private String mWordName;
     private FragmentDialogEditWord.ViewHolder mWordInfoViewHolder;
+    private RecyclerView mRecyclerView;
 
     private SuggestionAdapter.OnSuggestionItemClicked mOnSuggestionItemClicked = new SuggestionAdapter.OnSuggestionItemClicked() {
         @Override
         public void onSuggestionItemClicked(String wordName) {
-            getInfo(wordName);
+            if (VRStringUtil.isOnline(getContext())) {
+                mRecyclerView.animate().alpha(0).setDuration(500).start();
+                getInfo(wordName);
+            } else {
+                VRStringUtil.showToast(getContext(), R.string.you_are_offline);
+            }
         }
     };
 
@@ -63,10 +71,10 @@ public class FragmentSuggestion extends DialogFragment {
 
         SuggestionAdapter adapter = new SuggestionAdapter(mArraySuggestion);
         adapter.onSuggestionItemClicked = mOnSuggestionItemClicked;
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.suggestion);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.suggestion);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(lm);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(lm);
+        mRecyclerView.setAdapter(adapter);
 
         return v;
     }
@@ -97,6 +105,9 @@ public class FragmentSuggestion extends DialogFragment {
                                 FragmentSuggestion.this.dismiss();
                             }
                         }, 1000);
+                    } else {
+                        Log.d("AAAA", "Not Found");
+                        mRecyclerView.animate().alpha(1).start();
                     }
                 }
             }
@@ -107,12 +118,5 @@ public class FragmentSuggestion extends DialogFragment {
                 wordName,
                 onloadFinish);
         task.execute();
-    }
-
-    private class ViewHolder {
-        LinearLayout item;
-        TextView searchFor;
-        TextView stt;
-        TextView suggestion;
     }
 }

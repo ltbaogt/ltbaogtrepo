@@ -7,19 +7,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -33,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
@@ -56,6 +52,7 @@ import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.utils.FragmentList;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -317,9 +314,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         boolean isHomeShowUp = true;
         if (FragmentList.MAIN_FRAGMENT_TAG.equals(tag)) {
             isHomeShowUp = false;
-            getSupportActionBar().setTitle(R.string.app_name);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
         } else {
-            getSupportActionBar().setTitle(R.string.app_name_short);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.app_name_short);
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeShowUp);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -372,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 break;
             case R.id.action_preview:
                 mNumberOfClick++;
-                if (isOnline() && (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
+                if (VRStringUtil.isOnline(getApplicationContext()) && (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
                     mNumberOfClick = 0;
                     mInterstitialAd.loadAd(mAdRequest);
                 } else {
@@ -670,18 +671,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers();
-            return;
         } else if (FragmentList.MAIN_FRAGMENT_TAG.equals(getTopFragmentTag())) {
             finish();
         } else {
             invalidateOptionsMenu();
             super.onBackPressed();
         }
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
     public void setAdsVisibility(int visibility) {
