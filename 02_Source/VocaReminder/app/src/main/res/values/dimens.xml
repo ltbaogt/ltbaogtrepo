@@ -8,6 +8,6 @@
 
     <!-- for carview -->
     <dimen name="cardview_height">75dp</dimen>
-    <dimen name="cardview_margin_bottom">10dp</dimen>
+    <dimen name="cardview_margin_bottom">5dp</dimen>
     <dimen name="cardview_margin_left">10dp</dimen>
 </resources>
