@@ -1,13 +1,16 @@
 package com.ltbaogt.vocareminder.vocareminder.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 
 /**
@@ -69,9 +72,17 @@ public class VRStringUtil {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
-    public static void showToast(Context ctx, final int strId) {
+    public static void showToastAtTop(Context ctx, final int strId) {
         Toast toast = Toast.makeText(ctx, strId, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP,0,0);
-        toast.show();
+        if (toast != null) {
+            toast.setGravity(Gravity.TOP, 0, 0);
+            toast.show();
+        }
+    }
+    public static void showToastAtBottom(Context ctx, final int strId) {
+        Toast toast = Toast.makeText(ctx, strId, Toast.LENGTH_SHORT);
+        if (toast != null) {
+            toast.show();
+        }
     }
 }

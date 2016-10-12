@@ -12,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.adapter.SuggestionAdapter;
@@ -46,7 +44,7 @@ public class FragmentSuggestion extends DialogFragment {
                 mRecyclerView.animate().alpha(0).setDuration(500).start();
                 getInfo(wordName);
             } else {
-                VRStringUtil.showToast(getContext(), R.string.you_are_offline);
+                VRStringUtil.showToastAtTop(getContext(), R.string.you_are_offline);
             }
         }
     };

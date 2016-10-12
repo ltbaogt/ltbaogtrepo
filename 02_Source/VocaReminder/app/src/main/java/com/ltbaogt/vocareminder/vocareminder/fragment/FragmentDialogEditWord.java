@@ -190,7 +190,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 String wordPosition = mViewHolder.etPosition.getText().toString().trim();
                 //Word name is empty
                 if ("".equalsIgnoreCase(wordName)) {
-                    VRStringUtil.showToast(getContext(), R.string.word_is_empty);
+                    VRStringUtil.showToastAtTop(getContext(), R.string.word_is_empty);
                     getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(50).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -227,7 +227,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                     mBtnGetInfo.setVisibility(View.INVISIBLE);
                     getInfo(mViewHolder.etWordName.getText().toString());
                 } else {
-                    VRStringUtil.showToast(getContext(), R.string.you_are_offline);
+                    VRStringUtil.showToastAtTop(getContext(), R.string.you_are_offline);
                 }
                 break;
             case R.id.btn_voice:

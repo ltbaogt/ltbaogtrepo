@@ -2,6 +2,7 @@ package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.view.View;
 
+import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 /**
@@ -15,6 +16,11 @@ public class OnClickIpaSpeaker implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
-        VRStringUtil.playMp3File(mUrl);
+        if (VRStringUtil.isOnline(view.getContext())) {
+            VRStringUtil.playMp3File(mUrl);
+        } else {
+            VRStringUtil.showToastAtBottom(view.getContext(), R.string.you_are_offline);
+        }
     }
+
 }
