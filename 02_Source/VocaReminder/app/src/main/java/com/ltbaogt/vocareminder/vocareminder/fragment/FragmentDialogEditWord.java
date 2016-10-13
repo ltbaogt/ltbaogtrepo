@@ -1,17 +1,23 @@
 package com.ltbaogt.vocareminder.vocareminder.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,6 +39,7 @@ import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import org.jsoup.nodes.Document;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +57,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     private ProgressBar mLoading;
 
     private ViewHolder mViewHolder;
+
+    private String mDictionaryType;
 
     public interface OnCreateOrUpdateWodListener {
         void onSave(Word w);
@@ -87,6 +96,17 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             mViewHolder.etMeaning = (EditText) v.findViewById(R.id.et_meaning);
             mViewHolder.etPronunciation = (EditText) v.findViewById(R.id.et_pronunciation);
             mViewHolder.etPosition = (EditText) v.findViewById(R.id.et_position);
+            mViewHolder.mButtonSearchMeaning = v.findViewById(R.id.btn_play_pronun);
+
+            setupDictionaryType(mBtnGetInfo);
+            mBtnGetInfo.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.d(TAG, ">>>onLongClick change language");
+                    openPopupMenu(mBtnGetInfo);
+                    return true;
+                }
+            });
             //Set title for dialog
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             //Get word instance
@@ -120,6 +140,56 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             //showKeyboard();
         }
         return v;
+    }
+
+    private void setupDictionaryType(ImageView view) {
+        if (view == null) return;
+        SharedPreferences sp = view.getContext().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
+        String type = sp.getString(Define.REF_DICTIONARY_TYPE,null);
+        if (Define.REF_DICTIONARY_TYPE_EN.equals(type)) {
+            view.setBackgroundResource(R.drawable.en_dict);
+            mDictionaryType = Define.REF_DICTIONARY_TYPE_EN;
+        } else {
+            view.setBackgroundResource(R.drawable.vi_dict);
+            mDictionaryType = Define.REF_DICTIONARY_TYPE_VI;
+        }
+    }
+
+    private void openPopupMenu(final ImageView anchorView) {
+        // inflate menu
+        final PopupMenu popup = new PopupMenu(anchorView.getContext(), anchorView);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.change_language_popup_menu_layout, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                SharedPreferences sp = anchorView.getContext().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                switch (item.getItemId()) {
+                    case R.id.action_language_vi:
+                        mDictionaryType = Define.REF_DICTIONARY_TYPE_VI;
+                        break;
+                    default:
+                        mDictionaryType = Define.REF_DICTIONARY_TYPE_EN;
+                        break;
+                }
+                editor.putString(Define.REF_DICTIONARY_TYPE, mDictionaryType);
+                editor.apply();
+                setupDictionaryType(mBtnGetInfo);
+                popup.dismiss();
+                return true;
+            }
+        });
+        try {
+            //This block forces popup menu shows icons
+            Field f = popup.getClass().getDeclaredField("mPopup");
+            f.setAccessible(true);
+            MenuPopupHelper mph = (MenuPopupHelper) f.get(popup);
+            mph.setForceShowIcon(true);
+        } catch (Exception e) {
+
+        }
+        popup.show();
     }
 
     @Override
@@ -299,5 +369,6 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         public EditText etMeaning;
         public EditText etPosition;
         public String mp3Url;
+        public View mButtonSearchMeaning;
     }
 }

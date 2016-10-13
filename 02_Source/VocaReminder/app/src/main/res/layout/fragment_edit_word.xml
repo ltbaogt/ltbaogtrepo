@@ -62,8 +62,7 @@
                 android:id="@+id/btn_get_info"
                 android:layout_width="@dimen/icon_search_word"
                 android:layout_height="@dimen/icon_search_word"
-                android:layout_gravity="right"
-                android:src="@drawable/ic_pronun" />
+                android:layout_gravity="right" />
 
             <ProgressBar
                 style="@style/AppTheme.ProgressBar"
