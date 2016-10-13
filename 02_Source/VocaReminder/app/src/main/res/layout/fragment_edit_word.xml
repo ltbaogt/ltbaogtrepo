@@ -49,9 +49,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapSentences"
+        android:paddingRight="@dimen/icon_search_word"
         android:layout_marginBottom="10dp" />
         <FrameLayout
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="18dp"
             android:layout_alignParentRight="true"
             android:id="@+id/btn_play_pronun"
             android:layout_width="wrap_content"
@@ -59,17 +60,16 @@
 
             <ImageView
                 android:id="@+id/btn_get_info"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_search_word"
+                android:layout_height="@dimen/icon_search_word"
                 android:layout_gravity="right"
                 android:src="@drawable/ic_pronun" />
 
             <ProgressBar
-
                 style="@style/AppTheme.ProgressBar"
                 android:id="@+id/ctrlActivityIndicator"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_search_word"
+                android:layout_height="@dimen/icon_search_word"
                 android:indeterminateOnly="true"
                 android:keepScreenOn="true"
                 android:visibility="invisible" />
