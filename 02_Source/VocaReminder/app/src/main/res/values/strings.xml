@@ -55,5 +55,6 @@
     <string name="restore_pernalty">Your database is not empty\nDo you want to delete permanently ?</string>
     <string name="sg_tittle">Search suggestions for <b>%1s</b></string>
     <string name="similar_words">These words with similar spellings or pronunciations:</string>
+    <string name="startapp_id">209856859</string>
 
 </resources>

@@ -29,15 +29,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.gson.Gson;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.ConvertWord;
@@ -53,6 +47,8 @@ import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.utils.FragmentList;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.startapp.android.publish.StartAppAd;
+import com.startapp.android.publish.StartAppSDK;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -81,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     private FragmentDialogEditWord mNewOrEditDialog;
     private int mNumberOfClick;
 
-    private InterstitialAd mInterstitialAd;
-    private AdRequest mAdRequest;
     private FragmentList mFragmentList;
 
     @Override
@@ -141,27 +135,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     //Load Ads banner
     private void loadAdBanner() {
-        ViewGroup adBanner = (ViewGroup) findViewById(R.id.ad_banner_layout);
-        AdView adView = new AdView(getApplicationContext());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId(getString(R.string.ad_unit_banner));
-        adBanner.addView(adView);
-
-//        mAdRequest = new AdRequest.Builder().addTestDevice("EA2540727A561FCA20EE335403F98E81").build();
-        mAdRequest = new AdRequest.Builder().build();
-        adView.loadAd(mAdRequest);
-
-        mInterstitialAd = new InterstitialAd(getApplicationContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.ad_unit_full));
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                mInterstitialAd.show();
-            }
-
-        });
-
+        StartAppSDK.init(this, getString(R.string.startapp_id), false);
+        StartAppAd.disableSplash();
+//        mStartAppAdd = new StartAppAd(this);
     }
 
     @Override
@@ -373,16 +349,16 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 break;
             case R.id.action_preview:
                 mNumberOfClick++;
-                if (VRStringUtil.isOnline(getApplicationContext()) && (mNumberOfClick == Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
-                    mNumberOfClick = 0;
-                    mInterstitialAd.loadAd(mAdRequest);
-                } else {
-                    if (canDrawOverlays()) {
-                        Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
-                        sendBroadcast(previewIntent);
-                    } else {
-                        startActivityForDrawOverlay();
+                if (canDrawOverlays()) {
+                    if (VRStringUtil.isOnline(getApplicationContext()) && (mNumberOfClick >= Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
+                        mNumberOfClick = 0;
+                        //Startapp show ads
+                        StartAppAd.showAd(getApplicationContext());
                     }
+                    Intent previewIntent = new Intent(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
+                    sendBroadcast(previewIntent);
+                } else {
+                    startActivityForDrawOverlay();
                 }
                 break;
         }
@@ -673,6 +649,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             mDrawer.closeDrawers();
         } else if (FragmentList.MAIN_FRAGMENT_TAG.equals(getTopFragmentTag())) {
             finish();
+            StartAppAd.onBackPressed(getApplicationContext());
         } else {
             invalidateOptionsMenu();
             super.onBackPressed();
