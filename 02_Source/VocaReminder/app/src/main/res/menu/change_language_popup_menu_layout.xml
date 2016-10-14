@@ -2,10 +2,12 @@
     <item
         android:id="@+id/action_language_en"
         android:orderInCategory="100"
+        android:icon="@drawable/en_dict"
         android:title="@string/action_language_en"/>
 
     <item
         android:id="@+id/action_language_vi"
         android:orderInCategory="101"
+        android:icon="@drawable/vi_dict"
         android:title="@string/action_language_vi" />
 </menu>

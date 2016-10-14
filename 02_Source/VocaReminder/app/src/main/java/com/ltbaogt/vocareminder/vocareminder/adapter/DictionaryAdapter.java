@@ -136,7 +136,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
             }
         });
         holder.mPronunciation.setText(w.getPronunciation());
-        OnClickIpaSpeaker onClickIpaSpeaker= new OnClickIpaSpeaker(w.getMp3Url());
+        OnClickIpaSpeaker onClickIpaSpeaker= new OnClickIpaSpeaker(w);
         holder.setIpaSpeakOnClickListener(onClickIpaSpeaker);
         Log.d(TAG, ">>>onBindViewHolder END");
     }

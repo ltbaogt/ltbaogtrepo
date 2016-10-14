@@ -147,10 +147,10 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
         SharedPreferences sp = view.getContext().getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
         String type = sp.getString(Define.REF_DICTIONARY_TYPE,null);
         if (Define.REF_DICTIONARY_TYPE_EN.equals(type)) {
-//            view.setBackgroundResource(R.drawable.en_dict);
+            view.setBackgroundResource(R.drawable.en_dict);
             mDictionaryType = Define.REF_DICTIONARY_TYPE_EN;
         } else {
-//            view.setBackgroundResource(R.drawable.vi_dict);
+            view.setBackgroundResource(R.drawable.vi_dict);
             mDictionaryType = Define.REF_DICTIONARY_TYPE_VI;
         }
     }

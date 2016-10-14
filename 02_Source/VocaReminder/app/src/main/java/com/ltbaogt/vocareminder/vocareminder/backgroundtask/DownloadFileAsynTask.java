@@ -1,9 +1,12 @@
 package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,41 +21,38 @@ import java.net.URL;
  */
 public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
 
+    private Context mContext;
+
+    public DownloadFileAsynTask(Context ctx) {
+        mContext = ctx;
+    }
     @Override
     protected String doInBackground(String... strings) {
         Log.d("AAA", ">>>DownloadFileAsynTask START");
         String mp3Url = strings[0];
-        String filesDir = strings[1] + "/mp3";
-        Log.d("AAA", ">>>DownloadFileAsynTask mp3Dir= " + filesDir);
-        File mp3Dir = new File(filesDir);
-        if (!mp3Dir.exists()) {
-            mp3Dir.mkdirs();
-        }
+        String mp3FileName = strings[1];
         InputStream is = null;
         OutputStream os = null;
         HttpURLConnection connection = null;
+        String savedFile = null;
+
         try {
             URL url = new URL(mp3Url);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return "Error";
+                savedFile = "Error";
+                return savedFile;
             }
-//            int fileLength = connection.getContentLength();
-            String mp3FilePath = filesDir + "/hello.mp3";
-            checkFile(mp3FilePath);
-            Log.d("AAA", ">>>DownloadFileAsynTask mp3file= " + mp3FilePath);
+            File fi = new File(VRStringUtil.getMp3FileDir(mContext) + "/" + mp3FileName);
             is = connection.getInputStream();
-            os = new FileOutputStream(mp3FilePath);
-
+            os = new FileOutputStream(fi);
             byte data[] = new byte[4096];
-            long total = 0;
             int count;
-            while ((count = is.read(data)) != 1) {
-                total +=count;
+            while ((count = is.read(data)) != -1) {
                 os.write(data,0,count);
             }
-
+            savedFile = fi.getPath();
         } catch (Exception e) {
 
         } finally {
@@ -70,35 +70,13 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
                 connection.disconnect();
             }
         }
-        return null;
-    }
-
-    private void checkFile(String mp3FilePath) {
-        File fi = new File(mp3FilePath);
-        Log.d("AAA", ">>>DownloadFileAsynTask.checkFile = " + fi.exists());
-        try {
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(mp3FilePath);
-            mediaPlayer.prepare();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    Log.d("AAA", ">>>DownloadFileAsynTask play mp3 stop");
-                }
-            });
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        return savedFile;
     }
 
     @Override
-    protected void onPostExecute(String msg) {
-        super.onPostExecute(msg);
-        Log.d("AAA", ">>>DownloadFileAsynTask END");
+    protected void onPostExecute(String mp3File) {
+        super.onPostExecute(mp3File);
+        Log.d("AAA", ">>>DownloadFileAsynTask file save at= " + mp3File);
+        VRStringUtil.playMp3File(mp3File);
     }
 }
