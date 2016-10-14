@@ -2,6 +2,7 @@ package com.ltbaogt.vocareminder.vocareminder.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+
+import java.io.File;
 
 /**
  * Created by MyPC on 06/10/2016.
@@ -84,5 +87,10 @@ public class VRStringUtil {
         if (toast != null) {
             toast.show();
         }
+    }
+
+    public static String getFilesDir(Context ctx) {
+        ContextWrapper cw = new ContextWrapper(ctx);
+        return cw.getFilesDir().getPath();
     }
 }
