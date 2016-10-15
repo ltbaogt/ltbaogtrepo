@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DictionaryFactory;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.EnViDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
@@ -308,7 +309,8 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getInfo(String wordName) {
-        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
+        DictionaryFactory dictFactory = new DictionaryFactory();
+        final FetchContentDictionarySite siteInstance = dictFactory.getDictionaryTypeInstance(mDictionaryType);
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
@@ -342,7 +344,9 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getSuggestions() {
-        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
+
+        DictionaryFactory dictionaryFactory = new DictionaryFactory();
+        final FetchContentDictionarySite siteInstance = dictionaryFactory.getDictionaryTypeInstance(mDictionaryType);
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
@@ -355,6 +359,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                     fs.setWordInfoViewHolder(mViewHolder);
                     fs.setWordName(mViewHolder.etWordName.getText().toString());
                     fs.setArray(array);
+                    fs.setDictionaryType(mDictionaryType);
                     fs.show(getActivity().getSupportFragmentManager(), "suggestions_2");
                 }
             }

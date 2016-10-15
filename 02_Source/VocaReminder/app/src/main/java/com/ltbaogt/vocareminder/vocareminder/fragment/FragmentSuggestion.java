@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.adapter.SuggestionAdapter;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DictionaryFactory;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.EnViDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
@@ -37,7 +38,11 @@ public class FragmentSuggestion extends DialogFragment {
     private String mWordName;
     private FragmentDialogEditWord.ViewHolder mWordInfoViewHolder;
     private RecyclerView mRecyclerView;
+    private String mDictionaryType;
 
+    public void setDictionaryType(String dictType) {
+        mDictionaryType = dictType;
+    }
     private SuggestionAdapter.OnSuggestionItemClicked mOnSuggestionItemClicked = new SuggestionAdapter.OnSuggestionItemClicked() {
         @Override
         public void onSuggestionItemClicked(String wordName) {
@@ -83,7 +88,8 @@ public class FragmentSuggestion extends DialogFragment {
     }
 
     private void getInfo(String wordName) {
-        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
+        DictionaryFactory dictionaryFactory = new DictionaryFactory();
+        final FetchContentDictionarySite siteInstance = dictionaryFactory.getDictionaryTypeInstance(mDictionaryType);
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
