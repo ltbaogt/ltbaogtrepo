@@ -34,18 +34,7 @@ public class VRStringUtil {
         return  retString;
     }
 
-    public static void playMp3IfNeed(Context ctx, String filename, String url) {
-        if (VRStringUtil.checkMp3FileExisted(ctx, filename)) {
-            VRStringUtil.playMp3InLocal(ctx, filename);
-        } else {
-            if (isOnline(ctx)) {
-                DownloadFileAsynTask downloader = new DownloadFileAsynTask(ctx);
-                downloader.execute(url, filename);
-            } else {
-                VRStringUtil.showToastAtBottom(ctx, R.string.you_are_offline);
-            }
-        }
-    }
+
     public static void playMp3InLocal(Context ctx, String filename) {
         String mp3FilePath = VRStringUtil.getMp3FileDir(ctx) + filename;
         playMp3File(mp3FilePath);

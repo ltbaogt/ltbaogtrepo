@@ -24,8 +24,7 @@ public class OnClickIpaSpeaker implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
-        String mp3FileName = VRStringUtil.mp3ForWordName(mWord.getWordName());
-        VRStringUtil.playMp3IfNeed(view.getContext(), mp3FileName, mWord.getMp3Url());
+        mWord.playMp3IfNeed(view.getContext());
     }
 
 

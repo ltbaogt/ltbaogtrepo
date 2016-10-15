@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.adapter.SuggestionAdapter;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.EnViDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
@@ -82,7 +83,7 @@ public class FragmentSuggestion extends DialogFragment {
     }
 
     private void getInfo(String wordName) {
-        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
@@ -112,7 +113,7 @@ public class FragmentSuggestion extends DialogFragment {
         };
 
         //Request http
-        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(siteInstance.getUrl(),
+        HttpUtil.LoadWordDefine task = new HttpUtil.LoadWordDefine(siteInstance.getRedirectSuggestionUrl(),
                 wordName,
                 onloadFinish);
         task.execute();

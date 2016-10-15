@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.EnViDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
@@ -307,14 +308,17 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getInfo(String wordName) {
-        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override
             public void onFinishLoad(Document doc) {
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
-
+                if (doc == null) {
+                    VRStringUtil.showToastAtBottom(getContext(), R.string.cannot_get_information);
+                    return;
+                }
                 ArrayList<WordEntity> listEntryWord = siteInstance.getWordInfo(doc);
 
                 if (getActivity() != null) {
@@ -338,7 +342,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void getSuggestions() {
-        final FetchContentDictionarySite siteInstance = new CambrigeDictionarySite();
+        final FetchContentDictionarySite siteInstance = new EnViDictionarySite();
         //Request done
         HttpUtil.OnFinishLoadWordDefine onloadFinish = new HttpUtil.OnFinishLoadWordDefine() {
             @Override

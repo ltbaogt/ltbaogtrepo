@@ -17,30 +17,24 @@ import java.util.ArrayList;
  * Created by MyPC on 09/10/2016.
  */
 public class CambrigeDictionarySite implements FetchContentDictionarySite {
-    private static final String TAG = Define.TAG + "HttpUtil";
-    public static final String ENTRY_BODY = ".entry-body";
-    public static final String TAG_POS = ".posgram.ico-bg";
-    public static final String TAG_WORD_NAME = ".headword";
-    public static final String TAG_DEFINE = ".def";
+    private static final String TAG = Define.TAG + "CambrigeDictionarySite";
 
     public static final String mp3Tag = "span.circle.circle-btn.sound.audio_play_button.uk";
     public static final String mp3TagDataSrcMp3 = "data-src-mp3";
 
     public static final String pronunTag = "span.pron";
 
-    public static final String suggestionTag = ".unstyled.prefix-block.a--b.a--rev li";
-
     @Override
     public ArrayList<WordEntity> getWordInfo(Document doc) {
         ArrayList<WordEntity> listWord = new ArrayList<>();
         if (doc != null) {
-            Elements entryBody = doc.select(ENTRY_BODY);
+            Elements entryBody = doc.select(getEntryBodyTag());
             if (entryBody != null && entryBody.size() > 0) {
                 Element entry = entryBody.get(0);
                 String ipa = getPronunciation(doc);
                 String mp3Url = getMp3Url(doc);
                 String wordName = "---";
-                Elements wordNameEls = entry.select(TAG_WORD_NAME);
+                Elements wordNameEls = entry.select(getWordNameTag());
                 if (wordNameEls != null && wordNameEls.size() > 0) {
                     wordName = wordNameEls.first().text();
                 }
@@ -53,7 +47,7 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
                     Element entryBodyEl = entry.child(i);
 
                     Log.d(TAG, ">>>getWordInfo classname of Child= " + entryBodyEl.className());
-                    Elements posEls = entryBodyEl.select(TAG_POS);
+                    Elements posEls = entryBodyEl.select(getPositionTag());
                     if (posEls != null && posEls.size() > 0) {
                         Log.d(TAG, ">>>getWordInfo posEls.size= " + posEls.size());
                         Element postEl = posEls.first();
@@ -63,7 +57,7 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
                         //Unable to fetch position of Word
                     }
 
-                    Elements defEls = entryBodyEl.select(TAG_DEFINE);
+                    Elements defEls = entryBodyEl.select(getDefineTag());
                     if (defEls != null && defEls.size() > 0) {
                         for (Element e : defEls) {
                             wordEntry.addMeaning(e.text());
@@ -89,7 +83,7 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
 
         if (doc != null) {
             //<li> tags
-            Elements suggestionEls = doc.select(suggestionTag);
+            Elements suggestionEls = doc.select(getSuggestionTag());
             Log.d(TAG, ">>>getSuggestions suggestionEls.size= " + suggestionEls.size());
             for (int i = 0; i < suggestionEls.size(); i++) {
                 array.put(i, getPrefix(suggestionEls.get(i)));
@@ -99,12 +93,17 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
         return array;
     }
 
-    private String getPrefix(Element el) {
+    @Override
+    public String getRedirectSuggestionUrl() {
+        return getUrl();
+    }
+
+    protected String getPrefix(Element el) {
         String ret = el.select(".prefix").text();
         return ret;
     }
 
-    private String getPrefixItem(Element el) {
+    protected String getPrefixItem(Element el) {
         String ret = el.select(".prefix-item").text();
         return ret;
     }
@@ -123,8 +122,8 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
     public String getMp3Url(Document doc) {
         try {
             return doc.select(mp3Tag).first().attr(mp3TagDataSrcMp3);
-        }catch (NullPointerException e) {
-            return null;
+        } catch (NullPointerException e) {
+            return "";
         }
 
     }
@@ -133,7 +132,28 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
         try {
             return doc.select(pronunTag).first().text();
         }catch (NullPointerException e) {
-            return null;
+            return "";
         }
+    }
+
+    public String getWordNameTag() {
+        return ".headword";
+    }
+
+    public String getDefineTag() {
+        return ".def";
+    }
+
+
+    public String getEntryBodyTag() {
+        return ".entry-body";
+    }
+
+    public String getPositionTag() {
+        return ".posgram.ico-bg";
+    }
+
+    public String getSuggestionTag() {
+        return ".unstyled.prefix-block.a--b.a--rev li";
     }
 }

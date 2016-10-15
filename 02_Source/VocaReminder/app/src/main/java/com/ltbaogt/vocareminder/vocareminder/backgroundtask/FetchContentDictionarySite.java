@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public interface FetchContentDictionarySite {
     ArrayList<WordEntity> getWordInfo(Document doc);
     SparseArray<String> getSuggestions(Document doc);
+    String getRedirectSuggestionUrl();
     String getUrl();
     String getSuggestionUrl();
 }

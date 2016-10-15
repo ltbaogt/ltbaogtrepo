@@ -1,11 +1,14 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ltbaogt.vocareminder.vocareminder.R;
+import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DownloadFileAsynTask;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
@@ -277,5 +280,19 @@ public class Word implements Parcelable {
         this.setDeleted((cs.getInt(COL_DELETED_INDEX) == 1));
         this.setPosition(cs.getString(COL_POSITION_INDEX));
         this.setMp3Url(cs.getString(COL_MP3_URL_INDEX));
+    }
+
+    public void playMp3IfNeed(Context ctx) {
+        String wordName = VRStringUtil.mp3ForWordName(getWordName());
+        if (VRStringUtil.checkMp3FileExisted(ctx, wordName)) {
+            VRStringUtil.playMp3InLocal(ctx, wordName);
+        } else {
+            if (VRStringUtil.isOnline(ctx)) {
+                DownloadFileAsynTask downloader = new DownloadFileAsynTask(ctx);
+                downloader.execute(getMp3Url(), wordName);
+            } else {
+                VRStringUtil.showToastAtBottom(ctx, R.string.you_are_offline);
+            }
+        }
     }
 }
