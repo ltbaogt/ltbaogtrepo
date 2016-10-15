@@ -124,7 +124,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
         holder.mMeaning.setTypeface(mTypeFaceRegular);
         holder.mMeaning.setText(w.getDefault_Meaning());
-        int ipaSpeakVisible = VRStringUtil.isStringNullOrEmpty(w.getMp3Url()) ? View.GONE : View.VISIBLE;
+        int ipaSpeakVisible = isMp3Existed(holder.mWordName.getContext(), w) ? View.VISIBLE : View.GONE;
         holder.mIpaSpeak.setVisibility(ipaSpeakVisible);
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +139,11 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         OnClickIpaSpeaker onClickIpaSpeaker= new OnClickIpaSpeaker(w);
         holder.setIpaSpeakOnClickListener(onClickIpaSpeaker);
         Log.d(TAG, ">>>onBindViewHolder END");
+    }
+
+    private boolean isMp3Existed(Context context, Word w) {
+        return (!VRStringUtil.isStringNullOrEmpty(w.getMp3Url())
+                || VRStringUtil.checkMp3FileExisted(context, VRStringUtil.mp3ForWordName(w.getWordName())));
     }
 
     @Override

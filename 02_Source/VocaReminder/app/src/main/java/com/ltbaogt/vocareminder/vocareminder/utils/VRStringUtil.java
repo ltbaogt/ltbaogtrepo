@@ -83,6 +83,9 @@ public class VRStringUtil {
         }
     }
 
+    public static String mp3ForWordName(String wordName) {
+        return wordName + ".mp3";
+    }
     public static String formatMeaning(String s) {
         return "- " + VRStringUtil.UpperFirstCharacterOrString(s);
     }
