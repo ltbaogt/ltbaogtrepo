@@ -1,7 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
-import android.content.DialogInterface;
-
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentDialogEditWord.ViewHolder;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSuggestInfo;

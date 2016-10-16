@@ -22,7 +22,6 @@ import com.ltbaogt.vocareminder.vocareminder.customview.PageIndicator;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnPageChangeListener;
 import com.ltbaogt.vocareminder.vocareminder.pager.SlidePageFragment;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.util.ArrayList;
 

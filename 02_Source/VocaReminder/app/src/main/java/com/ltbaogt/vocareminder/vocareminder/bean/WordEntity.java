@@ -1,6 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
-import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.util.ArrayList;

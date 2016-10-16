@@ -10,7 +10,6 @@ import android.widget.CompoundButton;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
 
 import java.util.ArrayList;
 

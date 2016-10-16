@@ -3,20 +3,12 @@ package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ltbaogt.vocareminder.vocareminder.bean.Word;
-import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.utils.HashMapItem;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 /**
  * Created by ppp on 31/08/2016.

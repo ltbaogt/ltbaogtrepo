@@ -27,9 +27,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.backgroundtask.CambrigeDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DictionaryFactory;
-import com.ltbaogt.vocareminder.vocareminder.backgroundtask.EnViDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictionarySite;
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;

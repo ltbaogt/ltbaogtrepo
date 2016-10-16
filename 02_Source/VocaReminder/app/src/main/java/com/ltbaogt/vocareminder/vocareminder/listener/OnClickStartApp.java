@@ -1,7 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;

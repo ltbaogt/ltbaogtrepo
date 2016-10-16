@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.net.Uri;
 
-import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
-import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.AppContact;
 
 /**

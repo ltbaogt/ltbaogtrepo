@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
         loadAdBanner();
-        //getOnwer();
     }
 
     private void initFragments() {
@@ -114,30 +113,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     public CoordinatorLayout getCoordinatorLayout() {
         return (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
     }
-//    private void getOnwer() {
-//        final String[] SELF_PROJECTION = new String[]{ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
-//        Cursor cs = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, SELF_PROJECTION, null, null, null);
-//        String onwer = "Hello";
-//        if (cs != null && cs.moveToFirst()) {
-//            String o = cs.getString(1);
-//            if (!TextUtils.isEmpty(onwer)) {
-//                onwer = o;
-//
-//            }
-//        }
-//        NavigationView navView = (NavigationView) findViewById(R.id.navigation_view);
-//        if (navView != null) {
-//            View headerLayout = navView.getHeaderView(0);
-//            TextView tvEmail = (TextView) headerLayout.findViewById(R.id.tv_email);
-//                tvEmail.setText(onwer);
-//        }
-//    }
 
     //Load Ads banner
     private void loadAdBanner() {
         StartAppSDK.init(this, getString(R.string.startapp_id), true);
         StartAppAd.disableSplash();
-//        mStartAppAdd = new StartAppAd(this);
     }
 
     @Override

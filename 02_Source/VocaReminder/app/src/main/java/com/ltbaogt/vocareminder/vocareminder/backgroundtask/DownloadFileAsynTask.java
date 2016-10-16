@@ -1,9 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.nfc.FormatException;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,12 +9,10 @@ import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.regex.Pattern;
 
 /**
  * Created by fahc03-177 on 10/14/16.

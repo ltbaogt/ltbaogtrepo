@@ -1,7 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import android.annotation.SuppressLint;
-import android.database.sqlite.SQLiteConstraintException;
 
 /**
  * Created by MyPC on 17/09/2016.

@@ -2,13 +2,11 @@ package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 /**
  * Created by MyPC on 16/10/2016.

@@ -1,7 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
-import android.content.ContentValues;
-
 /**
  * Created by MyPC on 12/09/2016.
  */

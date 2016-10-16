@@ -1,18 +1,13 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 
 import java.lang.ref.WeakReference;
 
