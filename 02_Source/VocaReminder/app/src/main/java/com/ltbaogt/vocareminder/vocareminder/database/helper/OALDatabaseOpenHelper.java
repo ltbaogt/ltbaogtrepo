@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -69,12 +69,12 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     private void copyDbFromAsset() throws IOException {
-        Log.d(TAG, ">>>copyDbFromAsset START");
+        VRLog.d(TAG, ">>>copyDbFromAsset START");
         InputStream is = mContext.getAssets().open(DATABASE_NAME);
 
         //Create empty db
         String outFileName = getDatabasePath();
-        Log.d(TAG, ">>>getDatabasePath outFileName= " + outFileName);
+        VRLog.d(TAG, ">>>getDatabasePath outFileName= " + outFileName);
         File f = new File(mContext.getApplicationInfo().dataDir + DATABASE_PATH_SUFFIX);
         if (!f.exists()) {
             f.mkdir();
@@ -89,22 +89,22 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         os.flush();
         os.close();
         is.close();
-        Log.d(TAG, ">>>copyDbFromAsset END");
+        VRLog.d(TAG, ">>>copyDbFromAsset END");
     }
 
     public SQLiteDatabase openDatabase() throws SQLException {
-        Log.d(TAG, ">>>openDatabase START");
+        VRLog.d(TAG, ">>>openDatabase START");
         File dbFile = mContext.getDatabasePath(DATABASE_NAME);
         boolean isExists = dbFile.exists();
-        Log.d(TAG, ">>>SQLiteDatabase isExists= " + isExists);
+        VRLog.d(TAG, ">>>SQLiteDatabase isExists= " + isExists);
         if (!isExists) {
             try {
                 copyDbFromAsset();
             } catch (IOException e) {
-                Log.d(TAG, Log.getStackTraceString(e));
+                VRLog.e(TAG, e);
             }
         }
-        Log.d(TAG, ">>>openDatabase END");
+        VRLog.d(TAG, ">>>openDatabase END");
         if (mOnDatabaseCreateCompleted != null) {
             mOnDatabaseCreateCompleted.onDatabaseCreated();
         }
@@ -120,7 +120,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
     //Insert new word
     public void insertWord(Word newWord) {
-        Log.d(TAG, ">>>insertWord START");
+        VRLog.d(TAG, ">>>insertWord START");
         if (newWord.getWordId() == -1) {
             ArrayList<Word> list = getAllWords();
             SQLiteDatabase db = getWritableDatabase();
@@ -144,7 +144,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             db.insert(Word.TABLE_NAME_TBL_WORD, null, cv);
         }
 
-        Log.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
+        VRLog.d(TAG, ">>>insertWord END, newWord= " + newWord.toString());
     }
 
     private ContentValues getContentValues(Word w) {
@@ -165,12 +165,12 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public Word getWordById(int id) {
-        Log.d(TAG, ">>>getWordById id= " + id);
+        VRLog.d(TAG, ">>>getWordById id= " + id);
         Cursor cs = getWordByIdInCursor(id);
         if (cs.moveToFirst()) {
             Word w = new Word();
             w.initFromCursor(cs);
-            Log.d(TAG, ">>>getWordById Word= " + w.toString());
+            VRLog.d(TAG, ">>>getWordById Word= " + w.toString());
             return w;
         }
         cs.close();
@@ -178,7 +178,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getWordByIdInCursor(int id) {
-        Log.d(TAG, ">>>getWordById id= " + id);
+        VRLog.d(TAG, ">>>getWordById id= " + id);
         SQLiteDatabase db = getWritableDatabase();
         String sqlString = "select * from " + Word.TABLE_NAME_TBL_WORD + " where " + Word.COL_WORD_ID + " = ?";
         Cursor cs = db.rawQuery(sqlString, new String[]{id + ""});
@@ -187,7 +187,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return cs;
     }
     public int getCount() {
-        Log.d(TAG, ">>>getCount START");
+        VRLog.d(TAG, ">>>getCount START");
         int ret = -1;
         try {
             SQLiteDatabase db = getWritableDatabase();
@@ -198,10 +198,10 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             c.close();
             db.close();
         } catch (SQLException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            VRLog.e(TAG, e);
         }
 
-        Log.d(TAG, ">>>getCount END, ret= " + ret);
+        VRLog.d(TAG, ">>>getCount END, ret= " + ret);
         return ret;
     }
 
@@ -271,18 +271,18 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
     public void updateWord(Word w) {
         SQLiteDatabase db = getWritableDatabase();
         db.update(Word.TABLE_NAME_TBL_WORD, getContentValues(w), Word.COL_WORD_ID + "=" + "?", new String[]{w.getWordId() + ""});
-        Log.d(TAG, ">>>updateWord word= " + w.toString());
+        VRLog.d(TAG, ">>>updateWord word= " + w.toString());
     }
     public void deleteWordById(int id) {
-        Log.d(TAG,">>>deleteWordById START, id= " + id);
+        VRLog.d(TAG,">>>deleteWordById START, id= " + id);
         updateDeletion(id, 1);
-        Log.d(TAG,">>>deleteWordById END");
+        VRLog.d(TAG,">>>deleteWordById END");
     }
 
     public void undoWordById(int id) {
-        Log.d(TAG,">>>deleteWordById START, id= " + id);
+        VRLog.d(TAG,">>>deleteWordById START, id= " + id);
         updateDeletion(id, 0);
-        Log.d(TAG,">>>deleteWordById END");
+        VRLog.d(TAG,">>>deleteWordById END");
     }
 
     private void updateDeletion(int id, int state) {
@@ -307,7 +307,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             reList = new int[cs.getCount()];
             do {
                 reList[i] = cs.getInt(Word.COL_WORD_ID_INDEX);
-                Log.d(TAG, ">>>getListWordId Word[" + i + "]= " + reList[i]);
+                VRLog.d(TAG, ">>>getListWordId Word[" + i + "]= " + reList[i]);
                 i++;
             } while (cs.moveToNext());
         }
@@ -316,22 +316,6 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
         return reList;
     }
 
-
-//    public Word randomWord() {
-//        Log.d(TAG, ">>>randomWord START");
-//        int[] listWordId = getListWordId();
-//        if (listWordId != null) {
-//            Random random = new Random();
-//            int randomId = random.nextInt(listWordId.length);
-//            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
-//            Word w = getWordById(listWordId[randomId]);
-//            Log.d(TAG, ">>>randomWord END, word after random " + w.toString());
-//            return w;
-//        }
-//        Log.d(TAG, ">>>randomWord END");
-//        return null;
-//    }
-
     public Cursor randomWordInCursor() {
         Cursor cs = null;
         int[] listWordId = getListWordId();
@@ -339,7 +323,7 @@ public class OALDatabaseOpenHelper extends SQLiteOpenHelper {
             Random random = new Random();
             int randomId = random.nextInt(listWordId.length);
             cs = getWordByIdInCursor(listWordId[randomId]);
-            Log.d(TAG, ">>>randomWord randomNumber is " + randomId);
+            VRLog.d(TAG, ">>>randomWord randomNumber is " + randomId);
         }
         return cs;
     }

@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.util.ArrayList;
 
@@ -72,7 +72,7 @@ public class FragmentListWord extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        Log.d(TAG, "onCreateView START");
+        VRLog.d(TAG, "onCreateView START");
         mMainView = inflater.inflate(R.layout.fragment_list_word, container, false);
         ArrayList<Word> arrayList = getWordList();
         //Show Recyclerview
@@ -107,7 +107,7 @@ public class FragmentListWord extends BaseFragment {
 //            }
 //        });
 //Remve Tag panel end
-        Log.d(TAG, "onCreateView END");
+        VRLog.d(TAG, "onCreateView END");
         return mMainView;
     }
 
@@ -138,13 +138,13 @@ public class FragmentListWord extends BaseFragment {
     }
 
     public void updateWord(Word w) {
-        Log.d(TAG, ">>>updateWord START");
+        VRLog.d(TAG, ">>>updateWord START");
         getWordAdapter().updateWord(w);
-        Log.d(TAG, ">>>updateWord END");
+        VRLog.d(TAG, ">>>updateWord END");
     }
 
     public void updateLayoutNoWord() {
-        Log.d(TAG, ">>>updateLayoutNoWord START");
+        VRLog.d(TAG, ">>>updateLayoutNoWord START");
         if (mIsArchivedScreen) return;
         View btnAdd = mMainView.findViewById(R.id.noword_layout);
         if (getWordAdapter() != null && getWordAdapter().getItemCount() <= 0) {
@@ -170,7 +170,7 @@ public class FragmentListWord extends BaseFragment {
                 btnAdd.setVisibility(View.INVISIBLE);
             }
         }
-        Log.d(TAG, ">>>updateLayoutNoWord END");
+        VRLog.d(TAG, ">>>updateLayoutNoWord END");
     }
 
     private void setRecyclerViewItemTouchListener() {
@@ -255,7 +255,7 @@ public class FragmentListWord extends BaseFragment {
                             Snackbar.LENGTH_SHORT);
                     snackbar1.show();
                 } catch (IllegalStateException ex) {
-                    Log.e(TAG, ">>>undoDeleteWord Word was undo but layout cannot update. Reason: Screen is transited");
+                    VRLog.e(TAG, ">>>undoDeleteWord Word was undo but layout cannot update. Reason: Screen is transited");
                 }
 
             }

@@ -1,11 +1,11 @@
 package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -100,7 +100,7 @@ public class EnViDictionarySite extends CambrigeDictionarySite {
 
                     Elements posEls = entryBody.select(getPositionTag());
                     if (posEls != null && posEls.size() > 0) {
-                        Log.d(TAG, ">>>getWordInfo posEls.size= " + posEls.size());
+                        VRLog.d(TAG, ">>>getWordInfo posEls.size= " + posEls.size());
                         Element postEl = posEls.first();
                         wordEntry.position = Utils
                                 .UpperFirstCharacterOrString(postEl.text());
@@ -116,14 +116,14 @@ public class EnViDictionarySite extends CambrigeDictionarySite {
                     } else {
                         //Unable to fetch definition of Word
                     }
-                    Log.d(TAG, ">>>getWordInfo " + wordEntry.toString());
+                    VRLog.d(TAG, ">>>getWordInfo " + wordEntry.toString());
                     listWord.add(wordEntry);
                 }
             } else {
                 //No thing to select
             }
         } else {
-            Log.d(TAG, ">>>getWordInfo Unable to fetch document");
+            VRLog.d(TAG, ">>>getWordInfo Unable to fetch document");
         }
         return listWord;
     }

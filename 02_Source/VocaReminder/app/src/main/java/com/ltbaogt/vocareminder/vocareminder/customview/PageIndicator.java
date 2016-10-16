@@ -4,13 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 07/10/2016.
@@ -45,7 +45,7 @@ public class PageIndicator extends LinearLayout {
     }
 
     private void init() {
-        Log.d(TAG, ">>>init START, mPage=" + mPage);
+        VRLog.d(TAG, ">>>init START, mPage=" + mPage);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         if (inflater != null) {
             LinearLayout v = (LinearLayout) inflater.inflate(R.layout.page_indicator_layout, this);
@@ -58,7 +58,7 @@ public class PageIndicator extends LinearLayout {
                 mIndicators.addView(page, lp);
             }
         }
-        Log.d(TAG, ">>>init END");
+        VRLog.d(TAG, ">>>init END");
     }
 
 

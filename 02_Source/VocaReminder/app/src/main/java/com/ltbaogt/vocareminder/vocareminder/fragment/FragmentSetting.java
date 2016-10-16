@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.ltbaogt.vocareminder.vocareminder.activity.MainActivity;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnCheckNotificationQuickAdd;
 import com.ltbaogt.vocareminder.vocareminder.listener.ServiceRunningListener;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.io.File;
 
@@ -108,9 +108,9 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
     }
 
     public void setStartStopServiceToggle(boolean isStart) {
-        Log.d("AAA", ">>>setStartStopServiceToggle START");
+        VRLog.d("AAA", ">>>setStartStopServiceToggle START");
         mSwitchServiceRunning.setChecked(isStart);
-        Log.d("AAA", ">>>setStartStopServiceToggle END");
+        VRLog.d("AAA", ">>>setStartStopServiceToggle END");
     }
 
     private String getBackupFile() {

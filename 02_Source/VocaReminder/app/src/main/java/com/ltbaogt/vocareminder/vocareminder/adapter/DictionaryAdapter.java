@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelp
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnClickIpaSpeaker;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     }
 
     public void filterRawWords() {
-        Log.d(TAG, "filterRawWords START");
+        VRLog.d(TAG, "filterRawWords START");
         try {
             for (int i = mArrayList.size() - 1; i >= 0; i--) {
                 Word w = mArrayList.get(i);
@@ -58,28 +58,28 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
             }
             notifyDataSetChanged();
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            VRLog.e(TAG, e);
         }
-        Log.d(TAG, "filterRawWords END");
+        VRLog.d(TAG, "filterRawWords END");
     }
     public void noFilter() {
-        Log.d(TAG, "noFilter START");
+        VRLog.d(TAG, "noFilter START");
         try {
             OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(mContext);
             mArrayList = db.getAllWordsOrderByNameInList();
             notifyDataSetChanged();
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            VRLog.e(TAG, e);
         }
-        Log.d(TAG, "noFilter END");
+        VRLog.d(TAG, "noFilter END");
     }
 
     public void insertWord(Word w) {
-        Log.d(TAG, ">>>insertWord START");
+        VRLog.d(TAG, ">>>insertWord START");
         mArrayList.add(w);
         int position = mArrayList.indexOf(w);
         notifyItemInserted(position);
-        Log.d(TAG, ">>>insertWord END");
+        VRLog.d(TAG, ">>>insertWord END");
     }
     public void updateWord(Word w) {
         int index = mArrayList.indexOf(w);
@@ -99,25 +99,25 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     }
 
     public void insertWordAtIndex(Word w, int index) {
-        Log.d(TAG, ">>>insertWordAtIndex START, index= " + index);
+        VRLog.d(TAG, ">>>insertWordAtIndex START, index= " + index);
         mArrayList.add(index, w);
         notifyItemInserted(index);
-        Log.d(TAG, ">>>insertWordAtIndex END");
+        VRLog.d(TAG, ">>>insertWordAtIndex END");
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, ">>>onCreateViewHolder START");
+        VRLog.d(TAG, ">>>onCreateViewHolder START");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.item_word, parent, false);
-        Log.d(TAG, ">>>onCreateViewHolder END");
+        VRLog.d(TAG, ">>>onCreateViewHolder END");
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Log.d(TAG, ">>>onBindViewHolder START");
+        VRLog.d(TAG, ">>>onBindViewHolder START");
         final Word w = mArrayList.get(holder.getAdapterPosition());
-        Log.d(TAG, ">>>onBindViewHolder " + w.toString());
+        VRLog.d(TAG, ">>>onBindViewHolder " + w.toString());
 
         holder.mWordName.setTypeface(mTypeFaceBold);
         holder.mWordName.setText(w.getWordName());
@@ -138,7 +138,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
         holder.mPronunciation.setText(w.getPronunciation());
         OnClickIpaSpeaker onClickIpaSpeaker= new OnClickIpaSpeaker(w);
         holder.setIpaSpeakOnClickListener(onClickIpaSpeaker);
-        Log.d(TAG, ">>>onBindViewHolder END");
+        VRLog.d(TAG, ">>>onBindViewHolder END");
     }
 
     private boolean isMp3Existed(Context context, Word w) {
@@ -148,7 +148,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, ">>>getItemCount mArrayList.size= " + mArrayList.size());
+        VRLog.d(TAG, ">>>getItemCount mArrayList.size= " + mArrayList.size());
         return mArrayList.size();
     }
 

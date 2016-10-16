@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -36,6 +35,7 @@ import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import org.jsoup.nodes.Document;
 
@@ -102,7 +102,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
             mBtnGetInfo.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.d(TAG, ">>>onLongClick change language");
+                    VRLog.d(TAG, ">>>onLongClick change language");
                     openPopupMenu(mBtnGetInfo);
                     return true;
                 }
@@ -227,7 +227,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 }
             }
         } else {
-            Log.d(TAG, ">>>onActivityResult cannot recognize the voice");
+            VRLog.d(TAG, ">>>onActivityResult cannot recognize the voice");
         }
 
     }
@@ -239,15 +239,15 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
     }
 
     private void hideKeyboard() {
-        Log.d(TAG, ">>>hideKeyboard START");
+        VRLog.d(TAG, ">>>hideKeyboard START");
         try {
             Activity activity = getActivity();
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         } catch (NullPointerException e) {
-            Log.d(TAG, "Unable to hide keyboard");
+            VRLog.d(TAG, "Unable to hide keyboard");
         }
-        Log.d(TAG, ">>>hideKeyboard END");
+        VRLog.d(TAG, ">>>hideKeyboard END");
     }
     @Override
     public void onClick(View view) {

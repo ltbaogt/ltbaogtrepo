@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.bean.Setting;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class ProviderWrapper {
             }
             words.close();
         }
-        Log.d(TAG, ">>>getRandomWord Word ID= " + w.getWordId());
+        VRLog.d(TAG, ">>>getRandomWord Word ID= " + w.getWordId());
         return w;
     }
 
@@ -76,25 +76,25 @@ public class ProviderWrapper {
         Uri uri = Uri.parse(AppContact.CONTENT_URI + "/settings");
         Cursor settings = mContext.getContentResolver().query(uri, null, key, null, null);
         int intValue = settings.getInt(Setting.COL_INDEX_VALUE);
-        Log.d("ProviderWrapper", ">>>getIntValueForKey " + intValue);
+        VRLog.d("ProviderWrapper", ">>>getIntValueForKey " + intValue);
         settings.close();
         return intValue;
     }
 
     private void setIntValueForKey(String key, int intValue) {
-        Log.d("ProviderWrapper", ">>>setIntValueForKey START");
+        VRLog.d("ProviderWrapper", ">>>setIntValueForKey START");
         Uri uri = Uri.parse(AppContact.CONTENT_URI + "/settings");
         ContentValues cv = new ContentValues();
         cv.put(key, intValue);
         mContext.getContentResolver().update(uri, cv, key, null);
-        Log.d("ProviderWrapper", ">>>setIntValueForKey END");
+        VRLog.d("ProviderWrapper", ">>>setIntValueForKey END");
     }
     public int getColorTheme() {
         int color = getIntValueForKey(Define.THEME_COLOR);
         if (color == -1) {
             color = ContextCompat.getColor(mContext.getApplicationContext(), R.color.teal);
         }
-        Log.d("ProviderWrapper", ">>>getColorTheme size= " + color);
+        VRLog.d("ProviderWrapper", ">>>getColorTheme size= " + color);
         return color;
     }
 

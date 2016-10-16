@@ -1,7 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.CompoundButton;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class MeaningAdapter extends RecyclerView.Adapter<MeaningAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Log.d("AAA", "bindedPosition= " + position);
+        VRLog.d("AAA", "bindedPosition= " + position);
         final String itemMeaning = mMeaningArray.get(position);
         holder.mCbChoose.setOnCheckedChangeListener(null);
         holder.mCbChoose.setChecked(selectedPosition == position);

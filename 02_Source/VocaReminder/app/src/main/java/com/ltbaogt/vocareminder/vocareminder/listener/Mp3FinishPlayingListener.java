@@ -1,9 +1,9 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.media.MediaPlayer;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 16/10/2016.
@@ -18,6 +18,6 @@ public class Mp3FinishPlayingListener implements MediaPlayer.OnCompletionListene
     public void onCompletion(MediaPlayer mediaPlayer) {
         mediaPlayer.stop();
         mediaPlayer.release();
-        Log.d(TAG, ">>>playMp3File END");
+        VRLog.d(TAG, ">>>playMp3File END");
     }
 }

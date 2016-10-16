@@ -6,11 +6,11 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.WordProvider;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 10/09/2016.
@@ -50,7 +50,7 @@ public class AppProvider extends ContentProvider {
         } else if (URI_MATCHER.match(uri) == WORD_ID) {
             c = dbHepler.randomWordInCursor();
         } else if (URI_MATCHER.match(uri) == SETTING_LIST) {
-            Log.d(TAG, ">>>query SETTING_LIST");
+            VRLog.d(TAG, ">>>query SETTING_LIST");
             c = dbHepler.getSettingValueForKey(selection);
         }
         if (c != null) {
@@ -89,10 +89,10 @@ public class AppProvider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String key, String[] strings) {
         OALDatabaseOpenHelper dbHepler = new OALDatabaseOpenHelper(getContext());
         if (URI_MATCHER.match(uri) == SETTING_LIST) {
-            Log.d(TAG, ">>>update START");
+            VRLog.d(TAG, ">>>update START");
             int color = contentValues.getAsInteger(key);
             dbHepler.setSettingValueForKey(key, String.valueOf(color));
-            Log.d(TAG, ">>>update END");
+            VRLog.d(TAG, ">>>update END");
         }
         dbHepler.close();
         return 0;

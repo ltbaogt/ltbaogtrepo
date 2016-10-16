@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.DatabaseCreatedListener;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 20/09/2016.
@@ -44,7 +44,7 @@ public class SplashScreenActivity extends Activity {
                         mActivity.getApplicationContext().startActivity(mainActivity);
                         mActivity.finish();
                         mActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        Log.d(TAG, ">>>onDatabaseCreated END");
+                        VRLog.d(TAG, ">>>onDatabaseCreated END");
                     }
                 }, 1000);
             }
@@ -78,9 +78,9 @@ public class SplashScreenActivity extends Activity {
             public void run() {
                 OALDatabaseOpenHelper db = new OALDatabaseOpenHelper(getApplicationContext());
                 db.setOnDatabaseCreateCompleted(mOnDbCreated);
-                Log.d(TAG, ">>>Initialize database START");
+                VRLog.d(TAG, ">>>Initialize database START");
                 db.openDatabase();
-                Log.d(TAG, ">>>Initialize database END");
+                VRLog.d(TAG, ">>>Initialize database END");
             }
         }).start();
     }

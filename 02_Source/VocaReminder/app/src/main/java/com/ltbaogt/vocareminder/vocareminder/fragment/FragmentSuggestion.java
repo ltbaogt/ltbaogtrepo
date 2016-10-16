@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import org.jsoup.nodes.Document;
 
@@ -109,7 +109,7 @@ public class FragmentSuggestion extends DialogFragment {
                             }
                         }, 1000);
                     } else {
-                        Log.d("AAAA", "Not Found");
+                        VRLog.d("AAAA", "Not Found");
                         mRecyclerView.animate().alpha(1).start();
                     }
                 }

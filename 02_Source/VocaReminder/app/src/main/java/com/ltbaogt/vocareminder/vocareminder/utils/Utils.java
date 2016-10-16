@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -32,10 +31,10 @@ public class Utils {
 
 
     public static void playMp3InLocal(Context ctx, String filename) {
-        Log.d(TAG, ">>>playMp3InLocal START");
+        VRLog.d(TAG, ">>>playMp3InLocal START");
         String mp3FilePath = Utils.getMp3FileDir(ctx) + filename;
         playMp3File(mp3FilePath);
-        Log.d(TAG, ">>>playMp3InLocal END");
+        VRLog.d(TAG, ">>>playMp3InLocal END");
     }
 
     public static void playMp3File(final String dataSource) {
@@ -43,7 +42,7 @@ public class Utils {
             @Override
             public void run() {
                 try {
-                    Log.d(TAG, ">>>playMp3File START");
+                    VRLog.d(TAG, ">>>playMp3File START");
                     MediaPlayer mediaPlayer = new MediaPlayer();
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mediaPlayer.setDataSource(dataSource);

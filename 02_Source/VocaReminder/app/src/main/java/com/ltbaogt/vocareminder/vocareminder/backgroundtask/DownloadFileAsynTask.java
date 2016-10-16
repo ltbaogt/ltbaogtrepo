@@ -2,11 +2,11 @@ package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,14 +28,14 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
     }
     @Override
     protected String doInBackground(String... strings) {
-        Log.d(TAG, ">>>DownloadFileAsynTask START");
+        VRLog.d(TAG, ">>>DownloadFileAsynTask START");
         String savedFile = null;
         //TODO: Index out of range
         if (strings.length >= 2) {
             String mp3Url = strings[0];
             String mp3FileName = strings[1];
             if (mp3FileName.lastIndexOf(".mp3") <= 0) {
-                Log.d(TAG, "Mp3 file name is invalid");
+                VRLog.d(TAG, "Mp3 file name is invalid");
             }
             InputStream is = null;
             OutputStream os = null;
@@ -81,11 +81,11 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String mp3File) {
         super.onPostExecute(mp3File);
-        Log.d(TAG, ">>>DownloadFileAsynTask file save at= " + mp3File);
+        VRLog.d(TAG, ">>>DownloadFileAsynTask file save at= " + mp3File);
         if (!Utils.isStringNullOrEmpty(mp3File)) {
             Utils.playMp3File(mp3File);
         } else {
-            Log.d(TAG, ">>>DownloadFileAsynTask mp3 file path is null");
+            VRLog.d(TAG, ">>>DownloadFileAsynTask mp3 file path is null");
             Utils.showToastAtTop(mContext, R.string.this_word_have_not_sound);
         }
     }

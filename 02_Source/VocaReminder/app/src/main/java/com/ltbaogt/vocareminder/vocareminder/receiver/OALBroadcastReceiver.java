@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.ltbaogt.vocareminder.vocareminder.listener.OpenPanelListener;
 import com.ltbaogt.vocareminder.vocareminder.listener.ShowMeaningCheckChanged;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.lang.ref.WeakReference;
 
@@ -49,7 +49,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
     }
     public OALBroadcastReceiver(Context ctx) {
-        Log.d(TAG, ">>>OALBroadcastReceiver init");
+        VRLog.d(TAG, ">>>OALBroadcastReceiver init");
         mContext = ctx;
         AssetManager assetManager = mContext.getApplicationContext().getAssets();
         mBoldtypeface = Typeface.createFromAsset(assetManager, Define.TYPE_FACE_BOLD);
@@ -58,12 +58,12 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, ">>>onReceive START");
+        VRLog.d(TAG, ">>>onReceive START");
         String action = intent.getAction();
 
         if (Intent.ACTION_SCREEN_ON.equals(action) || Define.VOCA_ACTION_OPEN_VOCA_REMINDER.equals(action)) {
             int callState = getTelephoneService().getCallState();
-            Log.d(TAG, ">>>onReceive callState= " + callState);
+            VRLog.d(TAG, ">>>onReceive callState= " + callState);
             if (callState != TelephonyManager.CALL_STATE_IDLE) {
                 return;
             }
@@ -75,33 +75,33 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             ProviderWrapper providerWrapper = new ProviderWrapper(mContext.getApplicationContext());
             int dismissTime = providerWrapper.getDismissTime();
             if (dismissTime > 0) {
-                Log.d(TAG, ">>>onReceive sendMessage to dismiss reminder after " + dismissTime);
+                VRLog.d(TAG, ">>>onReceive sendMessage to dismiss reminder after " + dismissTime);
                 mHandler = new ReceiverHandler(mContext.getApplicationContext());
                 mHandler.sendEmptyMessageDelayed(Define.HANDLER_WHAT_AUTO_DISMISS,dismissTime);
             }
 
         } else if (Define.VOCA_ACTION_CLOSE_VOCA_REMINDER.equals(action) || Intent.ACTION_SCREEN_OFF.equals(action)) {
             try {
-                Log.d(TAG, ">>>onReceive call dismissReminderLayout");
+                VRLog.d(TAG, ">>>onReceive call dismissReminderLayout");
                 dismissReminderLayout();
             } catch (NullPointerException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
+                VRLog.e(TAG, e);
             }
         } else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
-            Log.d(TAG, ">>>onReceive ACTION_BOOT_COMPLETED");
+            VRLog.d(TAG, ">>>onReceive ACTION_BOOT_COMPLETED");
             ProviderWrapper providerWrapper = new ProviderWrapper(context.getApplicationContext());
             int isRunning = providerWrapper.getServiceRunningStatus();
             if (isRunning == OALService.SERVICE_RUNNING_YES) {
                 context.startService(new Intent(context, OALService.class));
             }
         }
-        Log.d(TAG, ">>>onReceive END");
+        VRLog.d(TAG, ">>>onReceive END");
     }
 
     private void dismissReminderLayout() {
-        Log.d(TAG, ">>>dismissReminderLayout");
+        VRLog.d(TAG, ">>>dismissReminderLayout");
         try {
-            Log.d(TAG, ">>>dismissReminderLayout is null " + (getWeakPreferenceMainLayout() == null));
+            VRLog.d(TAG, ">>>dismissReminderLayout is null " + (getWeakPreferenceMainLayout() == null));
             if (getWeakPreferenceMainLayout() != null) {
                 getWindowManager().removeViewImmediate(getWeakPreferenceMainLayout());
                 getWeakPreferenceMainLayout().setOnTouchListener(null);
@@ -112,7 +112,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
                 }
             }
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, ">>>dismissReminderLayout " + Log.getStackTraceString(e));
+            VRLog.e(TAG, ">>>dismissReminderLayout " + e);
         }
     }
 
@@ -173,7 +173,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             mTvPronun.setText(w.getPronunciation());
             mTvSentence.setText(w.getDefault_Meaning());
         } else {
-            Log.d(TAG, "Dictionary is empty");
+            VRLog.d(TAG, "Dictionary is empty");
         }
         mReminderLayout.get().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
@@ -189,7 +189,7 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
             GestureDetector g = new GestureDetector(mReminderLayout.get().getContext(), doubletabDetector);
             getWeakPreferenceMainLayout().setOnTouchListener(new OnTouchDismissListener(g));
         } else {
-            Log.d(TAG, ">>>setupReminderEvent Cannot set OnTouchDismissListener event");
+            VRLog.d(TAG, ">>>setupReminderEvent Cannot set OnTouchDismissListener event");
         }
 
 
@@ -197,10 +197,10 @@ public class OALBroadcastReceiver extends BroadcastReceiver {
 
     private View getWeakPreferenceMainLayout() {
         if (mReminderLayout == null) {
-            Log.d(TAG, ">>>getWeakPreferenceMainLayout holder is null");
+            VRLog.d(TAG, ">>>getWeakPreferenceMainLayout holder is null");
             return null;
         } else {
-            Log.d(TAG, ">>>getWeakPreferenceMainLayout holder is not null, depended on element");
+            VRLog.d(TAG, ">>>getWeakPreferenceMainLayout holder is not null, depended on element");
             return mReminderLayout.get();
         }
     }

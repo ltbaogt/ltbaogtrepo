@@ -1,7 +1,5 @@
 package com.ltbaogt.vocareminder.vocareminder.utils;
 
-import android.util.Log;
-
 import com.ltbaogt.vocareminder.vocareminder.fragment.BaseFragment;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentAbout;
 import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentListWord;
@@ -28,7 +26,7 @@ public class FragmentList {
         if (!mList.containsValue(f)) {
             mList.put(k, f);
         } else {
-            Log.d("VReminder", ">>>setFragmentForKey fragment already exist");
+            VRLog.d("VReminder", ">>>setFragmentForKey fragment already exist");
         }
     }
     public FragmentListWord getVocabularyFragment() {

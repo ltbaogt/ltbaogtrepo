@@ -25,7 +25,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +46,7 @@ import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.utils.FragmentList;
 import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d(TAG, ">>>onNewIntent START");
+        VRLog.d(TAG, ">>>onNewIntent START");
         super.onNewIntent(intent);
         if (intent.hasExtra(Define.EXTRA_QUICK_ADD)) {
            if(mIsAttached) {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                showDialogNewWord(w);
            }
         }
-        Log.d(TAG, ">>>onNewIntent END");
+        VRLog.d(TAG, ">>>onNewIntent END");
     }
 
     @Override
@@ -161,11 +161,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     @Override
     public void onSave(Word w) {
-        Log.d(TAG, ">>>onSave SRART");
+        VRLog.d(TAG, ">>>onSave SRART");
         //Fragment that is holding RecyclerView.
         // This fragment will invoke RecyclerView get its adapter to add new Word to Adapter's ArrayList
         mFragmentList.getVocabularyFragment().addNewWord(w);
-        Log.d(TAG, ">>>onSave END");
+        VRLog.d(TAG, ">>>onSave END");
     }
 
     @Override
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, ">>>onCreateOptionsMenu STARTT");
+        VRLog.d(TAG, ">>>onCreateOptionsMenu STARTT");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         String tag = getTopFragmentTag();
@@ -295,13 +295,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             }
         });
 
-        Log.d(TAG, ">>>onCreateOptionsMenu END");
+        VRLog.d(TAG, ">>>onCreateOptionsMenu END");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, ">>>onOptionsItemSelected START");
+        VRLog.d(TAG, ">>>onOptionsItemSelected START");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 }
                 break;
         }
-        Log.d(TAG, ">>>onOptionsItemSelected END");
+        VRLog.d(TAG, ">>>onOptionsItemSelected END");
         return super.onOptionsItemSelected(item);
     }
 
@@ -376,26 +376,26 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         Gson gsonParser = new Gson();
         try {
             if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                Log.d(TAG, ">>>backup SDCard isn't found");
+                VRLog.d(TAG, ">>>backup SDCard isn't found");
                 return;
             }
             String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BACKUP_FOLDER;
-            Log.d(TAG, ">>>backup " + storagePath);
+            VRLog.d(TAG, ">>>backup " + storagePath);
             File storageDirectory = new File(storagePath);
             boolean directoryCreated;
             if (storageDirectory.exists()) {
-                Log.d(TAG, ">>>backup location is found");
+                VRLog.d(TAG, ">>>backup location is found");
                 directoryCreated = true;
             } else {
                 directoryCreated = storageDirectory.mkdir();
-                Log.d(TAG, ">>>backup create new directory <reminder>");
+                VRLog.d(TAG, ">>>backup create new directory <reminder>");
             }
             if (directoryCreated) {
                 String backFilePath = storagePath + BACKUP_FILE;
                 File backupFile = new File(backFilePath);
                 boolean fileCreated;
                 if (backupFile.exists()) {
-                    Log.d(TAG, ">>>backup override old file");
+                    VRLog.d(TAG, ">>>backup override old file");
                     fileCreated = true;
                 } else {
                     fileCreated = backupFile.createNewFile();
@@ -412,12 +412,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     if (mFragmentList.getSettingFragment() != null) {
                         mFragmentList.getSettingFragment().setBackupFile(backupFile.getName());
                     }
-                    Log.d(TAG, ">>>backup backup completed");
+                    VRLog.d(TAG, ">>>backup backup completed");
                 } else {
-                    Log.d(TAG, ">>>backup cannot create backup file");
+                    VRLog.d(TAG, ">>>backup cannot create backup file");
                 }
             } else {
-                Log.d(TAG, ">>>backup cannot create backup directory");
+                VRLog.d(TAG, ">>>backup cannot create backup directory");
             }
 
         } catch (IOException e) {
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     public void backupVocabulary(View v) {
-        Log.d(TAG, ">>>backupVocabulary START");
+        VRLog.d(TAG, ">>>backupVocabulary START");
         if (canWriteExternalStorage()) {
             showConfirmDialog(R.string.popup_title_backup_vocabularies, new DialogInterface.OnClickListener() {
                 @Override
@@ -439,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } else {
             showReqPrmWriteExtStoragePopup(REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP);
         }
-        Log.d(TAG, ">>>backupVocabulary END");
+        VRLog.d(TAG, ">>>backupVocabulary END");
     }
 
     public void restoreVocabulary(View v) {
@@ -472,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 doBackup(db);
             }
         } catch (Exception e) {
-            Log.d(TAG, ">>>restore An Error occurs when restoring");
+            VRLog.d(TAG, ">>>restore An Error occurs when restoring");
         } finally {
             db.close();
         }
@@ -489,12 +489,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     Word w = ConvertWord.toWord(jsonParser.fromJson(object, ConvertWord.class));
                     db.insertWord(w);
                 }
-                Log.d(TAG, ">>>restore completed");
+                VRLog.d(TAG, ">>>restore completed");
             } else {
-                Log.d(TAG, ">>>restore Cannot find restore file. Reason: Backup doesn't exist");
+                VRLog.d(TAG, ">>>restore Cannot find restore file. Reason: Backup doesn't exist");
             }
         } catch (Exception e) {
-            Log.d(TAG, ">>>restore An Error occurs when restoring");
+            VRLog.d(TAG, ">>>restore An Error occurs when restoring");
         } finally {
             showSnackBar(R.string.snackbar_restore_completed);
         }
@@ -560,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         super.onDestroy();
         NavigationView drawer = (NavigationView) findViewById(R.id.navigation_view);
         drawer.setNavigationItemSelectedListener(null);
-        Log.d(TAG, ">>>onDestroy START");
+        VRLog.d(TAG, ">>>onDestroy START");
     }
 
     public void showDialog(Bundle b) {
@@ -640,14 +640,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         boolean canWrite;
         int isGranted = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         canWrite = (isGranted == PackageManager.PERMISSION_GRANTED);
-        Log.d(TAG, ">>>canWriteExternalStorage can write external storage= " + canWrite);
+        VRLog.d(TAG, ">>>canWriteExternalStorage can write external storage= " + canWrite);
         return canWrite;
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, ">>>onRequestPermissionsResult grantResult= " + grantResults[0]);
+        VRLog.d(TAG, ">>>onRequestPermissionsResult grantResult= " + grantResults[0]);
         if (REQUEST_CODE_WRITE_EXTERNAL_STORAGE_FOR_BACKUP == requestCode) {
             if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
                 backup();
@@ -670,13 +670,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (REQUEST_CODE_SETTING_DRAW_OVERLAY == requestCode) {
             if(canDrawOverlays()) {
-                Log.d(TAG, "onActivityResult app can draw overlay from now");
+                VRLog.d(TAG, "onActivityResult app can draw overlay from now");
                 if (mFragmentList.getSettingFragment() != null) {
                     mFragmentList.getSettingFragment().setStartStopServiceToggle(true);
                     startVRService();
                 }
             } else {
-                Log.d(TAG, "onActivityResult app doesn't be granted to draw overlay");
+                VRLog.d(TAG, "onActivityResult app doesn't be granted to draw overlay");
                 if (mFragmentList.getSettingFragment() != null) {
                     mFragmentList.getSettingFragment().setStartStopServiceToggle(false);
                 }
@@ -693,7 +693,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         if (Build.VERSION.SDK_INT >= 23) {
             canDraw = Settings.canDrawOverlays(this);
         }
-        Log.d(TAG, ">>>canDrawOverlays canDraw= " + canDraw);
+        VRLog.d(TAG, ">>>canDrawOverlays canDraw= " + canDraw);
         return canDraw;
     }
 
@@ -703,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, MainActivity.REQUEST_CODE_SETTING_DRAW_OVERLAY);
         } else {
-            Log.d(TAG, ">>>startActivityForDrawOverlay don't need request");
+            VRLog.d(TAG, ">>>startActivityForDrawOverlay don't need request");
         }
     }
 
@@ -716,7 +716,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             top = bse.getName();
 
         }
-        Log.d(TAG, ">>>getTopFragmentTag topFragment= " + top);
+        VRLog.d(TAG, ">>>getTopFragmentTag topFragment= " + top);
         return top;
     }
 

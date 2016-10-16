@@ -1,10 +1,10 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.customview.PageIndicator;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 07/10/2016.
@@ -25,7 +25,7 @@ public class VROnPageChangeListener implements ViewPager.OnPageChangeListener {
 
     @Override
     public void onPageSelected(int position) {
-        Log.d(TAG, ">>>onPageSelected START, position= " + position);
+        VRLog.d(TAG, ">>>onPageSelected START, position= " + position);
         mPageIndicator.setCurrentPage(position);
     }
 

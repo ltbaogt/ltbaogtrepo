@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.Button;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by MyPC on 23/09/2016.
@@ -37,10 +37,10 @@ public class FragmentAbout extends BaseFragment {
             public void onClick(View view) {
                 try {
                     String pathToOpenGp = Define.MARKET_URI + getContext().getPackageName();
-                    Log.d(TAG, "open app with packageName is= " + pathToOpenGp);
+                    VRLog.d(TAG, "open app with packageName is= " + pathToOpenGp);
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pathToOpenGp)));
                 } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
+                    VRLog.e(TAG, e);
                 }
             }
         });

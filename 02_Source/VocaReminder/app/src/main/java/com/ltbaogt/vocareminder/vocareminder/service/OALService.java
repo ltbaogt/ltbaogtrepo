@@ -8,12 +8,12 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.receiver.OALBroadcastReceiver;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 /**
  * Created by My PC on 04/08/2016.
@@ -34,9 +34,8 @@ public class OALService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, ">>>onCreate START");
+        VRLog.d(TAG, ">>>onCreate START");
         super.onCreate();
-//        mInstance = this;
         mReceiver = new OALBroadcastReceiver(getApplicationContext());
         IntentFilter filter = new IntentFilter();
         filter.addAction(Define.VOCA_ACTION_OPEN_VOCA_REMINDER);
@@ -45,18 +44,18 @@ public class OALService extends Service {
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mReceiver, filter);
         initScreenSizeIfNeed();
-        Log.d(TAG, ">>>onCreate END");
+        VRLog.d(TAG, ">>>onCreate END");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, ">>>onStartCommand START");
+        VRLog.d(TAG, ">>>onStartCommand START");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, ">>>onDestroy START");
+        VRLog.d(TAG, ">>>onDestroy START");
         super.onDestroy();
         unregisterReceiver(mReceiver);
         mReceiver = null;
@@ -65,7 +64,7 @@ public class OALService extends Service {
             Intent i = new Intent(getApplicationContext(), this.getClass());
             getApplicationContext().startService(i);
         }
-        Log.d(TAG, ">>>onDestroy END");
+        VRLog.d(TAG, ">>>onDestroy END");
     }
 
     private void initScreenSizeIfNeed() {
@@ -78,7 +77,7 @@ public class OALService extends Service {
                     .getDefaultDisplay().getMetrics(displayMetrics);
             shared.edit().putInt(Define.REF_SCREEN_SIZE_WIDTH, displayMetrics.widthPixels).commit();
             shared.edit().putInt(Define.REF_SCREEN_SIZE_HEIGHT, displayMetrics.heightPixels).commit();
-            Log.d("TAG", ">>>initScreenSizeIfNeed screen size= (" + displayMetrics.widthPixels + "x" + displayMetrics.heightPixels);
+            VRLog.d("TAG", ">>>initScreenSizeIfNeed screen size= (" + displayMetrics.widthPixels + "x" + displayMetrics.heightPixels);
         }
 
     }

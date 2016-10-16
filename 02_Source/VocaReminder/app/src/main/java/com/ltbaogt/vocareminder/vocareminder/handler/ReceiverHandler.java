@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.lang.ref.WeakReference;
 
@@ -17,7 +17,7 @@ public class ReceiverHandler extends Handler {
 
     private WeakReference<Context> mContext;
     public ReceiverHandler(Context ctx) {
-        Log.d(Define.TAG, ">>>ReceiverHandler init");
+        VRLog.d(Define.TAG, ">>>ReceiverHandler init");
         mContext = new WeakReference<>(ctx.getApplicationContext());
     }
     @Override
@@ -34,7 +34,7 @@ public class ReceiverHandler extends Handler {
         if (mContext != null && mContext.get() != null) {
             Intent intent = new Intent(Define.VOCA_ACTION_CLOSE_VOCA_REMINDER);
             mContext.get().sendBroadcast(intent);
-            Log.d("ReceiverHandler", ">>>dismissReminder");
+            VRLog.d("ReceiverHandler", ">>>dismissReminder");
         }
     }
 }

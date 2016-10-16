@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.ltbaogt.vocareminder.vocareminder.customview.PageIndicator;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnPageChangeListener;
 import com.ltbaogt.vocareminder.vocareminder.pager.SlidePageFragment;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import java.util.ArrayList;
 
@@ -55,7 +55,7 @@ public class FragmentSuggestInfo extends DialogFragment {
             @Override
             public void onClick(View view) {
                 int currentEntityIndex = mPageIndicator.getCurrentPage();
-                Log.d(TAG, ">>>onClick currentEntityIndex= " + currentEntityIndex);
+                VRLog.d(TAG, ">>>onClick currentEntityIndex= " + currentEntityIndex);
                 if (currentEntityIndex >= 0) {
                     WordEntity selectedEntity = mArrayMeaning.get(currentEntityIndex);
                     if (mAcceptSuggestionListener != null) {
@@ -97,7 +97,7 @@ public class FragmentSuggestInfo extends DialogFragment {
     @Override
     public void onAttachFragment(Fragment childFragment) {
         super.onAttachFragment(childFragment);
-        Log.d(TAG, ">>> onAttachFragment");
+        VRLog.d(TAG, ">>> onAttachFragment");
         if (mPager != null) {
             mPageIndicator.setCurrentPage(mPager.getCurrentItem());
         }
@@ -115,7 +115,7 @@ public class FragmentSuggestInfo extends DialogFragment {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d(TAG, ">>>getItem position= " + position);
+            VRLog.d(TAG, ">>>getItem position= " + position);
             SlidePageFragment pageFragment = new SlidePageFragment();
             pageFragment.setEntity(mArrayMeaning.get(position));
             return pageFragment;
@@ -125,24 +125,6 @@ public class FragmentSuggestInfo extends DialogFragment {
         public int getCount() {
             return mArrayMeaning.size();
         }
-
-//        @Override
-//        public Object instantiateItem(ViewGroup container, int position) {
-//            Log.d(TAG, ">>>instantiateItem position= " + position);
-//            super.instantiateItem(container, position);
-////            SlidePageFragment f = (SlidePageFragment)
-//            SlidePageFragment pageFragment = new SlidePageFragment();
-//            pageFragment.setEntity(mArrayMeaning.get(position));
-//            registeredFragments.put(position, pageFragment);
-//            return pageFragment;
-//        }
-//
-//        @Override
-//        public void destroyItem(ViewGroup container, int position, Object object) {
-//            Log.d(TAG, ">>>destroyItem position= " + position);
-//            registeredFragments.remove(position);
-//            super.destroyItem(container, position, object);
-//        }
     }
 
 }

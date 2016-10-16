@@ -1,9 +1,9 @@
 package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
+import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,14 +34,14 @@ public class HttpUtil {
 
         @Override
         protected Document doInBackground(String... params) {
-            Log.d(TAG, ">>>doInBackground START");
+            VRLog.d(TAG, ">>>doInBackground START");
             if (mForWord == null || mForWord.length() == 0) {
-                Log.d(TAG, ">>>doInBackground word empty");
+                VRLog.d(TAG, ">>>doInBackground word empty");
             }
             Document doc = null;
             try {
                 String url = mUrl + mForWord;
-                Log.d(TAG, ">>>doInBackground url=" + url);
+                VRLog.d(TAG, ">>>doInBackground url=" + url);
                 doc = Jsoup.connect(url).get();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -52,7 +52,7 @@ public class HttpUtil {
         @Override
         protected void onPostExecute(Document document) {
             mOnFinishLoadWordDefine.onFinishLoad(document);
-            Log.d(TAG, ">>>onPostExecute END");
+            VRLog.d(TAG, ">>>onPostExecute END");
         }
     }
 }
