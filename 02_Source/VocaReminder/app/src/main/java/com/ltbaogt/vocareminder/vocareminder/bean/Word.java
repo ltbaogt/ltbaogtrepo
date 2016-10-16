@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 /**
  * Created by My PC on 05/08/2016.
@@ -221,7 +221,7 @@ public class Word extends BaseWord implements Parcelable {
     }
 
     public void setMp3Url(String url) {
-        if (VRStringUtil.isStringNullOrEmpty(url)) return;
+        if (Utils.isStringNullOrEmpty(url)) return;
         url = url.trim();
         mMp3Url = url;
     }

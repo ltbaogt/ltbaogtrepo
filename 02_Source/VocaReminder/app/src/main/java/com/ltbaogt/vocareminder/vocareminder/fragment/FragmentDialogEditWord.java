@@ -35,7 +35,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.database.bl.OALBLL;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import org.jsoup.nodes.Document;
 
@@ -120,14 +120,14 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mViewHolder.etPosition.setHint(Define.WORD_INIT_POSITION);
             } else {
                 mViewHolder.etWordName.setText(mWord.getWordName());
-                if (!VRStringUtil.isStringNullOrEmpty(mWord.getPronunciation())) {
+                if (!Utils.isStringNullOrEmpty(mWord.getPronunciation())) {
                     mViewHolder.etPronunciation.setText(mWord.getPronunciation());
                 }
-                if (!VRStringUtil.isStringNullOrEmpty(mWord.getDefault_Meaning())) {
+                if (!Utils.isStringNullOrEmpty(mWord.getDefault_Meaning())) {
                     mViewHolder.etMeaning.setText(mWord.getDefault_Meaning());
 
                 }
-                if (!VRStringUtil.isStringNullOrEmpty(mWord.getPosition())) {
+                if (!Utils.isStringNullOrEmpty(mWord.getPosition())) {
                     mViewHolder.etPosition.setText(mWord.getPosition());
 
                 }
@@ -260,7 +260,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 String wordPosition = mViewHolder.etPosition.getText().toString().trim();
                 //Word name is empty
                 if ("".equalsIgnoreCase(wordName)) {
-                    VRStringUtil.showToastAtTop(getContext(), R.string.word_is_empty);
+                    Utils.showToastAtTop(getContext(), R.string.word_is_empty);
                     getDialog().getWindow().getDecorView().animate().setDuration(50).translationX(50).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -292,12 +292,12 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 dismiss();
                 break;
             case R.id.btn_get_info:
-                if (VRStringUtil.isOnline(getContext())) {
+                if (Utils.isOnline(getContext())) {
                     mLoading.setVisibility(View.VISIBLE);
                     mBtnGetInfo.setVisibility(View.INVISIBLE);
                     getInfo(mViewHolder.etWordName.getText().toString());
                 } else {
-                    VRStringUtil.showToastAtTop(getContext(), R.string.you_are_offline);
+                    Utils.showToastAtTop(getContext(), R.string.you_are_offline);
                 }
                 break;
             case R.id.btn_voice:
@@ -316,7 +316,7 @@ public class FragmentDialogEditWord extends DialogFragment implements View.OnCli
                 mLoading.setVisibility(View.INVISIBLE);
                 mBtnGetInfo.setVisibility(View.VISIBLE);
                 if (doc == null) {
-                    VRStringUtil.showToastAtBottom(getContext(), R.string.cannot_get_information);
+                    Utils.showToastAtBottom(getContext(), R.string.cannot_get_information);
                     return;
                 }
                 ArrayList<WordEntity> listEntryWord = siteInstance.getWordInfo(doc);

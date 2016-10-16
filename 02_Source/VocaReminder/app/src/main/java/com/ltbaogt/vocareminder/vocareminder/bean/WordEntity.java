@@ -1,6 +1,6 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class WordEntity extends BaseWord {
         if (lastIndexColon == s.length() - 1) {
             s = s.substring(0, s.length() - 1);
         }
-        meanings.add(VRStringUtil.UpperFirstCharacterOrString(s.trim()));
+        meanings.add(Utils.UpperFirstCharacterOrString(s.trim()));
     }
 
     public String printMeaning() {
@@ -47,7 +47,7 @@ public class WordEntity extends BaseWord {
         if (selectedMeaning < 0 || selectedMeaning >= meanings.size()) {
             return "";
         }
-        return VRStringUtil.formatMeaning(meanings.get(selectedMeaning));
+        return Utils.formatMeaning(meanings.get(selectedMeaning));
     }
 
     @Override

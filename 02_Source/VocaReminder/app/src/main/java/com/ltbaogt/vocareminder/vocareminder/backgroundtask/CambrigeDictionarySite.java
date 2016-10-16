@@ -5,7 +5,7 @@ import android.util.SparseArray;
 
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,7 +41,7 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
                 //Create single word
                 for (int i = 0; i < entry.children().size(); i++) {
                     WordEntity wordEntry = new WordEntity();
-                    wordEntry.wordName = VRStringUtil.UpperFirstCharacterOrString(wordName);
+                    wordEntry.wordName = Utils.UpperFirstCharacterOrString(wordName);
                     wordEntry.pronunciation = ipa;
                     wordEntry.mp3URL = mp3Url;
                     Element entryBodyEl = entry.child(i);
@@ -51,7 +51,7 @@ public class CambrigeDictionarySite implements FetchContentDictionarySite {
                     if (posEls != null && posEls.size() > 0) {
                         Log.d(TAG, ">>>getWordInfo posEls.size= " + posEls.size());
                         Element postEl = posEls.first();
-                        wordEntry.position = VRStringUtil
+                        wordEntry.position = Utils
                                 .UpperFirstCharacterOrString(postEl.text());
                     } else {
                         //Unable to fetch position of Word

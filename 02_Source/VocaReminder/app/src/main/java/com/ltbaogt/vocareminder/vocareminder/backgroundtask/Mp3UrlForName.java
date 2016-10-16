@@ -3,7 +3,7 @@ package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +24,7 @@ public class Mp3UrlForName extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strings) {
         mWordname = strings[0];
         String mp3Url = null;
-        if (!VRStringUtil.isStringNullOrEmpty(mWordname)) {
+        if (!Utils.isStringNullOrEmpty(mWordname)) {
             try {
                 CambrigeDictionarySite dictionarySite = new CambrigeDictionarySite();
                 String url = dictionarySite.getUrl() + mWordname.toLowerCase();
@@ -40,6 +40,6 @@ public class Mp3UrlForName extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String url) {
         DownloadFileAsynTask downloader = new DownloadFileAsynTask(mContext);
-        downloader.execute(url, VRStringUtil.mp3ForWordName(mWordname));
+        downloader.execute(url, Utils.mp3ForWordName(mWordname));
     }
 }

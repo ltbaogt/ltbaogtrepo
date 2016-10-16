@@ -20,7 +20,7 @@ import com.ltbaogt.vocareminder.vocareminder.bean.Word;
 import com.ltbaogt.vocareminder.vocareminder.database.helper.OALDatabaseOpenHelper;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.listener.OnClickIpaSpeaker;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -142,8 +142,8 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
     }
 
     private boolean isMp3Existed(Context context, Word w) {
-        return (!VRStringUtil.isStringNullOrEmpty(w.getMp3Url())
-                || VRStringUtil.checkMp3FileExisted(context, VRStringUtil.mp3ForWordName(w.getWordName())));
+        return (!Utils.isStringNullOrEmpty(w.getMp3Url())
+                || Utils.checkMp3FileExisted(context, Utils.mp3ForWordName(w.getWordName())));
     }
 
     @Override

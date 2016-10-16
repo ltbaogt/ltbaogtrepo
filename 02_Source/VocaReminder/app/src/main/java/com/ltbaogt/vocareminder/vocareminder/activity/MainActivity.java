@@ -46,7 +46,7 @@ import com.ltbaogt.vocareminder.vocareminder.fragment.FragmentSetting;
 import com.ltbaogt.vocareminder.vocareminder.provider.ProviderWrapper;
 import com.ltbaogt.vocareminder.vocareminder.service.OALService;
 import com.ltbaogt.vocareminder.vocareminder.utils.FragmentList;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 import com.startapp.android.publish.StartAppAd;
 import com.startapp.android.publish.StartAppSDK;
 
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             case R.id.action_preview:
                 mNumberOfClick++;
                 if (canDrawOverlays()) {
-                    if (VRStringUtil.isOnline(getApplicationContext()) && (mNumberOfClick >= Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
+                    if (Utils.isOnline(getApplicationContext()) && (mNumberOfClick >= Define.CLICK_COUNT_TO_SHOW_FULL_ADD)) {
                         mNumberOfClick = 0;
                         //Startapp show ads
                         StartAppAd.showAd(getApplicationContext());

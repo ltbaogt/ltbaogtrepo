@@ -18,9 +18,9 @@ import java.io.IOException;
 /**
  * Created by MyPC on 06/10/2016.
  */
-public class VRStringUtil {
+public class Utils {
 
-    public static final String TAG = Define.TAG + "VRStringUtil";
+    public static final String TAG = Define.TAG + "Utils";
 
     public static String UpperFirstCharacterOrString(String s) {
         String retString = "";
@@ -33,7 +33,7 @@ public class VRStringUtil {
 
     public static void playMp3InLocal(Context ctx, String filename) {
         Log.d(TAG, ">>>playMp3InLocal START");
-        String mp3FilePath = VRStringUtil.getMp3FileDir(ctx) + filename;
+        String mp3FilePath = Utils.getMp3FileDir(ctx) + filename;
         playMp3File(mp3FilePath);
         Log.d(TAG, ">>>playMp3InLocal END");
     }
@@ -64,7 +64,7 @@ public class VRStringUtil {
         return wordName + ".mp3";
     }
     public static String formatMeaning(String s) {
-        return "- " + VRStringUtil.UpperFirstCharacterOrString(s);
+        return "- " + Utils.UpperFirstCharacterOrString(s);
     }
 
     public static boolean isStringNullOrEmpty(String s) {

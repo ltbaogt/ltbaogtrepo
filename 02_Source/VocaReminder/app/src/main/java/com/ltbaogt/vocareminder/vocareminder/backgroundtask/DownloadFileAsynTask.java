@@ -4,8 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +48,7 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
                     savedFile = "Error";
                     return savedFile;
                 }
-                File fi = new File(VRStringUtil.getMp3FileDir(mContext) + "/" + mp3FileName);
+                File fi = new File(Utils.getMp3FileDir(mContext) + "/" + mp3FileName);
                 is = connection.getInputStream();
                 os = new FileOutputStream(fi);
                 byte data[] = new byte[4096];
@@ -81,6 +82,11 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String mp3File) {
         super.onPostExecute(mp3File);
         Log.d(TAG, ">>>DownloadFileAsynTask file save at= " + mp3File);
-        VRStringUtil.playMp3File(mp3File);
+        if (!Utils.isStringNullOrEmpty(mp3File)) {
+            Utils.playMp3File(mp3File);
+        } else {
+            Log.d(TAG, ">>>DownloadFileAsynTask mp3 file path is null");
+            Utils.showToastAtTop(mContext, R.string.this_word_have_not_sound);
+        }
     }
 }

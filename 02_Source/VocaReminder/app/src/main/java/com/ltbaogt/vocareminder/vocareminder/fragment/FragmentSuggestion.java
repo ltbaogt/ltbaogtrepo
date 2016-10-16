@@ -21,7 +21,7 @@ import com.ltbaogt.vocareminder.vocareminder.backgroundtask.FetchContentDictiona
 import com.ltbaogt.vocareminder.vocareminder.backgroundtask.HttpUtil;
 import com.ltbaogt.vocareminder.vocareminder.bean.WordEntity;
 import com.ltbaogt.vocareminder.vocareminder.listener.VROnDismisSuggestInfoListener;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
+import com.ltbaogt.vocareminder.vocareminder.utils.Utils;
 
 import org.jsoup.nodes.Document;
 
@@ -44,11 +44,11 @@ public class FragmentSuggestion extends DialogFragment {
     private SuggestionAdapter.OnSuggestionItemClicked mOnSuggestionItemClicked = new SuggestionAdapter.OnSuggestionItemClicked() {
         @Override
         public void onSuggestionItemClicked(String wordName) {
-            if (VRStringUtil.isOnline(getContext())) {
+            if (Utils.isOnline(getContext())) {
                 mRecyclerView.animate().alpha(0).setDuration(500).start();
                 getInfo(wordName);
             } else {
-                VRStringUtil.showToastAtTop(getContext(), R.string.you_are_offline);
+                Utils.showToastAtTop(getContext(), R.string.you_are_offline);
             }
         }
     };
