@@ -29,25 +29,10 @@
             android:layout_height="match_parent">
 
             <FrameLayout
-                android:layout_above="@+id/ad_banner_layout"
                 android:id="@+id/main_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#F2f2f2"/>
-
-            <FrameLayout
-                android:id="@+id/ad_banner_layout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true">
-
-                <com.startapp.android.publish.banner.Banner
-                    android:id="@+id/startAppBanner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-            </FrameLayout>
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 

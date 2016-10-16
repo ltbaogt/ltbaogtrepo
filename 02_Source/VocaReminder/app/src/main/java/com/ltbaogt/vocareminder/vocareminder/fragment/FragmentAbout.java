@@ -48,18 +48,6 @@ public class FragmentAbout extends BaseFragment {
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity) getActivity()).setAdsVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ((MainActivity) getActivity()).setAdsVisibility(View.VISIBLE);
-    }
-
     private void onClickShareApp() {
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType("text/plain");

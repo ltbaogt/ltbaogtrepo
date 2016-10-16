@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
 
     //Load Ads banner
     private void loadAdBanner() {
-        StartAppSDK.init(this, getString(R.string.startapp_id), false);
+        StartAppSDK.init(this, getString(R.string.startapp_id), true);
         StartAppAd.disableSplash();
 //        mStartAppAdd = new StartAppAd(this);
     }
@@ -653,13 +653,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         } else {
             invalidateOptionsMenu();
             super.onBackPressed();
-        }
-    }
-
-    public void setAdsVisibility(int visibility) {
-        View v = findViewById(R.id.ad_banner_layout);
-        if (v != null) {
-            v.setVisibility(visibility);
         }
     }
 
