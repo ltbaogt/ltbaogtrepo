@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by MyPC on 06/10/2016.
  */
-public class WordEntity {
+public class WordEntity extends BaseWord {
 
     public String wordName;
     public String pronunciation;
@@ -49,5 +49,15 @@ public class WordEntity {
             return "";
         }
         return VRStringUtil.formatMeaning(meanings.get(selectedMeaning));
+    }
+
+    @Override
+    public String getWordName() {
+        return wordName;
+    }
+
+    @Override
+    public String getMp3Url() {
+        return mp3URL;
     }
 }

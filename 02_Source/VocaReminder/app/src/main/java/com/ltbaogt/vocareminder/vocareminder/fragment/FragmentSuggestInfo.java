@@ -76,7 +76,7 @@ public class FragmentSuggestInfo extends DialogFragment {
             imgIpa.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    VRStringUtil.playMp3File(entity.mp3URL);
+                    entity.playMp3IfNeed(view.getContext());
                 }
             });
 

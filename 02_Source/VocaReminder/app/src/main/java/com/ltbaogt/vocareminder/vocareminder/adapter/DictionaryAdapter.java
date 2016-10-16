@@ -124,8 +124,8 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.My
 
         holder.mMeaning.setTypeface(mTypeFaceRegular);
         holder.mMeaning.setText(w.getDefault_Meaning());
-        int ipaSpeakVisible = isMp3Existed(holder.mWordName.getContext(), w) ? View.VISIBLE : View.GONE;
-        holder.mIpaSpeak.setVisibility(ipaSpeakVisible);
+//        int ipaSpeakVisible = isMp3Existed(holder.mWordName.getContext(), w) ? View.VISIBLE : View.GONE;
+//        holder.mIpaSpeak.setVisibility(ipaSpeakVisible);
         holder.mSingleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

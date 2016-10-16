@@ -201,6 +201,7 @@ public class FragmentListWord extends BaseFragment {
 
                 if (mIsArchivedScreen) {
                     bl.deleteForever(w.getWordId());
+                    w.deleteMp3File(getContext());
                     Toast.makeText(getContext(),String.format(getString(R.string.message_word_was_deleted), w.getWordName()),Toast.LENGTH_SHORT).show();
                 } else {
                     bl.deleteWordById(w.getWordId());

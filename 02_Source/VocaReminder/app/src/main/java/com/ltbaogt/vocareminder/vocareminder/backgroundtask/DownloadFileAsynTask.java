@@ -3,9 +3,11 @@ package com.ltbaogt.vocareminder.vocareminder.backgroundtask;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.nfc.FormatException;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
 import java.io.File;
@@ -15,12 +17,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 /**
  * Created by fahc03-177 on 10/14/16.
  */
 public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
 
+    public static final String TAG = Define.TAG + "DownloadFileAsynTask";
     private Context mContext;
 
     public DownloadFileAsynTask(Context ctx) {
@@ -28,46 +32,51 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
     }
     @Override
     protected String doInBackground(String... strings) {
-        Log.d("AAA", ">>>DownloadFileAsynTask START");
-        String mp3Url = strings[0];
-        String mp3FileName = strings[1];
-        InputStream is = null;
-        OutputStream os = null;
-        HttpURLConnection connection = null;
+        Log.d(TAG, ">>>DownloadFileAsynTask START");
         String savedFile = null;
-
-        try {
-            URL url = new URL(mp3Url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                savedFile = "Error";
-                return savedFile;
+        //TODO: Index out of range
+        if (strings.length >= 2) {
+            String mp3Url = strings[0];
+            String mp3FileName = strings[1];
+            if (mp3FileName.lastIndexOf(".mp3") <= 0) {
+                Log.d(TAG, "Mp3 file name is invalid");
             }
-            File fi = new File(VRStringUtil.getMp3FileDir(mContext) + "/" + mp3FileName);
-            is = connection.getInputStream();
-            os = new FileOutputStream(fi);
-            byte data[] = new byte[4096];
-            int count;
-            while ((count = is.read(data)) != -1) {
-                os.write(data,0,count);
-            }
-            savedFile = fi.getPath();
-        } catch (Exception e) {
-
-        } finally {
+            InputStream is = null;
+            OutputStream os = null;
+            HttpURLConnection connection = null;
             try {
-                if (is != null) {
-                    is.close();
+                URL url = new URL(mp3Url);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    savedFile = "Error";
+                    return savedFile;
                 }
-                if (os != null) {
-                    os.close();
+                File fi = new File(VRStringUtil.getMp3FileDir(mContext) + "/" + mp3FileName);
+                is = connection.getInputStream();
+                os = new FileOutputStream(fi);
+                byte data[] = new byte[4096];
+                int count;
+                while ((count = is.read(data)) != -1) {
+                    os.write(data, 0, count);
                 }
+                savedFile = fi.getPath();
             } catch (Exception e) {
 
-            }
-            if (connection != null) {
-                connection.disconnect();
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                    if (os != null) {
+                        os.close();
+                    }
+                } catch (Exception e) {
+
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }
         return savedFile;
@@ -76,7 +85,7 @@ public class DownloadFileAsynTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String mp3File) {
         super.onPostExecute(mp3File);
-        Log.d("AAA", ">>>DownloadFileAsynTask file save at= " + mp3File);
+        Log.d(TAG, ">>>DownloadFileAsynTask file save at= " + mp3File);
         VRStringUtil.playMp3File(mp3File);
     }
 }

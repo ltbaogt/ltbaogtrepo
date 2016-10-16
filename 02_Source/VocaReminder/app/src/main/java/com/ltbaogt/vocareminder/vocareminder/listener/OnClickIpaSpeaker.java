@@ -1,17 +1,8 @@
 package com.ltbaogt.vocareminder.vocareminder.listener;
 
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.View;
 
-import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DownloadFileAsynTask;
 import com.ltbaogt.vocareminder.vocareminder.bean.Word;
-import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
-
-import java.io.IOException;
 
 /**
  * Created by MyPC on 08/10/2016.

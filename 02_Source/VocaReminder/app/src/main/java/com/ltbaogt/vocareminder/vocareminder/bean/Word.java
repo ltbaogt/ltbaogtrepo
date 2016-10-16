@@ -1,14 +1,11 @@
 package com.ltbaogt.vocareminder.vocareminder.bean;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.ltbaogt.vocareminder.vocareminder.R;
-import com.ltbaogt.vocareminder.vocareminder.backgroundtask.DownloadFileAsynTask;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
 
@@ -17,7 +14,7 @@ import com.ltbaogt.vocareminder.vocareminder.utils.VRStringUtil;
  */
 
 @SuppressLint("ParcelCreator")
-public class Word implements Parcelable {
+public class Word extends BaseWord implements Parcelable {
 
     public static final String TABLE_NAME_TBL_WORD = "tbl_Word";
     public static final int COL_WORD_ID_INDEX = 0;
@@ -141,6 +138,8 @@ public class Word implements Parcelable {
     public int getWordId() {
         return mWordId;
     }
+
+    @Override
     public String getWordName() {
         return mWordName;
     }
@@ -227,10 +226,11 @@ public class Word implements Parcelable {
         mMp3Url = url;
     }
 
-
+    @Override
     public String getMp3Url() {
         return mMp3Url;
     }
+
     @Override
     public String toString() {
         String str = "Word={"
@@ -282,17 +282,5 @@ public class Word implements Parcelable {
         this.setMp3Url(cs.getString(COL_MP3_URL_INDEX));
     }
 
-    public void playMp3IfNeed(Context ctx) {
-        String wordName = VRStringUtil.mp3ForWordName(getWordName());
-        if (VRStringUtil.checkMp3FileExisted(ctx, wordName)) {
-            VRStringUtil.playMp3InLocal(ctx, wordName);
-        } else {
-            if (VRStringUtil.isOnline(ctx)) {
-                DownloadFileAsynTask downloader = new DownloadFileAsynTask(ctx);
-                downloader.execute(getMp3Url(), wordName);
-            } else {
-                VRStringUtil.showToastAtBottom(ctx, R.string.you_are_offline);
-            }
-        }
-    }
+
 }

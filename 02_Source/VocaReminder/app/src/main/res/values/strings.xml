@@ -59,5 +59,6 @@
     <string name="action_language_vi">Vi</string>
     <string name="action_language_en">En</string>
     <string name="cannot_get_information">Cannot retrieve information</string>
+    <string name="dont_download_yet">You have\'t downloaded sound yet</string>
 
 </resources>
