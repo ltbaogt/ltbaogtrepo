@@ -61,5 +61,6 @@
     <string name="cannot_get_information">Cannot retrieve information</string>
     <string name="dont_download_yet">You have\'t downloaded sound yet</string>
     <string name="this_word_have_not_sound">Sorry. This word doesn\'t have sound file</string>
+    <string name="finish_tutorial">OK. Let\'s build your dictionary</string>
 
 </resources>

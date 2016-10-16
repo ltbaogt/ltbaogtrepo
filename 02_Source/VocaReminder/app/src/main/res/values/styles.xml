@@ -13,6 +13,12 @@
         <!--<item name="android:windowIsTranslucent">true</item>-->
     </style>
 
+    <style name="AppTheme.FullScreen">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
     <!--Button style-->
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
