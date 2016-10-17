@@ -34,8 +34,7 @@
             android:launchMode="singleTask"/>
         <activity android:name="com.startapp.android.publish.list3d.List3DActivity"
             android:theme="@android:style/Theme" />
-        <activity android:name=".activity.FirstStartActivity"
-            android:theme="@style/AppTheme.FullScreen"/>
+
         <activity android:name="com.startapp.android.publish.OverlayActivity"
             android:theme="@android:style/Theme.Translucent"
             android:configChanges="orientation|keyboardHidden|screenSize" />

@@ -1,9 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -29,11 +27,9 @@ public class SplashScreenActivity extends Activity {
 
     public static class SplashHandler extends Handler {
         private Activity mActivity;
-        private boolean isFirstStart;
 
-        public SplashHandler(Activity ctx, boolean isfs) {
+        public SplashHandler(Activity ctx) {
             mActivity = ctx;
-            isFirstStart = isfs;
         }
 
         @Override
@@ -43,18 +39,11 @@ public class SplashScreenActivity extends Activity {
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent mainActivity;
-                        if (!isFirstStart) {
-                            mainActivity = new Intent(mActivity.getApplicationContext(), MainActivity.class);
-                        } else {
-                            mainActivity = new Intent(mActivity.getApplicationContext(), FirstStartActivity.class);
-                        }
-                        if (mainActivity != null) {
-                            mainActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            mActivity.getApplicationContext().startActivity(mainActivity);
-                            mActivity.finish();
-                            mActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        }
+                        Intent mainActivity = new Intent(mActivity.getApplicationContext(), MainActivity.class);
+                        mainActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mActivity.getApplicationContext().startActivity(mainActivity);
+                        mActivity.finish();
+                        mActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         VRLog.d(TAG, ">>>onDatabaseCreated END");
                     }
                 }, 1000);
@@ -67,10 +56,7 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashscreen_layout);
         appLogoAmination();
-        SharedPreferences sp = SplashScreenActivity.this.getSharedPreferences(Define.REF_KEY, Context.MODE_PRIVATE);
-        boolean isFirstStart = sp.getBoolean(Define.REF_FIRST_START, true);
-        mOnDbCreated = new DatabaseCreatedListener(new SplashHandler(this, !isFirstStart));
-
+        mOnDbCreated = new DatabaseCreatedListener(new SplashHandler(this));
     }
 
     private void appLogoAmination() {
