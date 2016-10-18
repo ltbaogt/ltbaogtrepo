@@ -2,6 +2,8 @@
     <!--Add Unit-->
     <string name="ad_unit_banner">ca-app-pub-6603190689104907/4077371277</string>
     <string name="ad_unit_full">ca-app-pub-6603190689104907/9984304074</string>
+    <string name="fb_open_uri">fb://profile/100000131498012</string>
+    <string name="fb_open_url">https://www.facebook.com/ltbaogt</string>
     <string name="app_name">VReminder</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Setting</string>

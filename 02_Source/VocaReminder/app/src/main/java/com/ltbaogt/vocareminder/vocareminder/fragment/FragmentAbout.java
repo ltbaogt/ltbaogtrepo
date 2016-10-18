@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
@@ -44,9 +45,46 @@ public class FragmentAbout extends BaseFragment {
                 }
             }
         });
+
+        ImageView fbLogo = (ImageView) v.findViewById(R.id.fb_logo);
+        fbLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                   startActivity(startFacebook());
+                } catch(Exception e) {
+
+                }
+            }
+        });
+
+        ImageView gmLogo = (ImageView) v.findViewById(R.id.gm_logo);
+        gmLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startGmail();
+            }
+        });
         return v;
     }
 
+    private Intent startFacebook() {
+        try {
+           return new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.fb_open_uri)));
+        } catch (Exception e) {
+
+        }
+        Uri uri = Uri.parse(getString(R.string.fb_open_url));
+        return new Intent(Intent.ACTION_VIEW, uri);
+    }
+
+    private void startGmail() {
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        emailIntent.setType("vnd.android.cursor.item/email");
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {getString(R.string.developer_email)});
+        startActivity(Intent.createChooser(emailIntent, "Send mail using..."));
+    }
     private void onClickShareApp() {
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType("text/plain");
