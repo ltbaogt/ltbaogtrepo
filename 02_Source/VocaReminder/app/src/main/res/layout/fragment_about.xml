@@ -36,21 +36,21 @@
                     android:id="@+id/fb_logo"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/fb_logo_state"
+                    android:src="@drawable/fb_logo"
                     android:layout_marginRight="20dp"/>
 
                 <ImageView
                     android:id="@+id/gm_logo"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/gmail_logo_state"
+                    android:src="@drawable/gmail_logo"
                     android:layout_marginRight="20dp"/>
 
                 <ImageView
                     android:id="@+id/skype_logo"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/skype_logo_state" />
+                    android:src="@drawable/skype_logo" />
             </LinearLayout>
 
             <View

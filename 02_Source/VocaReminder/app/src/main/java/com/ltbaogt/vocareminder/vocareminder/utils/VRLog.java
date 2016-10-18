@@ -4,7 +4,7 @@ package com.ltbaogt.vocareminder.vocareminder.utils;
  * Created by MyPC on 16/10/2016.
  */
 public class VRLog {
-    public static boolean isLogable;
+    public static boolean isLogable = false;
 
     public static void d(String tag, String msg) {
         if (isLogable) {
