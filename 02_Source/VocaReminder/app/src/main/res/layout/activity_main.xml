@@ -40,6 +40,7 @@
                         android:paddingLeft="5dp">
 
                         <TextView
+                            android:textStyle="bold"
                             android:id="@+id/setting_service_switch_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
