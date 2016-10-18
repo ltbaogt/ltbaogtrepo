@@ -29,7 +29,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="General Setting"
+                        android:text="@string/general_setting"
                         android:textColor="@color/colorPrimary"
                         android:textSize="19dp" />
 
@@ -44,7 +44,7 @@
                             android:id="@+id/setting_service_switch_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reminder OFF/ON"
+                            android:text="@string/reminder_on_off"
                             android:textColor="@android:color/black" />
 
                         <Switch
@@ -67,7 +67,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_marginBottom="10dp"
-                            android:text="Time to dismiss reminder"
+                            android:text="@string/time_to_dismiss"
                             android:textColor="@android:color/black" />
 
                         <SeekBar
@@ -86,7 +86,7 @@
                             android:layout_below="@id/setting_dismiss_time_title"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@id/setting_dismiss_time_sb"
-                            android:text="5s" />
+                            android:text="@string/five_seconds" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -99,7 +99,7 @@
                             android:id="@+id/dismiss_time_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Choose theme color"
+                            android:text="@string/choose_theme_color"
                             android:textColor="@android:color/black" />
 
                         <TextView
@@ -121,14 +121,14 @@
                             android:id="@+id/change_color_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Clean up vocabularies"
+                            android:text="@string/clean_up_vocabularies_title"
                             android:textColor="@android:color/black" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/change_color_title"
-                            android:text="Clean up your vocabularies, all data will be eased"
+                            android:text="@string/clean_up_description"
                             android:textSize="12sp" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -163,7 +163,7 @@
                             android:id="@+id/backup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Backup your vocabularies"
+                            android:text="@string/backup_title"
                             android:textColor="@android:color/black" />
 
                         <TextView
@@ -171,7 +171,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/backup"
-                            android:text="Backup your vocabularies"
                             android:textSize="12sp" />
                     </RelativeLayout>
 
@@ -186,7 +185,7 @@
                             android:id="@+id/restore"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Restore your vocabularies"
+                            android:text="@string/restore_title"
                             android:textColor="@android:color/black" />
 
                         <TextView
@@ -194,7 +193,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/restore"
-                            android:text="Restore your vocabularies"
                             android:textSize="12sp" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -228,7 +226,7 @@
                             android:id="@+id/quick_add"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Quick add through notification"
+                            android:text="@string/quick_add_toggle_title"
                             android:textColor="@android:color/black" />
 
                         <TextView
@@ -236,7 +234,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/quick_add"
-                            android:text="Notification is always show to add new word quickly"
+                            android:text="@string/quick_add_desription"
                             android:textSize="12sp" />
 
                         <Switch

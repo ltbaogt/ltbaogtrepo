@@ -61,5 +61,16 @@
     <string name="cannot_get_information">Cannot retrieve information</string>
     <string name="dont_download_yet">You have\'t downloaded sound yet</string>
     <string name="this_word_have_not_sound">Sorry. This word doesn\'t have sound file</string>
+    <string name="general_setting">General Setting</string>
+    <string name="reminder_on_off">Reminder OFF/ON</string>
+    <string name="time_to_dismiss">Dismiss reminder in:</string>
+    <string name="five_seconds">5s</string>
+    <string name="choose_theme_color">Choose color reminder\'s background</string>
+    <string name="clean_up_vocabularies_title">Clean up vocabularies</string>
+    <string name="clean_up_description">Clean up your vocabularies, all data will be eased</string>
+    <string name="backup_title">Backup your vocabularies</string>
+    <string name="restore_title">Restore your vocabularies</string>
+    <string name="quick_add_toggle_title">Quick add through notification</string>
+    <string name="quick_add_desription">Notification is always show to add new word quickly</string>
 
 </resources>
