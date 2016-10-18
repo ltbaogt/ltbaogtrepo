@@ -204,6 +204,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.settings:
+                    if (FragmentList.EDIT_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        drawer.closeDrawers();
+                        return true;
+                    }
                     if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
                         popTopFragment();
                     }
@@ -216,6 +220,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.about:
+                    if (FragmentList.ABOUT_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        drawer.closeDrawers();
+                        return true;
+                    }
                     if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
                         popTopFragment();
                     }
@@ -228,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                     drawer.closeDrawers();
                     break;
                 case R.id.trash:
+                    if (FragmentList.ARCHIVED_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
+                        drawer.closeDrawers();
+                        return true;
+                    }
                     if (!FragmentList.MAIN_FRAGMENT_TAG.equals(mainActivity.getTopFragmentTag())) {
                         popTopFragment();
                     }
