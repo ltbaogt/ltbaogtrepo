@@ -219,23 +219,22 @@
                     <RelativeLayout
                         style="@style/setting_item"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp">
-
-                        <TextView
-                            android:id="@+id/quick_add"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/quick_add_toggle_title"
-                            android:textColor="@android:color/black" />
-
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="20dp">
                         <TextView
                             android:id="@+id/quick_add_description"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/quick_add"
+                            android:layout_alignParentBottom="true"
                             android:text="@string/quick_add_desription"
                             android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/quick_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@id/quick_add_description"
+                            android:text="@string/quick_add_toggle_title"
+                            android:textColor="@android:color/black" />
 
                         <Switch
                             android:id="@+id/setting_quick_add_switch"
