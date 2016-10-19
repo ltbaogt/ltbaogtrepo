@@ -1,4 +1,13 @@
 <resources>
+
+    <string name="ad_unit_banner">ca-app-pub-6603190689104907/4077371277</string>
+    <string name="ad_unit_full">ca-app-pub-6603190689104907/9984304074</string>
+    <string name="fb_open_uri">fb://profile/100000131498012</string>
+    <string name="fb_open_url">https://www.facebook.com/ltbaogt</string>
+    <string name="app_name">VReminder</string>
+    <string name="developer_email">Email: ltbaogt@gmail.com</string>
+    <string name="startapp_id">209856859</string>
+
     <string name="action_search">Tìm từ</string>
     <string name="action_settings">Cấu hình</string>
     <string name="action_about">About</string>
@@ -15,7 +24,7 @@
     <string name="btn_ok">Đồng ý</string>
     <string name="clean_up_vocabularies">Bạn có muốn thực hiện chức năng này ?</string>
     <string name="btn_discard">Hủy bỏ</string>
-    <string name="word_is_empty">Word name must be not empty</string>
+    <string name="word_is_empty">Tên từ mới không được rỗng</string>
     <string name="word_not_found">Không tìm thấy từ này</string>
     <string name="word_name">Từ mới</string>
     <string name="word_meaning">Ý nghĩa</string>
