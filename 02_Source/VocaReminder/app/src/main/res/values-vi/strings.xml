@@ -71,5 +71,6 @@
     <string name="quick_add_desription">Bảng thông báo luôn hiện để thêm từ nhanh</string>
     <string name="backup_and_restore_title">Sao lưu và phục hồi</string>
     <string name="notificaion_title">Bảng thông báo</string>
+    <string name="version_string">Phiên bản: %1$s.%2$d</string>
 
 </resources>

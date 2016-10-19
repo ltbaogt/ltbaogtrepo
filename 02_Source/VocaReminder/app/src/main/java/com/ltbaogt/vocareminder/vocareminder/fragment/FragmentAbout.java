@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.ltbaogt.vocareminder.vocareminder.BuildConfig;
 import com.ltbaogt.vocareminder.vocareminder.R;
 import com.ltbaogt.vocareminder.vocareminder.define.Define;
 import com.ltbaogt.vocareminder.vocareminder.utils.VRLog;
@@ -65,6 +67,11 @@ public class FragmentAbout extends BaseFragment {
                 startGmail();
             }
         });
+
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView tvVersion = (TextView) v.findViewById(R.id.tv_version);
+        tvVersion.setText(String.format(getString(R.string.version_string),versionName, versionCode));
         return v;
     }
 
