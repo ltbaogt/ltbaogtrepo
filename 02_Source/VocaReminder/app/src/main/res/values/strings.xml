@@ -77,5 +77,7 @@
     <string name="restore_title">Restore your vocabularies</string>
     <string name="quick_add_toggle_title">Quick add through notification</string>
     <string name="quick_add_desription">Notification is always show to add new word quickly</string>
+    <string name="backup_and_restore_title">Backup and Restore</string>
+    <string name="notificaion_title">Notification</string>
 
 </resources>

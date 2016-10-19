@@ -69,5 +69,7 @@
     <string name="restore_title">Khôi phục lại các từ mới của bạn</string>
     <string name="quick_add_toggle_title">Thêm từ nhanh thông qua bảng thông báo</string>
     <string name="quick_add_desription">Bảng thông báo luôn hiện để thêm từ nhanh</string>
+    <string name="backup_and_restore_title">Sao lưu và phục hồi</string>
+    <string name="notificaion_title">Bảng thông báo</string>
 
 </resources>
