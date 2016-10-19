@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
                 .commit();
         setupDrawer();
         mProviderWrapper = new ProviderWrapper(getApplicationContext());
-        loadAdBanner();
+        loadAds();
     }
 
     private void initFragments() {
@@ -115,8 +115,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     //Load Ads banner
-    private void loadAdBanner() {
-        StartAppSDK.init(this, getString(R.string.startapp_id), true);
+    private void loadAds() {
+        //Load Return ads by default
+        boolean isEnableReturnAds = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            //Depend on canDrawOverlays result
+            isEnableReturnAds = Settings.canDrawOverlays(this);
+        }
+        StartAppSDK.init(this, getString(R.string.startapp_id), isEnableReturnAds);
         StartAppAd.disableSplash();
     }
 
@@ -283,11 +289,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         if (FragmentList.MAIN_FRAGMENT_TAG.equals(tag)) {
             isHomeShowUp = false;
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(R.string.app_name);
+                getSupportActionBar().setTitle(R.string.action_bar_vocabularies);
             }
-        } else {
+        } else if (FragmentList.EDIT_FRAGMENT_TAG.equals(tag)) {
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(R.string.app_name_short);
+                getSupportActionBar().setTitle(R.string.action_bar_setting);
+            }
+        } else if (FragmentList.ARCHIVED_FRAGMENT_TAG.equals(tag)) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.action_bar_archived);
+            }
+            menu.findItem(R.id.action_search).setVisible(false);
+        } else if (FragmentList.ABOUT_FRAGMENT_TAG.equals(tag)) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.action_bar_about);
             }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeShowUp);

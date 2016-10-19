@@ -52,7 +52,10 @@
     <string name="popup_title_explain_why_grant_write_external_storage">In order to perform Backup/Restore, you need grant app read/write your external storage.</string>
     <string name="snackbar_backup_completed">Backup is completed</string>
     <string name="snackbar_restore_completed">Restore is completed</string>
-    <string name="app_name_short">VR</string>
+    <string name="action_bar_vocabularies">Vocabularies</string>
+    <string name="action_bar_setting">Setting</string>
+    <string name="action_bar_archived">Archived</string>
+    <string name="action_bar_about">About</string>
     <string name="choose_meaning_from_list">Choose suggested meaning from below:</string>
     <string name="restore_pernalty">Your database is not empty\nDo you want to delete permanently ?</string>
     <string name="sg_tittle">Search suggestions for <b>%1s</b></string>

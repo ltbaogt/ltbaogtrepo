@@ -270,18 +270,24 @@ public class FragmentListWord extends BaseFragment {
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
                     if (dX > 0) {
-                        p.setColor(getResources().getColor(R.color.green));
-                        RectF background = new RectF((float) itemView.getLeft() + ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() + dX - 20, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
-                        c.drawRect(background, p);
+//                        p.setColor(getResources().getColor(R.color.green));
+//                        RectF background = new RectF((float) itemView.getLeft() + ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() + dX - 20, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
+//                        c.drawRect(background, p);
+//                        float leftEdge = (float) itemView.getLeft() + 3*ITEM_WORD_MARGIN;
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_unarchieved);
-                        float leftEdge = (float) itemView.getLeft() + 3*ITEM_WORD_MARGIN;
-                        RectF icon_dest = new RectF(leftEdge,(float) itemView.getTop() + width, leftEdge + 48,(float)itemView.getBottom() - width);
+//                        RectF icon_dest = new RectF(leftEdge,(float) itemView.getTop() + width - 10, leftEdge + 38,(float)itemView.getBottom() - width - 20);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else if (dX < 0) {
-                        p.setColor(getResources().getColor(R.color.red));
-                        RectF background = new RectF((float) itemView.getRight() + dX - 5*ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_trash);
+//                        p.setColor(getResources().getColor(R.color.red));
+//                        RectF background = new RectF((float) itemView.getRight() + dX - 5*ITEM_WORD_MARGIN, (float) itemView.getTop(),(float) itemView.getRight() - ITEM_WORD_MARGIN, (float) itemView.getBottom() - ITEM_WORD_MARGIN);
+//                        c.drawRect(background, p);
+                        if (mIsArchivedScreen) {
+                            icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_trash);
+                        } else {
+                            icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_archieve);
+                        }
+
                         RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     }

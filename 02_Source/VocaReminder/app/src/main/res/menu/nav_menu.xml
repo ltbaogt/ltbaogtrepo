@@ -12,7 +12,7 @@
         <item
             android:id="@+id/trash"
             android:title="Archived"
-            android:icon="@drawable/ic_trash"/>
+            android:icon="@drawable/ic_archieve"/>
         <item
             android:id="@+id/settings"
             android:title="@string/nav_setting"
