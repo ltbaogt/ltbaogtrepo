@@ -14,8 +14,8 @@
     <string name="action_filter_raw_word">Lọc từ chưa có nghĩa</string>
     <string name="action_filter_no_filter">Bỏ lọc từ</string>
 
-    <string name="add_new_word_suggestion">Nhấn nút này để thêm từ mới</string>
-    <string name="action_add">Add New Word</string>
+    <string name="add_new_word_suggestion">Thêm từ mới</string>
+    <string name="action_add">Thêm từ mới</string>
     <string name="popup_title_new_word">Thêm từ mới</string>
     <string name="popup_title_edit_word">Chỉnh sửa từ</string>
     <string name="popup_button_cancel_word">Thoát</string>

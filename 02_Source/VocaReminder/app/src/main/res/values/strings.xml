@@ -11,7 +11,7 @@
     <string name="action_filter_raw_word">Filter Raw Words</string>
     <string name="action_filter_no_filter">No Filter</string>
 
-    <string name="add_new_word_suggestion">Please add your word by pressing Add button</string>
+    <string name="add_new_word_suggestion">Add new word</string>
     <string name="action_add">Add New Word</string>
     <string name="popup_title_new_word">Add new Word</string>
     <string name="popup_title_edit_word">Edit Word</string>
