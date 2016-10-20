@@ -1,6 +1,7 @@
 package com.ltbaogt.vocareminder.vocareminder.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -152,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (mProviderWrapper.getServiceRunningStatus() == -1) {
+            startVRService();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (getIntent().hasExtra(Define.EXTRA_QUICK_ADD)) {
@@ -271,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
             fm.popBackStack();
         }
     }
+
 
 
     @Override
@@ -747,4 +757,13 @@ public class MainActivity extends AppCompatActivity implements FragmentDialogEdi
         return top;
     }
 
+    public boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (OALService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

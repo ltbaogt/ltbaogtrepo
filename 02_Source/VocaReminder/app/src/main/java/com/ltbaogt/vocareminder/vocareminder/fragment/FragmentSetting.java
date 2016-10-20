@@ -53,7 +53,7 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             mSeekbarDismissTime.setProgress(dismissTime);
             mTvDismissTime.setText(dismissTime + "s");
             int serviceStatus = getMainActivity().getProviderWrapper().getServiceRunningStatus();
-            mSwitchServiceRunning.setChecked((((serviceStatus == OALService.SERVICE_RUNNING_YES) && isServiceRunning()) ? true:false));
+            mSwitchServiceRunning.setChecked((((serviceStatus == OALService.SERVICE_RUNNING_YES) && getMainActivity().isServiceRunning()) ? true:false));
             mBackupDesription = (TextView) v.findViewById(R.id.backup_description);
             mRestoreDescription = (TextView) v.findViewById(R.id.restore_description);
             mBackupDesription.setText(getBackupFile());
@@ -97,15 +97,7 @@ public class FragmentSetting extends BaseFragment implements SeekBar.OnSeekBarCh
             getMainActivity().getProviderWrapper().updateDismissTime(mCurrentDismissTime * 1000);
         }
     }
-    public boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getActivity().getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (OALService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public void setStartStopServiceToggle(boolean isStart) {
         VRLog.d("AAA", ">>>setStartStopServiceToggle START");
