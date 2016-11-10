@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
             userMinute = mTimePicker.getMinute();
         }
 
-//        if (currentHour + userHour > 23) {
-//            calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        }
+        if (userHour < currentHour) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
         calendar.set(Calendar.HOUR_OF_DAY, userHour);
         calendar.set(Calendar.MINUTE, userMinute);
         calendar.set(Calendar.SECOND, 0);
