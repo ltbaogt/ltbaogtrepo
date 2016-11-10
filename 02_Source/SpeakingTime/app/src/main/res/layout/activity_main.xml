@@ -10,8 +10,15 @@
     tools:context="com.ryutb.speakingtime.MainActivity">
 
     <Button
+        android:id="@+id/set_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="speakHour"
         android:text="HOUR" />
+
+    <TimePicker
+        android:id="@+id/time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/set_timer" />
 </RelativeLayout>
