@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <EditTextPreference
+        android:key="snooze"
+        android:summary="summary of snooze"
+        android:title="Snooze" />
+    <Preference
+    app:key="go_to_snooze_setting"
+    android:title="Snooze setting"
+    android:summary="Snooze setting summary">
+    <intent android:action="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
+    </Preference>
+</PreferenceScreen>

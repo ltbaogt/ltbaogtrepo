@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreference
+        android:title="Snooze On/Off"
+        android:summaryOn="Snooze is On"
+        android:summaryOff="Snooze is Off"
+        app:key="@string/snooze_setting_item" />
+
+    <ListPreference
+        android:dialogTitle="dialog_title_list_preference"
+        android:entries="@array/entries_list_preference"
+        android:entryValues="@array/entryvalues_list_preference"
+        android:key="interval"
+        android:title="Interval" />
+    <ListPreference
+        android:dialogTitle="dialog_title_list_preference"
+        android:entries="@array/entries_list_preference"
+        android:entryValues="@array/entryvalues_list_preference"
+        android:key="repeat"
+        android:title="Repeat" />
+
+</PreferenceScreen>

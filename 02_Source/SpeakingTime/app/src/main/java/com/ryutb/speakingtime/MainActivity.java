@@ -25,50 +25,24 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MyClock";
     private TimePicker mTimePicker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mTimePicker = (TimePicker) findViewById(R.id.time_picker);
-        mTimePicker.setIs24HourView(true);
+
+        AlarmSettingFragment settingFragment = new AlarmSettingFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.setting_alarm, settingFragment).commit();
     }
 
 
     public void speakHour(View v) throws IOException, ParseException {
-//        Calendar calendar = GregorianCalendar.getInstance();
-//        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-//        final int minus = calendar.get(Calendar.MINUTE);
-//        Uri mp3 = Uri.parse("android.resource://"
-//                + getPackageName() + "/raw/"
-//                + "h_" + hourOfDay);
-//        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), mp3);
-//        mediaPlayer.start();
-//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mediaPlayer2) {
-//
-//                Uri mp32 = Uri.parse("android.resource://"
-//                        + getPackageName() + "/raw/"
-//                        + "minute_" + minus);
-//                mediaPlayer2 = MediaPlayer.create(getApplicationContext(), mp32);
-//                if (mediaPlayer2 != null) {
-//                    mediaPlayer2.start();
-//                }
-//            }
-//        });
 
         Calendar calendar = GregorianCalendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMunite = calendar.get(Calendar.MINUTE);
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss");
-//        String nextTimerInString = String.format("%1$d/$2$d/$3$d $4$d:$4$d:$4$d"
-//                , calendar.get(Calendar.DAY_OF_MONTH)
-//                , calendar.get(Calendar.MONTH)
-//        , calendar.get(Calendar.YEAR)
-//        , calendar.get(Calendar.HOUR_OF_DAY)
-//        , calendar.get(Calendar.MINUTE)
-//        , calendar.get(Calendar.SECOND));
-//        Date nextTimer = sdf.parse(nextTimerInString);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
         int userHour = currentHour;
         if (Build.VERSION.SDK_INT < 23) {
             userHour = mTimePicker.getCurrentHour();
@@ -76,31 +50,22 @@ public class MainActivity extends AppCompatActivity {
             userHour = mTimePicker.getHour();
         }
 
-        int userMinute = currentMunite;
+        int userMinute = currentMinute;
         if (Build.VERSION.SDK_INT < 23) {
             userMinute = mTimePicker.getCurrentMinute();
         } else {
             userMinute = mTimePicker.getMinute();
         }
 
-        if (userHour < currentHour || ((userHour == currentHour) && userMinute < currentMunite)) {
+        Log.d(TAG, ">>>nextTime userHour= " + userHour
+                + ", userMinute=" + userMinute);
+        if (userHour < currentHour || ((userHour == currentHour) && userMinute < currentMinute)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
         calendar.set(Calendar.HOUR_OF_DAY, userHour);
         calendar.set(Calendar.MINUTE, userMinute);
         calendar.set(Calendar.SECOND, 0);
-//
-//        Log.d(TAG, ">>>nextTime userHour= " + userHour
-//                + ", userMinute= " + userMinute);
-//        if (userHour > currentHour) {
-//            calendar.add(Calendar.HOUR_OF_DAY, (24 - userHour) + userHour);
-//            if (userMinute > currentMunite) {
-//                calendar.add(Calendar.MINUTE, userMinute - currentMunite);
-//            }
-//        } else if (userMinute > currentMunite) {
-//            calendar.add(Calendar.MINUTE, userMinute - currentMunite);
-//        }
-//
+
         String timer = ">>>nextTime d= " + calendar.get(Calendar.DAY_OF_YEAR)
                 + ", m= " + calendar.get(Calendar.MONTH)
                 + ", y= " + calendar.get(Calendar.YEAR)
@@ -110,14 +75,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, timer);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        Intent recvIntent = new Intent(getApplicationContext(), TimeReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, recvIntent, 0);
+        Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
+        recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, recvIntent, 0);
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>onReceive START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
-
-
-
     }
 }

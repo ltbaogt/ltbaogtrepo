@@ -16,10 +16,17 @@
         android:onClick="speakHour"
         android:text="SET ALARM" />
 
-
     <TimePicker
         android:id="@+id/time_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/set_timer" />
+
+    <RelativeLayout
+        android:id="@+id/setting_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/time_picker">
+
+    </RelativeLayout>
 </RelativeLayout>

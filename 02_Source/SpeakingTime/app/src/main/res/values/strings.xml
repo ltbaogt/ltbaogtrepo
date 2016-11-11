@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SpeakingTime</string>
+    <string name="snooze_setting_item">snooze_setting_item</string>
 </resources>

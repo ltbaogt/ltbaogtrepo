@@ -29,9 +29,7 @@ public class ViRooster extends Rooster {
         public void onCompletion(MediaPlayer mediaPlayer) {
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
-                doRepeat(mediaPlayer, 1000);
-
-
+                doRepeat(mediaPlayer, 5000);
             }
         }
     };

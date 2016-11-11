@@ -15,8 +15,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmActivity"/>
-        <receiver android:name=".TimeReceiver" />
+        <activity android:name=".AlarmActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AlarmSnoozeSettingActivity">
+            <intent-filter>
+                <action android:name="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

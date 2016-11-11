@@ -43,7 +43,7 @@ public abstract class Rooster {
 
     public int getRepeatTime() {
         //return mRepeatTime;
-        return 4;
+        return 20;
     }
 
     public void cancelRepeat() {
@@ -51,6 +51,7 @@ public abstract class Rooster {
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
+            mMediaPlayer = null;
         }
     }
     public void setOnSpeakCompleted(OnSpeakCompleted l) {
