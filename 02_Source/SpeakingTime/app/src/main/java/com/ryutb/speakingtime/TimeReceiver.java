@@ -32,29 +32,22 @@ public class TimeReceiver extends BroadcastReceiver {
     int mCount = 0;
     @Override
     public void onReceive(final Context context, Intent intent) {
-//        mRunable = new Runnable() {
+
+        Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(alarmIntent);
+//        ViRooster viRooster = new ViRooster(context);
+//        viRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
 //            @Override
-//            public void run() {
-//                speakTime(context);
-//                mCount++;
-//                if (mCount < 2) {
-//                    mHandler.postDelayed(this, 1000);
-//                }
+//            public void onSpeakCompleted() {
+//                Toast.makeText(context, "FINISH", Toast.LENGTH_SHORT).show();
 //            }
-//        };
-//        mHandler.post(mRunable);
-        ViRooster viRooster = new ViRooster(context);
-        viRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
-            @Override
-            public void onSpeakCompleted() {
-                Toast.makeText(context, "FINISH", Toast.LENGTH_SHORT).show();
-            }
-        });
-        try {
-            viRooster.speakNow();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        });
+//        try {
+//            viRooster.speakNow();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         Log.d(TAG, ">>>onReceive END");
     }
 

@@ -18,6 +18,7 @@ public abstract class Rooster {
     public static final String MINUTE_PREFIX = "minute_";
     public static final String HOUR_PREFIX = "h_";
 
+    protected MediaPlayer mMediaPlayer;
     protected Context mContext;
     protected OnSpeakCompleted mOnSpeakCompleted;
     private boolean mIsRepeat;
@@ -47,6 +48,10 @@ public abstract class Rooster {
 
     public void cancelRepeat() {
         mRepeatCount = getRepeatTime();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+        }
     }
     public void setOnSpeakCompleted(OnSpeakCompleted l) {
         mOnSpeakCompleted = l;
@@ -58,6 +63,8 @@ public abstract class Rooster {
 
     public Rooster(Context ctx) {
         mContext = ctx;
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
     }
 
     public abstract void speakNow() throws IOException;
@@ -66,18 +73,17 @@ public abstract class Rooster {
     protected abstract MediaPlayer prepareMediaPlayerMinute(int minute);
 
     protected MediaPlayer prepareMediaPlayer(int rawResId) {
-        MediaPlayer mediaPlayer = null;
+
         try {
-            mediaPlayer = new MediaPlayer();
+            mMediaPlayer = new MediaPlayer();
             AssetFileDescriptor afd = mContext.getResources()
                     .openRawResourceFd(rawResId);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
-            mediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(), afd.getLength());
-            mediaPlayer.prepare();
+            mMediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(), afd.getLength());
+            mMediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return mediaPlayer;
+        return mMediaPlayer;
     }
 
     protected void doRepeat(final MediaPlayer mediaPlayer, int interval) {
