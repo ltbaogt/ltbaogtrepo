@@ -63,8 +63,6 @@ public abstract class Rooster {
 
     public Rooster(Context ctx) {
         mContext = ctx;
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
     }
 
     public abstract void speakNow() throws IOException;
@@ -76,6 +74,8 @@ public abstract class Rooster {
 
         try {
             mMediaPlayer = new MediaPlayer();
+            //STREAM_ALARM: music is mute, alarm sound is fired
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             AssetFileDescriptor afd = mContext.getResources()
                     .openRawResourceFd(rawResId);
             mMediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(), afd.getLength());
