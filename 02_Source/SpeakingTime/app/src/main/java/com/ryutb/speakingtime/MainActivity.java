@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             userMinute = mTimePicker.getMinute();
         }
 
-        if (userHour < currentHour) {
+        if (userHour < currentHour || ((userHour == currentHour) && userMinute < currentMunite)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
         calendar.set(Calendar.HOUR_OF_DAY, userHour);
