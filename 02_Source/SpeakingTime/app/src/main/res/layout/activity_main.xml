@@ -16,6 +16,14 @@
         android:onClick="speakHour"
         android:text="HOUR" />
 
+    <Button
+
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="speakHour"
+        android:text="STOP" />
+
     <TimePicker
         android:id="@+id/time_picker"
         android:layout_width="match_parent"

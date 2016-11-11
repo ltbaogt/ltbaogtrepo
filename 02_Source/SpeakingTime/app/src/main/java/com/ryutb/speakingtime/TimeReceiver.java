@@ -7,7 +7,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -41,31 +43,19 @@ public class TimeReceiver extends BroadcastReceiver {
 //            }
 //        };
 //        mHandler.post(mRunable);
-        speakTime(context);
+        ViRooster viRooster = new ViRooster(context);
+        viRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
+            @Override
+            public void onSpeakCompleted() {
+                Toast.makeText(context, "FINISH", Toast.LENGTH_SHORT).show();
+            }
+        });
+        try {
+            viRooster.speakNow();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, ">>>onReceive END");
     }
 
-    private void speakTime(final Context context) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        final int minus = calendar.get(Calendar.MINUTE);
-        Uri mp3 = Uri.parse("android.resource://"
-                + context.getPackageName() + "/raw/"
-                + "h_" + hourOfDay);
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, mp3);
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer2) {
-
-                Uri mp32 = Uri.parse("android.resource://"
-                        + context.getPackageName() + "/raw/"
-                        + "minute_" + minus);
-                mediaPlayer2 = MediaPlayer.create(context, mp32);
-                if (mediaPlayer2 != null) {
-                    mediaPlayer2.start();
-                }
-            }
-        });
-    }
 }
