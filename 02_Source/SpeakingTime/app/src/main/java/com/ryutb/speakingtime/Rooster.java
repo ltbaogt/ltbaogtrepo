@@ -1,13 +1,20 @@
 package com.ryutb.speakingtime;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by fahc03-177 on 11/11/16.
@@ -18,17 +25,15 @@ public abstract class Rooster {
     public static final String MINUTE_PREFIX = "minute_";
     public static final String HOUR_PREFIX = "h_";
 
-    protected MediaPlayer mMediaPlayer;
+
+    protected MediaPlayer mHourMediaPlayer;
+    protected MediaPlayer mMinuteMediaPlayer;
     protected Context mContext;
     protected OnSpeakCompleted mOnSpeakCompleted;
     private boolean mIsRepeat;
     protected int mRepeatCount;
     private int mRepeatTime;
 
-    private Handler mRepeatHandler = new Handler() {
-
-
-    };
     public void setIsRepeat(boolean isRepeat) {
         mIsRepeat = isRepeat;
     }
@@ -47,68 +52,194 @@ public abstract class Rooster {
     }
 
     public void cancelRepeat() {
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent recvIntent = new Intent(mContext, AlarmActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
         mRepeatCount = getRepeatTime();
-        if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+        if (mHourMediaPlayer != null) {
+            mHourMediaPlayer.stop();
+            mHourMediaPlayer.release();
+            mHourMediaPlayer = null;
         }
+
+        if (mMinuteMediaPlayer != null) {
+            mMinuteMediaPlayer.stop();
+            mMinuteMediaPlayer.release();
+            mMinuteMediaPlayer = null;
+        }
+
     }
+
     public void setOnSpeakCompleted(OnSpeakCompleted l) {
         mOnSpeakCompleted = l;
     }
 
     public interface OnSpeakCompleted {
         void onSpeakCompleted();
+
+        void onRepeateCompleted();
     }
+
+    //Minute speak completed listener
+    MediaPlayer.OnCompletionListener mMinusSpeakCompleted = new MediaPlayer.OnCompletionListener() {
+
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            if (mOnSpeakCompleted != null) {
+                mOnSpeakCompleted.onSpeakCompleted();
+                doRepeat(mediaPlayer, 1000 * 60);
+            }
+        }
+    };
 
     public Rooster(Context ctx) {
         mContext = ctx;
     }
 
-    public abstract void speakNow() throws IOException;
+    protected abstract int prepareMediaPlayerHour(int hour);
 
-    protected abstract MediaPlayer prepareMediaPlayerHour(int hour);
-    protected abstract MediaPlayer prepareMediaPlayerMinute(int minute);
+    protected abstract int prepareMediaPlayerMinute(int minute);
 
-    protected MediaPlayer prepareMediaPlayer(int rawResId) {
+    protected MediaPlayer prepareMediaPlayer(int rawResIdHour, int rawResIdMinute) {
 
         try {
-            mMediaPlayer = new MediaPlayer();
-            //STREAM_ALARM: music is mute, alarm sound is fired
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-            AssetFileDescriptor afd = mContext.getResources()
-                    .openRawResourceFd(rawResId);
-            mMediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(), afd.getLength());
-            mMediaPlayer.prepare();
+            //Relase old resource
+            if (mHourMediaPlayer != null) {
+                mHourMediaPlayer.release();
+                mHourMediaPlayer = null;
+            }
+
+            if (mMinuteMediaPlayer != null) {
+                mMinuteMediaPlayer.release();
+                mMinuteMediaPlayer = null;
+            }
+
+            //Create new media player
+            mMinuteMediaPlayer = createMP(rawResIdMinute);
+            mMinuteMediaPlayer.prepare();
+
+            mHourMediaPlayer = createMP(rawResIdHour);
+            mHourMediaPlayer.prepareAsync();
+            mHourMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mHourMediaPlayer.start();
+                }
+            });
+            mHourMediaPlayer.setNextMediaPlayer(mMinuteMediaPlayer);
+
+            mHourMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                    Log.d(TAG, ">>>onError mHourMediaPlayer");
+                    return false;
+                }
+            });
+
+            mMinuteMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                    Log.d(TAG, ">>>onError mMinuteMediaPlayer");
+                    return false;
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return mMediaPlayer;
+        return mHourMediaPlayer;
+    }
+
+    public void speakNow() throws IOException {
+
+        int hourOfDay = getHourOfDay();
+        final int minus = getMinute();
+
+        MediaPlayer mediaPlayer = prepareMP(hourOfDay, minus);
+        mMinuteMediaPlayer.setOnCompletionListener(mMinusSpeakCompleted);
+        mediaPlayer.start();
+    }
+
+
+    protected MediaPlayer createMP(int restId) {
+
+        MediaPlayer mediaPlayer = null;
+        try {
+            AssetFileDescriptor afd = mContext.getResources()
+                    .openRawResourceFd(restId);
+
+            mediaPlayer = new MediaPlayer();
+            //STREAM_ALARM: music is mute, alarm sound is fired
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mediaPlayer;
+    }
+
+    protected MediaPlayer prepareMP(int hour, int minute) {
+        int hourRes = prepareMediaPlayerHour(hour);
+        int minuteRes = prepareMediaPlayerMinute(minute);
+        return prepareMediaPlayer(hourRes, minuteRes);
     }
 
     protected void doRepeat(final MediaPlayer mediaPlayer, int interval) {
-        mRepeatCount++;
-        Log.d(TAG, ">>>doRepeat mRepeatCount= " + mRepeatCount);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (mRepeatCount <= getRepeatTime()) {
-                        SpeakOnRepeat();
-                    } else {
-                        mRepeatCount = 0;
-                        mediaPlayer.stop();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, interval);
+//        mRepeatCount++;
+//        Log.d(TAG, ">>>doRepeat mRepeatCount= " + mRepeatCount);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    //Continue repeating
+//                    if (mRepeatCount <= getRepeatTime()) {
+//                        SpeakOnRepeat();
+//                    } else {
+//                        //Cancel repeat
+//                        mRepeatCount = 0;
+//                        if (mOnSpeakCompleted != null) {
+//                            mOnSpeakCompleted.onRepeateCompleted();
+//                        }
+//                        //mediaPlayer.stop();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, interval);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 1);
+        calendar.set(Calendar.SECOND, 0);
 
+        String timer = ">>>doRepeat d= " + calendar.get(Calendar.DAY_OF_YEAR)
+                + ", m= " + calendar.get(Calendar.MONTH)
+                + ", y= " + calendar.get(Calendar.YEAR)
+                + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
+                + ", m= " + calendar.get(Calendar.MINUTE);
+        Log.d(TAG, timer);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+
+        Intent recvIntent = new Intent(mContext, AlarmActivity.class);
+        recvIntent.putExtra(Define.EXTRA_REPEAT_ALARM, true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= 19) {
+            Log.d(TAG, ">>>doRepeat START");
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
     }
 
     protected void SpeakOnRepeat() throws IOException {
         speakNow();
+    }
+
+    protected int getHourOfDay() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    protected int getMinute() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        return calendar.get(Calendar.MINUTE);
     }
 }

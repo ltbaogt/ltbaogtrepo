@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
         recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, recvIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), Define.REQ_CODE_SET_ARLAM, recvIntent, 0);
         if (Build.VERSION.SDK_INT >= 19) {
-            Log.d(TAG, ">>>onReceive START");
+            Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
     }

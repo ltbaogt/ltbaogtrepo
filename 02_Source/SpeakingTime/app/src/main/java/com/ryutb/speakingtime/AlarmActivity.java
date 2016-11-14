@@ -1,8 +1,10 @@
 package com.ryutb.speakingtime;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,7 +15,17 @@ import java.io.IOException;
  */
 public class AlarmActivity extends AppCompatActivity {
 
+    public static final String TAG = "MyClock";
     ViRooster mViRooster;
+    private boolean mIsRepeate;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mIsRepeate = intent.getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
+        Log.d(TAG, ">>>onNewIntent mIsRepeate= " + mIsRepeate);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +37,13 @@ public class AlarmActivity extends AppCompatActivity {
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {
-                    Toast.makeText(getApplicationContext(), "onSpeakCompleted", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, ">>>onSpeakCompleted");
+                }
+
+                @Override
+                public void onRepeateCompleted() {
+                    Log.d(TAG, ">>>onRepeateCompleted");
+                    finish();
                 }
             });
             try {
@@ -41,4 +59,17 @@ public class AlarmActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, ">>>onResume mIsRepeate= " + mIsRepeate);
+        if (mIsRepeate) {
+            try {
+                mViRooster.speakNow();
+                mIsRepeate = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
