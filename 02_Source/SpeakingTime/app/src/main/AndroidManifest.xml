@@ -17,7 +17,7 @@
         </activity>
         <activity
             android:name=".AlarmActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".AlarmSnoozeSettingActivity">
             <intent-filter>

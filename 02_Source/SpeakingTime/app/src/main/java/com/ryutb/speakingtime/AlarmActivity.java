@@ -31,8 +31,10 @@ public class AlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_activity_layout);
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
+        mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
+
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
-        if (isStart) {
+        if (isStart || mIsRepeate) {
             mViRooster = new ViRooster(getApplicationContext());
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
