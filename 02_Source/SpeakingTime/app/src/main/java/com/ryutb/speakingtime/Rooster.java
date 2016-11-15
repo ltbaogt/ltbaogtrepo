@@ -8,9 +8,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,6 +32,8 @@ public abstract class Rooster {
     protected int mRepeatCount;
     private int mRepeatTime;
 
+    private PendingIntent mNextAlarmPendingIntent;
+
     public void setIsRepeat(boolean isRepeat) {
         mIsRepeat = isRepeat;
     }
@@ -52,10 +52,11 @@ public abstract class Rooster {
     }
 
     public void cancelRepeat() {
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent recvIntent = new Intent(mContext, AlarmActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(pendingIntent);
+        Log.d(TAG, ">>>cancelRepeat START");
+        if (mNextAlarmPendingIntent != null) {
+            Log.d(TAG, ">>>cancelRepeat");
+            mNextAlarmPendingIntent.cancel();
+        }
         mRepeatCount = getRepeatTime();
         if (mHourMediaPlayer != null) {
             mHourMediaPlayer.stop();
@@ -68,7 +69,7 @@ public abstract class Rooster {
             mMinuteMediaPlayer.release();
             mMinuteMediaPlayer = null;
         }
-
+        Log.d(TAG, ">>>cancelRepeat END");
     }
 
     public void setOnSpeakCompleted(OnSpeakCompleted l) {
@@ -88,7 +89,7 @@ public abstract class Rooster {
         public void onCompletion(MediaPlayer mediaPlayer) {
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
-                doRepeat(mediaPlayer, 1000 * 60);
+                doRepeat();
             }
         }
     };
@@ -184,32 +185,10 @@ public abstract class Rooster {
         return prepareMediaPlayer(hourRes, minuteRes);
     }
 
-    protected void doRepeat(final MediaPlayer mediaPlayer, int interval) {
-//        mRepeatCount++;
-//        Log.d(TAG, ">>>doRepeat mRepeatCount= " + mRepeatCount);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    //Continue repeating
-//                    if (mRepeatCount <= getRepeatTime()) {
-//                        SpeakOnRepeat();
-//                    } else {
-//                        //Cancel repeat
-//                        mRepeatCount = 0;
-//                        if (mOnSpeakCompleted != null) {
-//                            mOnSpeakCompleted.onRepeateCompleted();
-//                        }
-//                        //mediaPlayer.stop();
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, interval);
+    protected void doRepeat() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 1);
+        calendar.set(Calendar.HOUR_OF_DAY, getHourOfDay());
+        calendar.set(Calendar.MINUTE, getMinute() + 1);
         calendar.set(Calendar.SECOND, 0);
 
         String timer = ">>>doRepeat d= " + calendar.get(Calendar.DAY_OF_YEAR)
@@ -218,14 +197,18 @@ public abstract class Rooster {
                 + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
                 + ", m= " + calendar.get(Calendar.MINUTE);
         Log.d(TAG, timer);
+
+        if (mNextAlarmPendingIntent != null) {
+            mNextAlarmPendingIntent.cancel();
+        }
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent recvIntent = new Intent(mContext, AlarmActivity.class);
         recvIntent.putExtra(Define.EXTRA_REPEAT_ALARM, true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNextAlarmPendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>doRepeat START");
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mNextAlarmPendingIntent);
         }
     }
 
