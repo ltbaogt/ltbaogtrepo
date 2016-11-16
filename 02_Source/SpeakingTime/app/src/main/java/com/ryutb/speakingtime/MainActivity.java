@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         AlarmSettingFragment settingFragment = new AlarmSettingFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.setting_alarm, settingFragment).commit();
+
     }
 
 

@@ -3,6 +3,7 @@ package com.ryutb.speakingtime;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -22,6 +24,8 @@ public class AlarmActivity extends AppCompatActivity {
     public static final String TAG = "MyClock";
     ViRooster mViRooster;
     private boolean mIsRepeate;
+    private Handler mClockHandler;
+    private TextView mTextViewClock;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -37,6 +41,7 @@ public class AlarmActivity extends AppCompatActivity {
         setContentView(R.layout.alarm_activity_layout);
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
         mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
+        mTextViewClock = (TextView) findViewById(R.id.clock);
 
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
         if (isStart || mIsRepeate) {
@@ -78,6 +83,20 @@ public class AlarmActivity extends AppCompatActivity {
         KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
+
+        mClockHandler = new Handler();
+        mClockHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewClock.setText(mViRooster.getHourOfDay()
+                        + " : "
+                        + mViRooster.getMinute()
+                        + " : "
+                        + mViRooster.getSecond());
+                mClockHandler.postDelayed(this,1000);
+            }
+        });
+
         if (mIsRepeate) {
             try {
                 mViRooster.speakNow();

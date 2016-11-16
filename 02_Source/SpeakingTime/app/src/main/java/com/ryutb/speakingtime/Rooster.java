@@ -216,13 +216,18 @@ public abstract class Rooster {
         speakNow();
     }
 
-    protected int getHourOfDay() {
+    public int getHourOfDay() {
         Calendar calendar = GregorianCalendar.getInstance();
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-    protected int getMinute() {
+    public int getMinute() {
         Calendar calendar = GregorianCalendar.getInstance();
         return calendar.get(Calendar.MINUTE);
+    }
+
+    public int getSecond() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        return calendar.get(Calendar.SECOND);
     }
 }
