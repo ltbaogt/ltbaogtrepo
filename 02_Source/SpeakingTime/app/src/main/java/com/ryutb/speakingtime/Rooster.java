@@ -207,7 +207,7 @@ public abstract class Rooster {
         recvIntent.putExtra(Define.EXTRA_REPEAT_ALARM, true);
         mNextAlarmPendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= 19) {
-            Log.d(TAG, ">>>doRepeat START");
+            Log.d(TAG, ">>>doRepeat setup alarm");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mNextAlarmPendingIntent);
         }
     }

@@ -30,6 +30,7 @@ public class AlarmActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, ">>>onCreate START");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_activity_layout);
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
@@ -75,12 +76,6 @@ public class AlarmActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        stopSpeaking(null);
     }
 
     @Override
