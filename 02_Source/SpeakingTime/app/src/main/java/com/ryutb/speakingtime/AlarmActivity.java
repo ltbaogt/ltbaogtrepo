@@ -1,7 +1,9 @@
 package com.ryutb.speakingtime;
 
+import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -68,6 +70,14 @@ public class AlarmActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, ">>>onResume mIsRepeate= " + mIsRepeate);
+
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "TAG");
+        wakeLock.acquire();
+
+        KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+        keyguardLock.disableKeyguard();
         if (mIsRepeate) {
             try {
                 mViRooster.speakNow();
