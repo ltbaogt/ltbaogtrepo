@@ -12,10 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.ryutb.speakingtime.bean.AlarmObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -27,13 +30,22 @@ import java.util.GregorianCalendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MyClock";
+
+    private Button mBtnSetAlarm;
     private TimePicker mTimePicker;
     private CheckBox m24HFormat;
+    AlarmObject mAlarmObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mBtnSetAlarm = (Button) findViewById(R.id.set_timer);
+        mAlarmObject = new AlarmObject(getSharedPreferences(getPackageName(), Context.MODE_PRIVATE));
+
+        Log.d(TAG, ">>>onCreate alarmId= " + mAlarmObject.getAlarmId());
+        mBtnSetAlarm.setText("Set alarm for alarmId= " + String.valueOf(mAlarmObject.getAlarmId()));
+
         mTimePicker = (TimePicker) findViewById(R.id.time_picker);
         m24HFormat = (CheckBox) findViewById(R.id.cb_24hour_format);
         m24HFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -89,10 +101,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
         recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), Define.REQ_CODE_SET_ARLAM, recvIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), mAlarmObject.getAlarmId(), recvIntent, 0);
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            mAlarmObject.createAlarm();
         }
     }
 }
