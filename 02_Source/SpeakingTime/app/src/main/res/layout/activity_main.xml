@@ -29,4 +29,10 @@
         android:layout_below="@id/time_picker">
 
     </RelativeLayout>
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_24hour_format"
+        android:layout_toRightOf="@id/set_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="24 Hour Format"/>
 </RelativeLayout>

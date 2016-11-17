@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -26,12 +28,20 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MyClock";
     private TimePicker mTimePicker;
+    private CheckBox m24HFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mTimePicker = (TimePicker) findViewById(R.id.time_picker);
+        m24HFormat = (CheckBox) findViewById(R.id.cb_24hour_format);
+        m24HFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean is42H) {
+                mTimePicker.setIs24HourView(is42H);
+            }
+        });
 
         AlarmSettingFragment settingFragment = new AlarmSettingFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.setting_alarm, settingFragment).commit();
