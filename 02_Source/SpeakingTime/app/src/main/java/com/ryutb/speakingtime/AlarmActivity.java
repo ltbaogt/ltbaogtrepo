@@ -2,17 +2,24 @@ package com.ryutb.speakingtime;
 
 import android.app.KeyguardManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ryutb.speakingtime.view.AlarmView;
 
 import java.io.IOException;
 
@@ -24,6 +31,7 @@ public class AlarmActivity extends AppCompatActivity {
     public static final String TAG = "MyClock";
     ViRooster mViRooster;
     private boolean mIsRepeate;
+    private AlarmView mAlarmView;
     private Handler mClockHandler;
     private TextView mTextViewClock;
 
@@ -38,11 +46,8 @@ public class AlarmActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, ">>>onCreate START");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.alarm_activity_layout);
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
         mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
-        mTextViewClock = (TextView) findViewById(R.id.clock);
-
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
         if (isStart || mIsRepeate) {
             mViRooster = new ViRooster(getApplicationContext());
@@ -67,6 +72,7 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     public void stopSpeaking(View v) {
+        getWindowManager().removeView(mAlarmView);
         mViRooster.cancelRepeat();
         finish();
     }
@@ -88,12 +94,14 @@ public class AlarmActivity extends AppCompatActivity {
         mClockHandler.post(new Runnable() {
             @Override
             public void run() {
-                mTextViewClock.setText(mViRooster.getHourOfDay()
-                        + " : "
-                        + mViRooster.getMinute()
-                        + " : "
-                        + mViRooster.getSecond());
-                mClockHandler.postDelayed(this,1000);
+                if (mTextViewClock != null) {
+                    mTextViewClock.setText(mViRooster.getHourOfDay()
+                            + " : "
+                            + mViRooster.getMinute()
+                            + " : "
+                            + mViRooster.getSecond());
+                }
+                mClockHandler.postDelayed(this, 1000);
             }
         });
 
@@ -105,6 +113,27 @@ public class AlarmActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        displayAlarm();
+    }
+
+    private void displayAlarm() {
+        Log.d(TAG, ">>>displayAlarm START");
+        mAlarmView = (AlarmView)((LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.alarm_activity_layout, null, false);
+        mTextViewClock = (TextView) mAlarmView.findViewById(R.id.clock);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        layoutParams.windowAnimations = android.R.style.Animation_Toast;
+        getWindowManager().addView(mAlarmView, layoutParams);
+        Log.d(TAG, ">>>displayAlarm END");
     }
 
     @Override
