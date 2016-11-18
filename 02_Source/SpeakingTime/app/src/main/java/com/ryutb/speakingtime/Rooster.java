@@ -31,6 +31,7 @@ public abstract class Rooster {
     private boolean mIsRepeat;
     protected int mRepeatCount;
     private int mRepeatTime;
+    private int mDefaultStream = AudioManager.STREAM_ALARM;
 
     private PendingIntent mNextAlarmPendingIntent;
 
@@ -116,6 +117,9 @@ public abstract class Rooster {
                 mMinuteMediaPlayer = null;
             }
 
+            AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setStreamVolume(mDefaultStream, audioManager.getStreamMaxVolume(mDefaultStream), 0);
+
             //Create new media player
             mMinuteMediaPlayer = createMP(rawResIdMinute);
             mMinuteMediaPlayer.prepare();
@@ -171,7 +175,7 @@ public abstract class Rooster {
 
             mediaPlayer = new MediaPlayer();
             //STREAM_ALARM: music is mute, alarm sound is fired
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            mediaPlayer.setAudioStreamType(mDefaultStream);
             mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
         } catch (IOException e) {
             e.printStackTrace();
