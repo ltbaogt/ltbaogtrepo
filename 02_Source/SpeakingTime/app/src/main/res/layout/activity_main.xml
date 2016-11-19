@@ -9,30 +9,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ryutb.speakingtime.MainActivity">
 
-    <Button
-        android:id="@+id/set_timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="speakHour"
-        android:text="SET ALARM" />
-
-    <TimePicker
-        android:id="@+id/time_picker"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/set_timer" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
-    <RelativeLayout
-        android:id="@+id/setting_alarm"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/time_picker">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/cb_24hour_format"
-        android:layout_toRightOf="@id/set_timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="24 Hour Format"/>
+            <Button
+                android:id="@+id/set_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="speakHour"
+                android:text="SET ALARM" />
+
+            <TimePicker
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/set_timer" />
+
+            <RelativeLayout
+                android:id="@+id/setting_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/time_picker">
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_24hour_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/set_timer"
+                android:text="24 Hour Format" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

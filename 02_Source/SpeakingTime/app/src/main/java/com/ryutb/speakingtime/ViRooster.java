@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
+import com.ryutb.speakingtime.bean.AlarmObject;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,8 +22,8 @@ public class ViRooster extends Rooster {
 
     private static final String TAG = "MyClock";
 
-    public ViRooster(Context ctx) {
-        super(ctx);
+    public ViRooster(Context ctx, AlarmObject ao) {
+        super(ctx, ao);
     }
 
     @Override

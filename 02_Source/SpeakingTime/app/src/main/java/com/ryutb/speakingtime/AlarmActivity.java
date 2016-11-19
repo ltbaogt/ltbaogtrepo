@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.view.AlarmView;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class AlarmActivity extends AppCompatActivity {
     private Handler mClockHandler;
     private TextView mTextViewClock;
 
+    private AlarmObject mAlarmObject;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -49,8 +52,12 @@ public class AlarmActivity extends AppCompatActivity {
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
         mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
+        //create new instance of alarm object in order to get settings
+        int alarmId = getIntent().getIntExtra(Define.EXTRA_ALARM_ID, 0);
+        mAlarmObject = new AlarmObject(getApplicationContext(), alarmId);
+
         if (isStart || mIsRepeate) {
-            mViRooster = new ViRooster(getApplicationContext());
+            mViRooster = new ViRooster(getApplicationContext(), mAlarmObject);
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -101,11 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
         recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
+        recvIntent.putExtra(Define.EXTRA_ALARM_ID, mAlarmObject.getAlarmId());
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), mAlarmObject.getAlarmId(), recvIntent, 0);
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             mAlarmObject.createAlarm();
+            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            mAlarmObject.setVolume(5);
         }
     }
 }

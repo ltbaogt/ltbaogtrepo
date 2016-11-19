@@ -10,6 +10,8 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
 
+import com.ryutb.speakingtime.bean.AlarmObject;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -32,6 +34,8 @@ public abstract class Rooster {
     protected int mRepeatCount;
     private int mRepeatTime;
     private int mDefaultStream = AudioManager.STREAM_ALARM;
+
+    private AlarmObject mAlarmObject;
 
     private PendingIntent mNextAlarmPendingIntent;
 
@@ -95,8 +99,9 @@ public abstract class Rooster {
         }
     };
 
-    public Rooster(Context ctx) {
+    public Rooster(Context ctx, AlarmObject alarmObject) {
         mContext = ctx;
+        mAlarmObject = alarmObject;
     }
 
     protected abstract int prepareMediaPlayerHour(int hour);
@@ -118,7 +123,7 @@ public abstract class Rooster {
             }
 
             AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            audioManager.setStreamVolume(mDefaultStream, audioManager.getStreamMaxVolume(mDefaultStream), 0);
+            audioManager.setStreamVolume(mDefaultStream, mAlarmObject.getVolume(), 0);
 
             //Create new media player
             mMinuteMediaPlayer = createMP(rawResIdMinute);

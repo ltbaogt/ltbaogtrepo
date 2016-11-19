@@ -6,9 +6,9 @@
         android:summary="summary of snooze"
         android:title="Snooze" />
     <Preference
-    app:key="go_to_snooze_setting"
-    android:title="Snooze setting"
-    android:summary="Snooze setting summary">
-    <intent android:action="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
+        android:summary="Snooze setting summary"
+        android:title="Snooze setting"
+        app:key="go_to_snooze_setting">
+        <intent android:action="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
     </Preference>
 </PreferenceScreen>
