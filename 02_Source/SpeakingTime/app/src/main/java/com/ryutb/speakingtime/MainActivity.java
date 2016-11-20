@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mBtnSetAlarm = (Button) findViewById(R.id.set_timer);
+        //mBtnSetAlarm = (Button) findViewById(R.id.set_timer);
         mAlarmObject = new AlarmObject(getSharedPreferences(getPackageName(), Context.MODE_PRIVATE));
 
         Log.d(TAG, ">>>onCreate alarmId= " + mAlarmObject.getAlarmId());
-        mBtnSetAlarm.setText("Set alarm for alarmId= " + String.valueOf(mAlarmObject.getAlarmId()));
+        //mBtnSetAlarm.setText("Set alarm for alarmId= " + String.valueOf(mAlarmObject.getAlarmId()));
 
         mTimePicker = (SpeakingClockTimePicker) findViewById(R.id.time_picker);
         m24HFormat = (CheckBox) findViewById(R.id.cb_24hour_format);

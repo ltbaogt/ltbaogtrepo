@@ -4,47 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ryutb.speakingtime.MainActivity">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/button_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@color/colorPrimary"
+            android:text="CANCEL"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/button_cancel"
+            android:layout_weight="50"
+            android:background="@color/colorPrimary"
+            android:onClick="speakHour"
+            android:text="OK"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <com.ryutb.speakingtime.view.SpeakingClockTimePicker
+        android:id="@+id/time_picker"
+        style="@style/AppTheme.TimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_bar"
+        android:timePickerMode="spinner" />
+
+    <RelativeLayout
+        android:id="@+id/setting_alarm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        android:layout_below="@id/time_picker">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </RelativeLayout>
 
-            <Button
-                android:id="@+id/set_timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="speakHour"
-                android:text="SET ALARM" />
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_24hour_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/time_picker"
+        android:text="24 Hour Format" />
 
-            <com.ryutb.speakingtime.view.SpeakingClockTimePicker
-                android:id="@+id/time_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/set_timer" />
-
-            <RelativeLayout
-                android:id="@+id/setting_alarm"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@id/time_picker">
-
-            </RelativeLayout>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cb_24hour_format"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/set_timer"
-                android:text="24 Hour Format" />
-        </RelativeLayout>
-    </ScrollView>
 </RelativeLayout>

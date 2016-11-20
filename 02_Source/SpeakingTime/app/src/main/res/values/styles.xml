@@ -9,4 +9,8 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="AppTheme.NewAlarm" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
