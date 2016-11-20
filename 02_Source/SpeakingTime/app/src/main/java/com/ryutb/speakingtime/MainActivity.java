@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private TimePicker mTimePicker;
     private CheckBox m24HFormat;
     AlarmObject mAlarmObject;
+    private AlarmSettingFragment mSettingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AlarmSettingFragment settingFragment = new AlarmSettingFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.setting_alarm, settingFragment).commit();
+        mSettingFragment = new AlarmSettingFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.setting_alarm, mSettingFragment).commit();
 
     }
 
@@ -108,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             mAlarmObject.createAlarm();
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            mAlarmObject.setVolume(5);
+            int alarmVolume = mSettingFragment.getVolume();
+            mAlarmObject.setVolume(alarmVolume);
         }
     }
 }

@@ -11,4 +11,14 @@
         app:key="go_to_snooze_setting">
         <intent android:action="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
     </Preference>
+    <ListPreference
+        android:defaultValue="0"
+        android:title="Alarm type"
+        app:entries="@array/alarm_type_entries_list_preference"
+        app:entryValues="@array/alarm_type_entryvalues_list_preference"
+        app:key="st_alarm_mode" />
+
+    <com.ryutb.speakingtime.view.AlarmVolumePreference
+        android:key="st_volume"
+        android:layout="@layout/volume_setting_layout" />
 </PreferenceScreen>
