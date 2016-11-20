@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,15 +71,13 @@ public class AlarmActivity extends AppCompatActivity {
                     finish();
                 }
             });
-            try {
-                mViRooster.speakNow();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            doSpeakTime();
         }
     }
 
     public void stopSpeaking(View v) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.cancel();
         getWindowManager().removeView(mAlarmView);
         mViRooster.cancelRepeat();
         finish();
@@ -113,14 +112,9 @@ public class AlarmActivity extends AppCompatActivity {
         });
 
         if (mIsRepeate) {
-            try {
-                mViRooster.speakNow();
-                mIsRepeate = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            doSpeakTime();
+            mIsRepeate = false;
         }
-
     }
 
     @Override
@@ -156,4 +150,16 @@ public class AlarmActivity extends AppCompatActivity {
         return true;
     }
 
+    public void doSpeakTime() {
+        if (mViRooster != null) {
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            //               //will start in 0s, vibration for 2000s, turn it off for 500s, turn it in 1000s, turn it off for 1000s
+            vibrator.vibrate(new long[]{      0,               2000,                  500 ,            1000 ,                 1000}, 0);
+            try {
+                mViRooster.speakNow();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
