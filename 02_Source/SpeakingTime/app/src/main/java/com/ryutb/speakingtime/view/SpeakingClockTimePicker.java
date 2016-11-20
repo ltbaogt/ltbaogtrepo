@@ -9,6 +9,8 @@ import android.widget.TimePicker;
 /**
  * Created by MyPC on 20/11/2016.
  */
+
+//This implement helps disable parent's scroll when it scroll
 public class SpeakingClockTimePicker extends TimePicker {
     public SpeakingClockTimePicker(Context context, AttributeSet attrs) {
         super(context, attrs);
