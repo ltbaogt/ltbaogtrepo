@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ryutb.speakingtime.bean.AlarmObject;
+import com.ryutb.speakingtime.view.SpeakingClockTimePicker;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MyClock";
 
     private Button mBtnSetAlarm;
-    private TimePicker mTimePicker;
+    private SpeakingClockTimePicker mTimePicker;
     private CheckBox m24HFormat;
     AlarmObject mAlarmObject;
     private AlarmSettingFragment mSettingFragment;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, ">>>onCreate alarmId= " + mAlarmObject.getAlarmId());
         mBtnSetAlarm.setText("Set alarm for alarmId= " + String.valueOf(mAlarmObject.getAlarmId()));
 
-        mTimePicker = (TimePicker) findViewById(R.id.time_picker);
+        mTimePicker = (SpeakingClockTimePicker) findViewById(R.id.time_picker);
         m24HFormat = (CheckBox) findViewById(R.id.cb_24hour_format);
         m24HFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
