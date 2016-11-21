@@ -64,8 +64,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void speakHour(View v) throws IOException, ParseException {
+    public void speakHour(View v) {
+        setTimer();
+    }
 
+    private void setTimer() {
         Calendar calendar = GregorianCalendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 + ", y= " + calendar.get(Calendar.YEAR)
                 + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
                 + ", m= " + calendar.get(Calendar.MINUTE);
-        Toast.makeText(this, timer, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, timer, Toast.LENGTH_SHORT).show();
         Log.d(TAG, timer);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -116,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         backToPreviousScreen(null);
     }
-
     public void backToPreviousScreen(View v) {
         finish();
     }
