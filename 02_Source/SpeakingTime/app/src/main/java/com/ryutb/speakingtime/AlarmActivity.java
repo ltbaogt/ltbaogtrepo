@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.view.AlarmView;
+import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 
@@ -127,6 +128,8 @@ public class AlarmActivity extends AppCompatActivity {
         Log.d(TAG, ">>>displayAlarm START");
         mAlarmView = (AlarmView)((LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.alarm_activity_layout, null, false);
         mTextViewClock = (TextView) mAlarmView.findViewById(R.id.clock);
+        RippleBackground rippleBackground=(RippleBackground) mAlarmView.findViewById(R.id.content);
+        rippleBackground.startRippleAnimation();
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);

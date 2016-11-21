@@ -12,24 +12,39 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
 
-        <Button
+        <com.andexert.library.RippleView
             android:id="@+id/button_cancel"
-            android:layout_width="120dp"
-            android:layout_height="match_parent"
-            android:layout_weight="50"
-            android:background="@color/colorPrimary"
-            android:text="CANCEL"
-            android:textColor="@android:color/white" />
+            rv_centered="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/button_cancel"
-            android:layout_weight="50"
-            android:background="@color/colorPrimary"
-            android:onClick="speakHour"
-            android:text="OK"
-            android:textColor="@android:color/white" />
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:background="@color/colorPrimary"
+                android:onClick="backToPreviousScreen"
+                android:text="CANCEL"
+                android:textColor="@android:color/white" />
+        </com.andexert.library.RippleView>
+
+        <com.andexert.library.RippleView
+            rv_centered="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/button_cancel">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:onClick="speakHour"
+                android:text="OK"
+                android:textAlignment="center"
+                android:textColor="@android:color/white" />
+        </com.andexert.library.RippleView>
     </RelativeLayout>
 
     <com.ryutb.speakingtime.view.SpeakingClockTimePicker

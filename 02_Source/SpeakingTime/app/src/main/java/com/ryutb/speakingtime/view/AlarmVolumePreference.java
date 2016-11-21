@@ -12,12 +12,14 @@ import android.widget.TextView;
 
 import com.ryutb.speakingtime.R;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 /**
  * Created by MyPC on 20/11/2016.
  */
 public class AlarmVolumePreference extends Preference {
 
-    private SeekBar mVolumeSeekBar;
+    private DiscreteSeekBar mVolumeSeekBar;
 
     public AlarmVolumePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -26,7 +28,7 @@ public class AlarmVolumePreference extends Preference {
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
-        mVolumeSeekBar = (SeekBar) holder.findViewById(R.id.st_volume_alarm);
+        mVolumeSeekBar = (DiscreteSeekBar) holder.findViewById(R.id.st_volume_alarm);
 
         AudioManager am = (AudioManager) mVolumeSeekBar.getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mVolumeSeekBar.setMax(am.getStreamMaxVolume(AudioManager.STREAM_ALARM));

@@ -14,7 +14,7 @@
             android:layout_height="24dp"
             android:background="@drawable/stop_ic" />
 
-        <SeekBar
+        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
             android:id="@+id/st_volume_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

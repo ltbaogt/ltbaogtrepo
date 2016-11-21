@@ -113,5 +113,11 @@ public class MainActivity extends AppCompatActivity {
             int alarmVolume = mSettingFragment.getVolume();
             mAlarmObject.setVolume(alarmVolume);
         }
+
+        backToPreviousScreen(null);
+    }
+
+    public void backToPreviousScreen(View v) {
+        finish();
     }
 }
