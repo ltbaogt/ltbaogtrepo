@@ -4,30 +4,22 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.view.SpeakingClockTimePicker;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -95,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, userHour);
         calendar.set(Calendar.MINUTE, userMinute);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
-        String timer = ">>>nextTime d= " + calendar.get(Calendar.DAY_OF_YEAR)
-                + ", m= " + calendar.get(Calendar.MONTH)
-                + ", y= " + calendar.get(Calendar.YEAR)
-                + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
-                + ", m= " + calendar.get(Calendar.MINUTE);
-        Toast.makeText(MainActivity.this, timer, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, timer);
+//        String timer = ">>>nextTime d= " + calendar.get(Calendar.DAY_OF_YEAR)
+//                + ", m= " + calendar.get(Calendar.MONTH)
+//                + ", y= " + calendar.get(Calendar.YEAR)
+//                + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
+//                + ", m= " + calendar.get(Calendar.MINUTE);
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
@@ -115,9 +107,40 @@ public class MainActivity extends AppCompatActivity {
             mAlarmObject.createAlarm();
             int alarmVolume = mSettingFragment.getVolume();
             mAlarmObject.setVolume(alarmVolume);
+            String alarmString = getAlarmInFurture(calendar);
+            Toast.makeText(getApplicationContext(), alarmString, Toast.LENGTH_SHORT).show();
         }
 
         backToPreviousScreen(null);
+    }
+
+    private String getAlarmInFurture(Calendar calendar) {
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.set(Calendar.SECOND, 0);
+        currentCalendar.set(Calendar.MILLISECOND, 0);
+        long minute = (calendar.getTimeInMillis() - currentCalendar.getTimeInMillis()) / 1000 / 60;
+        long hours = minute / 60;
+        long minute2 = minute - (hours * 60);
+        String ret = "Báo thức sau ";
+        if (hours > 0) {
+            if (hours == 1) {
+                ret += String.valueOf(hours) + " giờ ";
+            } else {
+                ret += String.valueOf(hours) + " giờs ";
+            }
+        }
+        if (minute2 > 0) {
+            if (minute2 == 1) {
+                ret += String.valueOf(minute2) + " phút";
+            } else {
+                ret += String.valueOf(minute2) + " phúts";
+            }
+        }
+
+        if (hours == 0 && minute == 0) {
+            ret = "Báo thức ngay bây giờ";
+        }
+        return ret;
     }
     public void backToPreviousScreen(View v) {
         finish();
