@@ -1,9 +1,6 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.activity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,10 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
-import com.ryutb.speakingtime.bean.AlarmObject;
-import com.ryutb.speakingtime.view.AlarmListTabFragment;
+import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.fragment.AlarmListTabFragment;
 
 import java.util.ArrayList;
 import java.util.List;

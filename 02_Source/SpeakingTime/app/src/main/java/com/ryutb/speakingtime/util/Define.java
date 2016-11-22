@@ -1,4 +1,4 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.util;
 
 /**
  * Created by MyPC on 11/11/2016.

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AlarmListActivity"
+            android:name=".activity.AlarmListActivity"
             android:theme="@style/AppTheme.AlarmList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +23,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NewAlarm" />
         <activity
-            android:name=".AlarmActivity"
+            android:name=".activity.AlarmActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".AlarmSnoozeSettingActivity">
+        <activity android:name=".activity.AlarmSnoozeSettingActivity">
             <intent-filter>
                 <action android:name="action.com.ryutb.speakingtime.AlarmSnoozeSettingActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -1,4 +1,4 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.voicecontroller;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,6 +10,8 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
 
+import com.ryutb.speakingtime.util.Define;
+import com.ryutb.speakingtime.activity.AlarmActivity;
 import com.ryutb.speakingtime.bean.AlarmObject;
 
 import java.io.IOException;

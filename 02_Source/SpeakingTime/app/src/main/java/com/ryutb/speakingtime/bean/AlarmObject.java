@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.ryutb.speakingtime.Define;
+import com.ryutb.speakingtime.util.Define;
 
 /**
  * Created by MyPC on 17/11/2016.

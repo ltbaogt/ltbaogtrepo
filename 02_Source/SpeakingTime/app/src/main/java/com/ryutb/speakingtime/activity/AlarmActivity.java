@@ -1,25 +1,25 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.activity;
 
 import android.app.KeyguardManager;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ryutb.speakingtime.util.Define;
+import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.voicecontroller.Rooster;
+import com.ryutb.speakingtime.voicecontroller.ViRooster;
 import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.view.AlarmView;
 import com.skyfishjy.library.RippleBackground;

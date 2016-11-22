@@ -1,4 +1,4 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -14,12 +14,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.ryutb.speakingtime.util.Define;
+import com.ryutb.speakingtime.R;
 import com.ryutb.speakingtime.bean.AlarmObject;
+import com.ryutb.speakingtime.fragment.AlarmSettingFragment;
 import com.ryutb.speakingtime.view.SpeakingClockTimePicker;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 

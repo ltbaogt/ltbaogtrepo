@@ -1,7 +1,9 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.ryutb.speakingtime.fragment.AlarmSnoozeSettingFragment;
 
 /**
  * Created by MyPC on 11/11/2016.

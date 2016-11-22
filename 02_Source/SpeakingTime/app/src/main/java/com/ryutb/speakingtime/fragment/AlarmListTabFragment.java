@@ -1,4 +1,4 @@
-package com.ryutb.speakingtime.view;
+package com.ryutb.speakingtime.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
-import com.ryutb.speakingtime.MainActivity;
+import com.ryutb.speakingtime.activity.MainActivity;
 import com.ryutb.speakingtime.R;
-import com.skyfishjy.library.RippleBackground;
 
 /**
  * Created by MyPC on 21/11/2016.

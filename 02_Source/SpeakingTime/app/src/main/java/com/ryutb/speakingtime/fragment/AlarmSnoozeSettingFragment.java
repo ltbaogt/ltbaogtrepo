@@ -1,8 +1,10 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import com.ryutb.speakingtime.R;
 
 /**
  * Created by MyPC on 11/11/2016.

@@ -1,8 +1,9 @@
-package com.ryutb.speakingtime;
+package com.ryutb.speakingtime.fragment;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.ryutb.speakingtime.R;
 import com.ryutb.speakingtime.view.AlarmVolumePreference;
 
 /**
