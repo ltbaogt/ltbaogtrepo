@@ -94,6 +94,8 @@ public abstract class Rooster {
         public void onCompletion(MediaPlayer mediaPlayer) {
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
+            }
+            if (getIsRepeat()) {
                 doRepeat();
             }
         }

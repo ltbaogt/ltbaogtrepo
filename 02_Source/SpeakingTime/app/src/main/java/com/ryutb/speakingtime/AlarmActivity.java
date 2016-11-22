@@ -60,7 +60,7 @@ public class AlarmActivity extends AppCompatActivity {
         mAlarmObject = new AlarmObject(getApplicationContext(), alarmId);
 
         if (isStart || mIsRepeate) {
-            mViRooster = new ViRooster(getApplicationContext(), mAlarmObject);
+            mViRooster = new ViRooster(getApplicationContext(), mAlarmObject, true);
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {
