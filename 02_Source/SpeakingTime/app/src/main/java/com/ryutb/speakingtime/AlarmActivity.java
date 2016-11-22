@@ -25,6 +25,7 @@ import com.ryutb.speakingtime.view.AlarmView;
 import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by fahc03-177 on 11/11/16.
@@ -102,11 +103,8 @@ public class AlarmActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (mTextViewClock != null) {
-                    mTextViewClock.setText(mViRooster.getHourOfDay()
-                            + " : "
-                            + mViRooster.getMinute()
-                            + " : "
-                            + mViRooster.getSecond());
+                    mTextViewClock.setText(String.format(Locale.US,"%1$02d : %2$02d : %3$02d"
+                            , mViRooster.getHourOfDay(), mViRooster.getMinute(), mViRooster.getSecond()));
                 }
                 mClockHandler.postDelayed(this, 1000);
             }
