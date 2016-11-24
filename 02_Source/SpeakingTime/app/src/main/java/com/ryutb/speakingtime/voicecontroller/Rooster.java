@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ryutb.speakingtime.util.Define;
 import com.ryutb.speakingtime.activity.AlarmActivity;
@@ -32,10 +33,11 @@ public abstract class Rooster {
     protected MediaPlayer mMinuteMediaPlayer;
     protected Context mContext;
     protected OnSpeakCompleted mOnSpeakCompleted;
-    private boolean mIsRepeat;
+    private boolean mIsRepeat = false;
     protected int mRepeatCount;
     private int mRepeatTime;
     private int mDefaultStream = AudioManager.STREAM_ALARM;
+    private int mVolumeAlarm;
 
     private AlarmObject mAlarmObject;
 
@@ -56,6 +58,18 @@ public abstract class Rooster {
     public int getRepeatTime() {
         //return mRepeatTime;
         return 20;
+    }
+
+    public int getVolumeAlarm() {
+        return mVolumeAlarm;
+    }
+
+    public int getAudioStream() {
+        return mDefaultStream;
+    }
+
+    public void setAudioStream(int streamType) {
+        mDefaultStream = streamType;
     }
 
     public void cancelRepeat() {
@@ -94,6 +108,8 @@ public abstract class Rooster {
 
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
+//            Log.d(TAG, "$MediaPlayer.OnCompletionListener>>>onCompletion");
+            Toast.makeText(mContext, "mMinusSpeakCompleted>>>onCompletion",Toast.LENGTH_SHORT).show();
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
             }
@@ -106,6 +122,11 @@ public abstract class Rooster {
     public Rooster(Context ctx, AlarmObject alarmObject) {
         mContext = ctx;
         mAlarmObject = alarmObject;
+    }
+
+    public Rooster(Context ctx, int volume) {
+        mContext = ctx;
+        mVolumeAlarm = volume;
     }
 
     protected abstract int prepareMediaPlayerHour(int hour);
@@ -127,7 +148,9 @@ public abstract class Rooster {
             }
 
             AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            audioManager.setStreamVolume(mDefaultStream, mAlarmObject.getVolume(), 0);
+
+            int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getVolume();
+            audioManager.setStreamVolume(mDefaultStream, volumeOfAlarm, 0);
 
             //Create new media player
             mMinuteMediaPlayer = createMP(rawResIdMinute);

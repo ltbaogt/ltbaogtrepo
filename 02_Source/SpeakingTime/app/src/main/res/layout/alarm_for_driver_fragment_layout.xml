@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_add_new_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start service" />
+
+    <Button
+        android:id="@+id/btn_stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop service" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cbPlayOnHeadPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Only for headset" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/st_volume_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

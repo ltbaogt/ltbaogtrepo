@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.fragment.AlarmForDriverFragment;
 import com.ryutb.speakingtime.fragment.AlarmListTabFragment;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class AlarmListActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new AlarmListTabFragment(), "Alarm List");
-        adapter.addFragment(new AlarmListTabFragment(), "Alarm For Driver");
+        adapter.addFragment(new AlarmForDriverFragment(), "Alarm For Driver");
         viewPager.setAdapter(adapter);
     }
 

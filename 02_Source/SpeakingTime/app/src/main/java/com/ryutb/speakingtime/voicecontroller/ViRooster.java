@@ -21,6 +21,10 @@ public class ViRooster extends Rooster {
         setIsRepeat(isRepeat);
     }
 
+    public ViRooster(Context ctx, int volume) {
+        super(ctx, volume);
+    }
+
     @Override
     protected int prepareMediaPlayerHour(int hour) {
         int hourRes = mContext.getResources()

@@ -82,6 +82,8 @@ public class AlarmActivity extends AppCompatActivity {
         vibrator.cancel();
         getWindowManager().removeView(mAlarmView);
         mViRooster.cancelRepeat();
+        mClockHandler.removeCallbacksAndMessages(null);
+        mClockHandler = null;
         finish();
     }
 
@@ -97,7 +99,7 @@ public class AlarmActivity extends AppCompatActivity {
         KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
-
+        //displayAlarm();
         mClockHandler = new Handler();
         mClockHandler.post(new Runnable() {
             @Override
@@ -117,8 +119,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void onPostResume() {
+        super.onPostResume();
         displayAlarm();
     }
 
@@ -131,7 +133,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         layoutParams.windowAnimations = android.R.style.Animation_Toast;
         getWindowManager().addView(mAlarmView, layoutParams);
@@ -163,4 +165,14 @@ public class AlarmActivity extends AppCompatActivity {
             }
         }
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        try {
+//            getWindowManager().removeView(mAlarmView);
+//        } catch (Exception e) {
+//
+//        }
+//    }
 }

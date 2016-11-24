@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             int alarmVolume = mSettingFragment.getVolume();
             mAlarmObject.setVolume(alarmVolume);
             String alarmString = getAlarmInFurture(calendar);
-            Toast.makeText(getApplicationContext(), alarmString, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), alarmString, Toast.LENGTH_LONG).show();
         }
 
         backToPreviousScreen(null);

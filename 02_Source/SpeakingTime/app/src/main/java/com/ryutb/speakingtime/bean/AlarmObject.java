@@ -17,6 +17,7 @@ public class AlarmObject {
     public static String SP_TIME_HOUR = "sp_time_hours";
     public static String SP_TIME_MINUTE = "sp_time_minute";
     public static String SP_VOLUME = "sp_volume";
+    public static String SP_PLAY_ONE_HEADPHONE = "sp_play_on_headphone";
     private SharedPreferences mSharePref;
     private String mAlarmId;
 
@@ -67,6 +68,16 @@ public class AlarmObject {
         return getInt(SP_VOLUME);
     }
 
+    public void setIsPlayOnHeadPhone(boolean isPlayOnHeadPhone) {
+        Log.d(TAG, ">>>setIsPlayOnHeadPhone isPlayOnHeadPhone=" +isPlayOnHeadPhone);
+        mSharePref.edit().putBoolean(SP_PLAY_ONE_HEADPHONE, isPlayOnHeadPhone).apply();
+    }
+
+    public boolean getIsPlayOnHeadPhone() {
+        boolean isPlay = mSharePref.getBoolean(SP_PLAY_ONE_HEADPHONE, true);
+        Log.d(TAG, ">>>getIsPlayOnHeadPhone isPlay=" +isPlay);
+        return isPlay;
+    }
     public void createAlarm() {
         saveCurrentAlarmId(this.getAlarmId());
     }
