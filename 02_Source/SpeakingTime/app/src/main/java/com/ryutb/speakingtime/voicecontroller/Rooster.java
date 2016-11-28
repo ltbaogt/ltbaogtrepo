@@ -11,26 +11,28 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ryutb.speakingtime.util.Define;
 import com.ryutb.speakingtime.activity.AlarmActivity;
 import com.ryutb.speakingtime.bean.AlarmObject;
+import com.ryutb.speakingtime.util.Define;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-/**
- * Created by fahc03-177 on 11/11/16.
- */
+
 public abstract class Rooster {
 
     private static final String TAG = "MyClock";
     public static final String MINUTE_PREFIX = "minute_";
     public static final String HOUR_PREFIX = "h_";
+    public static final int ALARM_LIST_START_INDEX = 0;
+
+    public static final int ALARM_SPEAK_TYPE_NOW_TIME = 0;
+    public static final int ALARM_SPEAK_TYPE_TIME = 1;
 
 
-    protected MediaPlayer mHourMediaPlayer;
-    protected MediaPlayer mMinuteMediaPlayer;
+    ArrayList<MediaPlayer> mMediaPlayers;
     protected Context mContext;
     protected OnSpeakCompleted mOnSpeakCompleted;
     private boolean mIsRepeat = false;
@@ -38,6 +40,7 @@ public abstract class Rooster {
     private int mRepeatTime;
     private int mDefaultStream = AudioManager.STREAM_ALARM;
     private int mVolumeAlarm;
+    private int mAlarmSpeakType;
 
     private AlarmObject mAlarmObject;
 
@@ -56,8 +59,8 @@ public abstract class Rooster {
     }
 
     public int getRepeatTime() {
-        //return mRepeatTime;
-        return 20;
+        mRepeatTime = 20;
+        return mRepeatTime;
     }
 
     public int getVolumeAlarm() {
@@ -79,17 +82,7 @@ public abstract class Rooster {
             mNextAlarmPendingIntent.cancel();
         }
         mRepeatCount = getRepeatTime();
-        if (mHourMediaPlayer != null) {
-            mHourMediaPlayer.stop();
-            mHourMediaPlayer.release();
-            mHourMediaPlayer = null;
-        }
-
-        if (mMinuteMediaPlayer != null) {
-            mMinuteMediaPlayer.stop();
-            mMinuteMediaPlayer.release();
-            mMinuteMediaPlayer = null;
-        }
+        mediaplayerStopAndReleaseRemove();
         Log.d(TAG, ">>>cancelRepeat END");
     }
 
@@ -109,7 +102,7 @@ public abstract class Rooster {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
 //            Log.d(TAG, "$MediaPlayer.OnCompletionListener>>>onCompletion");
-            Toast.makeText(mContext, "mMinusSpeakCompleted>>>onCompletion",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "mMinusSpeakCompleted>>>onCompletion", Toast.LENGTH_SHORT).show();
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
             }
@@ -119,54 +112,51 @@ public abstract class Rooster {
         }
     };
 
-    public Rooster(Context ctx, AlarmObject alarmObject) {
-        mContext = ctx;
-        mAlarmObject = alarmObject;
-    }
-
-    public Rooster(Context ctx, int volume) {
+    public Rooster(Context ctx, int volume, int alarmType) {
         mContext = ctx;
         mVolumeAlarm = volume;
+        mAlarmSpeakType = alarmType;
+        mMediaPlayers = new ArrayList<>();
+    }
+
+    public Rooster(Context ctx, AlarmObject alarmObject, int alarmType) {
+        mContext = ctx;
+        mAlarmObject = alarmObject;
+        mMediaPlayers = new ArrayList<>();
+        mAlarmSpeakType = alarmType;
     }
 
     protected abstract int prepareMediaPlayerHour(int hour);
 
     protected abstract int prepareMediaPlayerMinute(int minute);
 
-    protected MediaPlayer prepareMediaPlayer(int rawResIdHour, int rawResIdMinute) {
+    protected void prepareMediaPlayer(int rawResIdHour, int rawResIdMinute) {
 
         try {
             //Relase old resource
-            if (mHourMediaPlayer != null) {
-                mHourMediaPlayer.release();
-                mHourMediaPlayer = null;
-            }
+            mediaplayerReleaseAndRemove();
 
-            if (mMinuteMediaPlayer != null) {
-                mMinuteMediaPlayer.release();
-                mMinuteMediaPlayer = null;
-            }
-
-            AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-
-            int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getVolume();
-            audioManager.setStreamVolume(mDefaultStream, volumeOfAlarm, 0);
+            setupVolumeForAudioStream();
 
             //Create new media player
-            mMinuteMediaPlayer = createMP(rawResIdMinute);
-            mMinuteMediaPlayer.prepare();
+            MediaPlayer minuteMediaPlayer = createMP(rawResIdMinute);
+            minuteMediaPlayer.prepare();
 
-            mHourMediaPlayer = createMP(rawResIdHour);
-            mHourMediaPlayer.prepareAsync();
-            mHourMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            final MediaPlayer hourMediaPlayer = createMP(rawResIdHour);
+            mMediaPlayers.add(hourMediaPlayer);
+            mMediaPlayers.add(minuteMediaPlayer);
+
+            hourMediaPlayer.prepareAsync();
+            hourMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
-                    mHourMediaPlayer.start();
+                    mMediaPlayers.get(ALARM_LIST_START_INDEX).start();
                 }
             });
-            mHourMediaPlayer.setNextMediaPlayer(mMinuteMediaPlayer);
+            hourMediaPlayer.setNextMediaPlayer(minuteMediaPlayer);
 
-            mHourMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            hourMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
                     Log.d(TAG, ">>>onError mHourMediaPlayer");
@@ -174,17 +164,17 @@ public abstract class Rooster {
                 }
             });
 
-            mMinuteMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            minuteMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
                     Log.d(TAG, ">>>onError mMinuteMediaPlayer");
                     return false;
                 }
             });
+            mMediaPlayers.get(ALARM_LIST_START_INDEX).setOnCompletionListener(mMinusSpeakCompleted);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Cannot play time because= " + Log.getStackTraceString(e));
         }
-        return mHourMediaPlayer;
     }
 
     public void speakNow() throws IOException {
@@ -192,9 +182,8 @@ public abstract class Rooster {
         int hourOfDay = getHourOfDay();
         final int minus = getMinute();
 
-        MediaPlayer mediaPlayer = prepareMP(hourOfDay, minus);
-        mMinuteMediaPlayer.setOnCompletionListener(mMinusSpeakCompleted);
-        mediaPlayer.start();
+        prepareMP(hourOfDay, minus);
+
     }
 
 
@@ -215,10 +204,10 @@ public abstract class Rooster {
         return mediaPlayer;
     }
 
-    protected MediaPlayer prepareMP(int hour, int minute) {
+    protected void prepareMP(int hour, int minute) {
         int hourRes = prepareMediaPlayerHour(hour);
         int minuteRes = prepareMediaPlayerMinute(minute);
-        return prepareMediaPlayer(hourRes, minuteRes);
+        prepareMediaPlayer(hourRes, minuteRes);
     }
 
     protected void doRepeat() {
@@ -248,10 +237,6 @@ public abstract class Rooster {
         }
     }
 
-    protected void SpeakOnRepeat() throws IOException {
-        speakNow();
-    }
-
     public int getHourOfDay() {
         Calendar calendar = GregorianCalendar.getInstance();
         return calendar.get(Calendar.HOUR_OF_DAY);
@@ -265,5 +250,35 @@ public abstract class Rooster {
     public int getSecond() {
         Calendar calendar = GregorianCalendar.getInstance();
         return calendar.get(Calendar.SECOND);
+    }
+
+    private void mediaplayerReleaseAndRemove() {
+        //Relase old resource
+        if (mMediaPlayers != null) {
+
+            for (int i = mMediaPlayers.size() - 1; i >= 0; i--) {
+                mMediaPlayers.get(i).release();
+                mMediaPlayers.remove(i);
+            }
+        }
+    }
+
+    private void mediaplayerStopAndReleaseRemove() {
+        //Relase old resource
+        if (mMediaPlayers != null) {
+
+            for (int i = mMediaPlayers.size() - 1; i >= 0; i--) {
+                mMediaPlayers.get(i).stop();
+                mMediaPlayers.get(i).release();
+                mMediaPlayers.remove(i);
+            }
+        }
+    }
+
+    protected void setupVolumeForAudioStream() {
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
+        int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getVolume();
+        audioManager.setStreamVolume(mDefaultStream, volumeOfAlarm, 0);
     }
 }

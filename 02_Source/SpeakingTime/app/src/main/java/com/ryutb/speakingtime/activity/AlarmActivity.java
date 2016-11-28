@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ryutb.speakingtime.util.Define;
 import com.ryutb.speakingtime.R;
 import com.ryutb.speakingtime.voicecontroller.Rooster;
+import com.ryutb.speakingtime.voicecontroller.ViNoneNowRooster;
 import com.ryutb.speakingtime.voicecontroller.ViRooster;
 import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.view.AlarmView;
@@ -60,7 +61,7 @@ public class AlarmActivity extends AppCompatActivity {
         mAlarmObject = new AlarmObject(getApplicationContext(), alarmId);
 
         if (isStart || mIsRepeate) {
-            mViRooster = new ViRooster(getApplicationContext(), mAlarmObject, true);
+            mViRooster = new ViNoneNowRooster(getApplicationContext(), mAlarmObject, true, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {

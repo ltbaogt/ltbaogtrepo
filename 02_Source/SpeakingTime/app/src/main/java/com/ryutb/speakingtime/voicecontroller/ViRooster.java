@@ -12,17 +12,13 @@ public class ViRooster extends Rooster {
 
     private static final String TAG = "MyClock";
 
-    public ViRooster(Context ctx, AlarmObject ao) {
-        super(ctx, ao);
-    }
-
-    public ViRooster(Context ctx, AlarmObject ao, boolean isRepeat) {
-        super(ctx, ao);
+    public ViRooster(Context ctx, AlarmObject ao, boolean isRepeat, int alarmType) {
+        super(ctx, ao, alarmType);
         setIsRepeat(isRepeat);
     }
 
-    public ViRooster(Context ctx, int volume) {
-        super(ctx, volume);
+    public ViRooster(Context ctx, int volume, int alarmType) {
+        super(ctx, volume, alarmType);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class VoiceClockBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void speakNow(final Context ctx, int streamType) {
-        ViRooster timer = new DriverRooster(ctx, 15);
+        ViRooster timer = new DriverRooster(ctx, 15, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);
         timer.setAudioStream(streamType);
         try {
             sendBroadcastPauseMusic(ctx);
