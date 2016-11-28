@@ -99,7 +99,6 @@ public class AlarmActivity extends AppCompatActivity {
         KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
-        //displayAlarm();
         mClockHandler = new Handler();
         mClockHandler.post(new Runnable() {
             @Override
@@ -119,8 +118,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
         displayAlarm();
     }
 

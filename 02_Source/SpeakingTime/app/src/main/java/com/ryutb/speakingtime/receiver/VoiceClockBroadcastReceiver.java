@@ -66,7 +66,7 @@ public class VoiceClockBroadcastReceiver extends BroadcastReceiver {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
         Intent headphoneStateIntent = ctx.registerReceiver(null, filter);
-        return headphoneStateIntent.getIntExtra("state", 0) == 1;
+        return headphoneStateIntent != null && headphoneStateIntent.getIntExtra("state", 0) == 1;
     }
 
     private void sendBroadcastPauseMusic(Context ctx) {
