@@ -41,6 +41,7 @@ public abstract class Rooster {
     private int mDefaultStream = AudioManager.STREAM_ALARM;
     private int mVolumeAlarm;
     private int mAlarmSpeakType;
+    boolean mIs24HourVoice = false;
 
     private AlarmObject mAlarmObject;
 
@@ -101,7 +102,6 @@ public abstract class Rooster {
 
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-//            Log.d(TAG, "$MediaPlayer.OnCompletionListener>>>onCompletion");
             Toast.makeText(mContext, "mMinusSpeakCompleted>>>onCompletion", Toast.LENGTH_SHORT).show();
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
@@ -182,6 +182,9 @@ public abstract class Rooster {
         int hourOfDay = getHourOfDay();
         final int minus = getMinute();
 
+        if (!mIs24HourVoice) {
+            hourOfDay -= 12;
+        }
         prepareMP(hourOfDay, minus);
 
     }
