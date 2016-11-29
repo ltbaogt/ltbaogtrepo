@@ -31,6 +31,7 @@ public class VoiceClockService extends Service {
         mReceiver = new VoiceClockBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mReceiver, filter);
     }
 
