@@ -182,7 +182,7 @@ public abstract class Rooster {
         int hourOfDay = getHourOfDay();
         final int minus = getMinute();
 
-        if (!mIs24HourVoice) {
+        if (!mIs24HourVoice && hourOfDay > 12) {
             hourOfDay -= 12;
         }
         prepareMP(hourOfDay, minus);
