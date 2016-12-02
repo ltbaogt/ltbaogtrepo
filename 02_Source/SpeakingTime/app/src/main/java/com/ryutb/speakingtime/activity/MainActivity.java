@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.ryutb.speakingtime.sql.VCDatabaseOpenHelper;
 import com.ryutb.speakingtime.util.Define;
 import com.ryutb.speakingtime.R;
 import com.ryutb.speakingtime.bean.AlarmObject;
@@ -32,16 +33,16 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox m24HFormat;
     AlarmObject mAlarmObject;
     private AlarmSettingFragment mSettingFragment;
+    private VCDatabaseOpenHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //mBtnSetAlarm = (Button) findViewById(R.id.set_timer);
-        mAlarmObject = new AlarmObject(getSharedPreferences(getPackageName(), Context.MODE_PRIVATE));
+        mDbHelper = new VCDatabaseOpenHelper(getApplicationContext());
+        mAlarmObject = new AlarmObject(mDbHelper.getReservedWordId());
 
         Log.d(TAG, ">>>onCreate alarmId= " + mAlarmObject.getAlarmId());
-        //mBtnSetAlarm.setText("Set alarm for alarmId= " + String.valueOf(mAlarmObject.getAlarmId()));
 
         mTimePicker = (SpeakingClockTimePicker) findViewById(R.id.time_picker);
         m24HFormat = (CheckBox) findViewById(R.id.cb_24hour_format);
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean is42H) {
                 mTimePicker.setIs24HourView(is42H);
+                mAlarmObject.setAlarmIs24Hour(is42H ? 1 : 0);
             }
         });
 
@@ -90,15 +92,10 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, userMinute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-
-//        String timer = ">>>nextTime d= " + calendar.get(Calendar.DAY_OF_YEAR)
-//                + ", m= " + calendar.get(Calendar.MONTH)
-//                + ", y= " + calendar.get(Calendar.YEAR)
-//                + ", h= " + calendar.get(Calendar.HOUR_OF_DAY)
-//                + ", m= " + calendar.get(Calendar.MINUTE);
+        mAlarmObject.setAlarmHour(userHour);
+        mAlarmObject.setAlarmMinute(userMinute);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
         Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
         recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
         recvIntent.putExtra(Define.EXTRA_ALARM_ID, mAlarmObject.getAlarmId());
@@ -106,17 +103,18 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            mAlarmObject.createAlarm();
             int alarmVolume = mSettingFragment.getVolume();
-            mAlarmObject.setVolume(alarmVolume);
-            String alarmString = getAlarmInFurture(calendar);
+            mAlarmObject.setAlarmVolume(alarmVolume);
+
+            String alarmString = getAlarmInFuture(calendar);
+            mDbHelper.insertAlarm(mAlarmObject);
             Toast.makeText(getApplicationContext(), alarmString, Toast.LENGTH_LONG).show();
         }
 
         backToPreviousScreen(null);
     }
 
-    private String getAlarmInFurture(Calendar calendar) {
+    private String getAlarmInFuture(Calendar calendar) {
         Calendar currentCalendar = Calendar.getInstance();
         currentCalendar.set(Calendar.SECOND, 0);
         currentCalendar.set(Calendar.MILLISECOND, 0);

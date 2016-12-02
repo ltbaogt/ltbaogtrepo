@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.ryutb.speakingtime.sql.VCDatabaseOpenHelper;
 import com.ryutb.speakingtime.util.Define;
 import com.ryutb.speakingtime.R;
 import com.ryutb.speakingtime.voicecontroller.Rooster;
@@ -41,6 +42,7 @@ public class AlarmActivity extends AppCompatActivity {
     private TextView mTextViewClock;
 
     private AlarmObject mAlarmObject;
+    private VCDatabaseOpenHelper mDbHelper;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -53,12 +55,13 @@ public class AlarmActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, ">>>onCreate START");
         super.onCreate(savedInstanceState);
+        mDbHelper = new VCDatabaseOpenHelper(getApplicationContext());
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
         mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
         //create new instance of alarm object in order to get settings
         int alarmId = getIntent().getIntExtra(Define.EXTRA_ALARM_ID, 0);
-        mAlarmObject = new AlarmObject(getApplicationContext(), alarmId);
+        mAlarmObject = mDbHelper.getAlarmById(alarmId);
 
         if (isStart || mIsRepeate) {
             mViRooster = new ViNoneNowRooster(getApplicationContext(), mAlarmObject, true, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);

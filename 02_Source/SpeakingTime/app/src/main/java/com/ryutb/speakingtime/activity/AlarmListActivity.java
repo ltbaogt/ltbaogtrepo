@@ -8,10 +8,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.fragment.AlarmForDriverFragment;
 import com.ryutb.speakingtime.fragment.AlarmListTabFragment;
+import com.ryutb.speakingtime.sql.VCDatabaseOpenHelper;
+import com.ryutb.speakingtime.util.Define;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +23,27 @@ import java.util.List;
 
 public class AlarmListActivity extends AppCompatActivity {
 
+    private static final String TAG = Define.createTAG("AlarmListActivity");
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    private VCDatabaseOpenHelper mDbHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_list_activity);
+        mDbHelper = new VCDatabaseOpenHelper(getApplicationContext());
+        mDbHelper.openDatabase();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-
+        ArrayList<AlarmObject> listAlarm = mDbHelper.getAllAlarms();
+        for (AlarmObject a: listAlarm) {
+            Log.d(TAG, ">>>onCreate " + a.toString());
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {

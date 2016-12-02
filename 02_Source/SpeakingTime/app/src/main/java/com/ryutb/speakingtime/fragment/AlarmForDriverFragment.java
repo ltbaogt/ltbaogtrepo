@@ -27,7 +27,7 @@ public class AlarmForDriverFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.alarm_for_driver_fragment_layout, container, false);
 
-        final AlarmObject alarmObject = new AlarmObject(getActivity().getSharedPreferences(getActivity().getPackageName(), Context.MODE_PRIVATE));
+//        final AlarmObject alarmObject = new AlarmObject(getActivity().getSharedPreferences(getActivity().getPackageName(), Context.MODE_PRIVATE));
         Button btnNewAlarm = (Button) v.findViewById(R.id.btn_add_new_alarm);
         btnNewAlarm.setOnClickListener(this);
 
@@ -35,14 +35,14 @@ public class AlarmForDriverFragment extends Fragment implements View.OnClickList
         btnStop.setOnClickListener(this);
 
         AppCompatCheckBox cbPlayOnHeadPhone = (AppCompatCheckBox) v.findViewById(R.id.cbPlayOnHeadPhone);
-        cbPlayOnHeadPhone.setChecked(alarmObject.getIsPlayOnHeadPhone());
-        cbPlayOnHeadPhone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-                alarmObject.setIsPlayOnHeadPhone(b);
-            }
-        });
+//        cbPlayOnHeadPhone.setChecked(alarmObject.getIsPlayOnHeadPhone());
+//        cbPlayOnHeadPhone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//
+//                alarmObject.setIsPlayOnHeadPhone(b);
+//            }
+//        });
         return v;
     }
 

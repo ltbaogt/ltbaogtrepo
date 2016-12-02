@@ -281,7 +281,7 @@ public abstract class Rooster {
     protected void setupVolumeForAudioStream() {
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 
-        int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getVolume();
+        int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getAlarmVolume();
         audioManager.setStreamVolume(mDefaultStream, volumeOfAlarm, 0);
     }
 }

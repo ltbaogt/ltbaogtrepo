@@ -30,17 +30,17 @@ public class VoiceClockBroadcastReceiver extends BroadcastReceiver {
         Log.d(TAG, ">>>onReceive");
         String action = intent.getAction();
         if (Intent.ACTION_SCREEN_ON.equals(action)) {
-            boolean isHeadphonePlugged = checkWiredHeadphoneIsPlugged(context);
-            AlarmObject alarmObject = new AlarmObject(context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE));
-            boolean isPlayOnHeadphone = alarmObject.getIsPlayOnHeadPhone();
-            Log.d(TAG, ">>>onReceive isHeadphonePlugged= " + isHeadphonePlugged);
-
-            //If play on headphone is uncheck
-            if (!isPlayOnHeadphone) {
-                speakNow(context, AudioManager.STREAM_ALARM);
-            } else if (isPlayOnHeadphone && isHeadphonePlugged) { //If play on headphone is check
-                speakNow(context, AudioManager.STREAM_VOICE_CALL);
-            }
+//            boolean isHeadphonePlugged = checkWiredHeadphoneIsPlugged(context);
+//            AlarmObject alarmObject = new AlarmObject(context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE));
+//            boolean isPlayOnHeadphone = alarmObject.getIsPlayOnHeadPhone();
+//            Log.d(TAG, ">>>onReceive isHeadphonePlugged= " + isHeadphonePlugged);
+//
+//            //If play on headphone is uncheck
+//            if (!isPlayOnHeadphone) {
+//                speakNow(context, AudioManager.STREAM_ALARM);
+//            } else if (isPlayOnHeadphone && isHeadphonePlugged) { //If play on headphone is check
+//                speakNow(context, AudioManager.STREAM_VOICE_CALL);
+//            }
         } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
             if (mTimer != null) {
                 mTimer.cancelRepeat();
