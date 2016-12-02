@@ -62,9 +62,10 @@ public class AlarmActivity extends AppCompatActivity {
         //create new instance of alarm object in order to get settings
         int alarmId = getIntent().getIntExtra(Define.EXTRA_ALARM_ID, 0);
         mAlarmObject = mDbHelper.getAlarmById(alarmId);
-
+        Log.d(TAG, ">>>onCreate alarmDisplayed= " + mAlarmObject.toString());
         if (isStart || mIsRepeate) {
             mViRooster = new ViNoneNowRooster(getApplicationContext(), mAlarmObject, true, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);
+            mViRooster.setIs24Hour(mAlarmObject.getAlarmIs24Hour());
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {
@@ -109,7 +110,7 @@ public class AlarmActivity extends AppCompatActivity {
             public void run() {
                 if (mTextViewClock != null) {
                     mTextViewClock.setText(String.format(Locale.US,"%1$02d : %2$02d : %3$02d"
-                            , mViRooster.getHourOfDay(), mViRooster.getMinute(), mViRooster.getSecond()));
+                            , getHour(), mViRooster.getMinute(), mViRooster.getSecond()));
                 }
                 mClockHandler.postDelayed(this, 1000);
             }
@@ -169,13 +170,15 @@ public class AlarmActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        try {
-//            getWindowManager().removeView(mAlarmView);
-//        } catch (Exception e) {
-//
-//        }
-//    }
+    private int getHour() {
+        int hour = -1;
+        if (mAlarmObject != null && mViRooster != null) {
+            boolean is24Hour = (mAlarmObject.getAlarmIs24Hour() == 1);
+            hour = mViRooster.getHourOfDay();
+            if (!is24Hour || hour <= 12) {
+                hour -= 12;
+            }
+        }
+        return hour;
+    }
 }

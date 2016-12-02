@@ -55,6 +55,9 @@ public abstract class Rooster {
         return mIsRepeat;
     }
 
+    public void setIs24Hour(int is24Hour) {
+        mIs24HourVoice = (is24Hour == 1);
+    }
     public void setRepeatTime(int time) {
         mRepeatTime = time;
     }
