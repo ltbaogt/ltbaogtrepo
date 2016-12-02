@@ -3,9 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <Button
         android:id="@+id/btn_add_new_alarm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Alarm" />
+<TextView
+    android:id="@+id/tv_alarm_list_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_alarm_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Alarm Id"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_cancel_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel Alarm" />
+
 </LinearLayout>

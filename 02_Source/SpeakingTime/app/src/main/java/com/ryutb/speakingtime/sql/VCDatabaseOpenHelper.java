@@ -223,9 +223,11 @@ public class VCDatabaseOpenHelper extends SQLiteOpenHelper {
 
 
     //Delete word forever, cannot undo
-    public void deleteForever(int id) {
+    public int cancelAlarmById(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(AlarmObject.TABLE_NAME, AlarmObject.COL_NAME_ALARM_ID + "=?", new String[]{String.valueOf(id)});
+        int affectedRows = db.delete(AlarmObject.TABLE_NAME, AlarmObject.COL_NAME_ALARM_ID + "=?", new String[]{String.valueOf(id)});
+        Log.d(TAG, "cancelAlarmById affectedRows=" + affectedRows);
+        return affectedRows;
     }
 
 //    public int[] getListWordId() {

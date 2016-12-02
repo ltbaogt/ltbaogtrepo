@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AlarmListActivity extends AppCompatActivity {
+public class AlarmListActivity extends VLBaseActivity {
 
     private static final String TAG = Define.createTAG("AlarmListActivity");
     private TabLayout tabLayout;

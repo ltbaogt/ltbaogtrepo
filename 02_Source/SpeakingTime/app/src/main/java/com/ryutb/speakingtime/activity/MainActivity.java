@@ -24,7 +24,7 @@ import com.ryutb.speakingtime.view.SpeakingClockTimePicker;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends VLBaseActivity {
 
     private static final String TAG = "MyClock";
 
@@ -96,18 +96,17 @@ public class MainActivity extends AppCompatActivity {
         mAlarmObject.setAlarmMinute(userMinute);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent recvIntent = new Intent(getApplicationContext(), AlarmActivity.class);
-        recvIntent.putExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, true);
-        recvIntent.putExtra(Define.EXTRA_ALARM_ID, mAlarmObject.getAlarmId());
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), mAlarmObject.getAlarmId(), recvIntent, 0);
+
+        PendingIntent pendingIntent = createPendingIntent(mAlarmObject.getAlarmId(), 0);
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>speakHour START");
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             int alarmVolume = mSettingFragment.getVolume();
             mAlarmObject.setAlarmVolume(alarmVolume);
 
-            String alarmString = getAlarmInFuture(calendar);
             mDbHelper.insertAlarm(mAlarmObject);
+            String alarmString = getAlarmInFuture(calendar);
+
             Toast.makeText(getApplicationContext(), alarmString, Toast.LENGTH_LONG).show();
         }
 
@@ -145,4 +144,5 @@ public class MainActivity extends AppCompatActivity {
     public void backToPreviousScreen(View v) {
         finish();
     }
+
 }
