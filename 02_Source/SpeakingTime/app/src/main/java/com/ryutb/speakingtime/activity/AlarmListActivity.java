@@ -33,17 +33,15 @@ public class AlarmListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_list_activity);
+
         mDbHelper = new VCDatabaseOpenHelper(getApplicationContext());
         mDbHelper.openDatabase();
+
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        ArrayList<AlarmObject> listAlarm = mDbHelper.getAllAlarms();
-        for (AlarmObject a: listAlarm) {
-            Log.d(TAG, ">>>onCreate " + a.toString());
-        }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
