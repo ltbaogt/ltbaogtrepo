@@ -85,16 +85,16 @@ public class AlarmListTabFragment extends Fragment implements View.OnClickListen
                     .createPendingIntent(alarmId, PendingIntent.FLAG_NO_CREATE);
             if (pIntent != null) {
                 pIntent.cancel();
-                if (mDbHelper.cancelAlarmById(alarmId) <= 0) {
-                    Toast.makeText(getContext(), "Alarm is cancelled but cannot delete this alarm", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, ">>>cancelAlarm Alarm is cancelled but cannot delete this alarm");
-                } else {
-                    Toast.makeText(getContext(), "Alarm is deleted successfully", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, ">>>cancelAlarm is cancelled successfully");
-                }
             } else {
                 Toast.makeText(getContext(), "Alarm not found", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, ">>>cancelAlarm Alarm not found");
+            }
+            if (mDbHelper.cancelAlarmById(alarmId) <= 0) {
+                Toast.makeText(getContext(), "Alarm is cancelled but cannot delete this alarm", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, ">>>cancelAlarm Alarm is cancelled but cannot delete this alarm");
+            } else {
+                Toast.makeText(getContext(), "Alarm is deleted successfully", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, ">>>cancelAlarm is cancelled successfully");
             }
         } catch (NumberFormatException e) {
             Toast.makeText(getContext(), "Input Alarm", Toast.LENGTH_SHORT).show();
