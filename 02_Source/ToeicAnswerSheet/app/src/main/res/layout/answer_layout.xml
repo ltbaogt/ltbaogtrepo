@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/id_sentence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:minWidth="20dp"
+            android:text="1"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/id_letter_a"
+            style="@style/AppTheme.LETTER"
+            android:layout_toRightOf="@id/id_sentence"
+            android:gravity="center"
+            android:text="A" />
+
+        <TextView
+            android:id="@+id/id_letter_b"
+            style="@style/AppTheme.LETTER"
+            android:layout_toRightOf="@id/id_letter_a"
+            android:text="B" />
+
+        <TextView
+            android:id="@+id/id_letter_c"
+            style="@style/AppTheme.LETTER"
+            android:layout_toRightOf="@id/id_letter_b"
+            android:text="C" />
+
+        <TextView
+            android:id="@+id/id_letter_d"
+            style="@style/AppTheme.LETTER"
+            android:layout_toRightOf="@id/id_letter_c"
+            android:text="D" />
+    </RelativeLayout>
+</FrameLayout>
