@@ -16,6 +16,7 @@ public class MyPDFView extends PDFView {
     private long mTimePressed = 0;
     private float curX;
     private float curY;
+    private static final int ALOW_MOVE_DISTANCE = 50;
 
     private OnLongPressPDFView mLongPressViewListener;
 
@@ -40,27 +41,34 @@ public class MyPDFView extends PDFView {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         Log.d(TAG, ">>>dispatchTouchEvent action=" + ev.getAction());
-        if (ev.getAction() == MotionEvent.ACTION_DOWN && mTimePressed <= 0 || ev.getAction() == MotionEvent.ACTION_MOVE && resetTimeWhenMove(ev)) {
-            curX = getX();
-            curY = getY();
+        if ((ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_MOVE) && mTimePressed <= 0 || resetTimeWhenMove(ev)) {
+            Log.d(TAG, ">>>dispatchTouchEvent reset time");
+            curX = ev.getX();
+            curY = ev.getY();
             mTimePressed = System.currentTimeMillis();
-        }
-        if (ev.getAction() == MotionEvent.ACTION_UP) {
-            if (System.currentTimeMillis() - mTimePressed > 2000) {
+        } else if (ev.getAction() == MotionEvent.ACTION_DOWN || ev.getAction() == MotionEvent.ACTION_MOVE) {
+            Log.d(TAG, ">>>dispatchTouchEvent check time");
+            if (System.currentTimeMillis() - mTimePressed > 1000) {
+                Log.d(TAG, ">>>dispatchTouchEvent fire long touch");
                 mTimePressed = 0;
                 if (mLongPressViewListener != null) {
                     mLongPressViewListener.onLongPressPDF();
                 }
             }
         }
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
+            mTimePressed = 0;
+        }
         return super.dispatchTouchEvent(ev);
     }
 
     private boolean resetTimeWhenMove(MotionEvent ev) {
         boolean isResetTime = false;
-        if (ev.getRawX() - curX > 150 || ev.getRawY() - curY > 150) {
+        Log.d(TAG, String.format(">>>resetTimeWhenMove distanceX=(%1$s,%2$s) distanceX=(%3$s,%4$s)", ev.getX(), curX, ev.getY(), curY));
+        if (Math.abs(ev.getX() - curX) > ALOW_MOVE_DISTANCE || Math.abs(ev.getY() - curY) > ALOW_MOVE_DISTANCE) {
             isResetTime = true;
         }
+        Log.d(TAG, ">>>resetTimeWhenMove isResetTime=" + isResetTime);
         return isResetTime;
     }
 }
