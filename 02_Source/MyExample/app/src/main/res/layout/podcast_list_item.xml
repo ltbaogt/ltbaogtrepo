@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:paddingLeft="5dp">
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:id="@+id/podcast_index"
+        style="@style/AppTheme.PodcastItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp" />
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/podcast_image_art"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_toRightOf="@id/podcast_index" />
+
+    <TextView
+        android:id="@+id/podcast_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/podcast_image_art"
+        android:textSize="18sp" />
+
+</RelativeLayout>
