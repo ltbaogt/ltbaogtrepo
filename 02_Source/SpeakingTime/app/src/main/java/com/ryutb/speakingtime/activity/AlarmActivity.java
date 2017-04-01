@@ -16,56 +16,57 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.bean.AlarmObject;
 import com.ryutb.speakingtime.sql.VCDatabaseOpenHelper;
 import com.ryutb.speakingtime.util.Define;
-import com.ryutb.speakingtime.R;
+import com.ryutb.speakingtime.view.AlarmView;
 import com.ryutb.speakingtime.voicecontroller.Rooster;
 import com.ryutb.speakingtime.voicecontroller.ViNoneNowRooster;
 import com.ryutb.speakingtime.voicecontroller.ViRooster;
-import com.ryutb.speakingtime.bean.AlarmObject;
-import com.ryutb.speakingtime.view.AlarmView;
 import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.util.Locale;
 
-/**
- * Created by fahc03-177 on 11/11/16.
- */
+
 public class AlarmActivity extends AppCompatActivity {
 
     public static final String TAG = "MyClock";
     ViRooster mViRooster;
-    private boolean mIsRepeate;
+    private boolean mIsRepeat;
+    private int mRepeatCount = 0;
     private AlarmView mAlarmView;
     private Handler mClockHandler;
     private TextView mTextViewClock;
 
     private AlarmObject mAlarmObject;
-    private VCDatabaseOpenHelper mDbHelper;
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mIsRepeate = intent.getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
-        Log.d(TAG, ">>>onNewIntent mIsRepeate= " + mIsRepeate);
+        mIsRepeat = intent.getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
+        mRepeatCount = intent.getIntExtra(Define.EXTRA_REPEAT_ALARM_COUNT, 0);
+        Log.d(TAG, ">>>onNewIntent mIsRepeat= " + mIsRepeat
+        + ", count= " + mRepeatCount);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, ">>>onCreate START");
         super.onCreate(savedInstanceState);
-        mDbHelper = new VCDatabaseOpenHelper(getApplicationContext());
+        VCDatabaseOpenHelper dbHelper = new VCDatabaseOpenHelper(getApplicationContext());
         boolean isStart = getIntent().getBooleanExtra(Define.EXTRA_START_FROM_ALARM_MANAGER, false);
-        mIsRepeate = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
+        mIsRepeat = getIntent().getBooleanExtra(Define.EXTRA_REPEAT_ALARM, false);
         getIntent().removeExtra(Define.EXTRA_START_FROM_ALARM_MANAGER);
         //create new instance of alarm object in order to get settings
         int alarmId = getIntent().getIntExtra(Define.EXTRA_ALARM_ID, 0);
-        mAlarmObject = mDbHelper.getAlarmById(alarmId);
+        mAlarmObject = dbHelper.getAlarmById(alarmId);
         Log.d(TAG, ">>>onCreate alarmDisplayed= " + mAlarmObject.toString());
-        if (isStart || mIsRepeate) {
-            mViRooster = new ViNoneNowRooster(getApplicationContext(), mAlarmObject, true, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);
+        if (isStart) {
+            mViRooster = new ViNoneNowRooster(getApplicationContext(), mAlarmObject, Rooster.ALARM_SPEAK_TYPE_NOW_TIME);
             mViRooster.setIs24Hour(mAlarmObject.getAlarmIs24Hour());
+            mViRooster.setRepeatCount(mAlarmObject.getAlarmRepeat());
             mViRooster.setOnSpeakCompleted(new Rooster.OnSpeakCompleted() {
                 @Override
                 public void onSpeakCompleted() {
@@ -73,8 +74,8 @@ public class AlarmActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onRepeateCompleted() {
-                    Log.d(TAG, ">>>onRepeateCompleted");
+                public void onRepeatCompleted() {
+                    Log.d(TAG, ">>>onRepeatCompleted");
                     finish();
                 }
             });
@@ -95,7 +96,7 @@ public class AlarmActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, ">>>onResume mIsRepeate= " + mIsRepeate);
+        Log.d(TAG, ">>>onResume mIsRepeat= " + mIsRepeat);
 
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "TAG");
@@ -116,9 +117,9 @@ public class AlarmActivity extends AppCompatActivity {
             }
         });
 
-        if (mIsRepeate) {
+        if (mIsRepeat) {
             doSpeakTime();
-            mIsRepeate = false;
+            mIsRepeat = false;
         }
     }
 

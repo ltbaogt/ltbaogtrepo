@@ -35,40 +35,23 @@ public abstract class Rooster {
     ArrayList<MediaPlayer> mMediaPlayers;
     protected Context mContext;
     protected OnSpeakCompleted mOnSpeakCompleted;
-    private boolean mIsRepeat = false;
     protected int mRepeatCount;
-    private int mRepeatTime;
     private int mDefaultStream = AudioManager.STREAM_ALARM;
-    private int mVolumeAlarm;
     private int mAlarmSpeakType;
     boolean mIs24HourVoice = false;
 
     private AlarmObject mAlarmObject;
 
-    private PendingIntent mNextAlarmPendingIntent;
-
-    public void setIsRepeat(boolean isRepeat) {
-        mIsRepeat = isRepeat;
-    }
-
-    public boolean getIsRepeat() {
-        return mIsRepeat;
-    }
-
     public void setIs24Hour(int is24Hour) {
         mIs24HourVoice = (is24Hour == 1);
     }
-    public void setRepeatTime(int time) {
-        mRepeatTime = time;
+
+    public void setRepeatCount(int time) {
+        mRepeatCount = time;
     }
 
-    public int getRepeatTime() {
-        mRepeatTime = 20;
-        return mRepeatTime;
-    }
-
-    public int getVolumeAlarm() {
-        return mVolumeAlarm;
+    public int getRepeatCount() {
+        return mRepeatCount;
     }
 
     public int getAudioStream() {
@@ -81,11 +64,6 @@ public abstract class Rooster {
 
     public void cancelRepeat() {
         Log.d(TAG, ">>>cancelRepeat START");
-        if (mNextAlarmPendingIntent != null) {
-            Log.d(TAG, ">>>cancelRepeat");
-            mNextAlarmPendingIntent.cancel();
-        }
-        mRepeatCount = getRepeatTime();
         mediaplayerStopAndReleaseRemove();
         Log.d(TAG, ">>>cancelRepeat END");
     }
@@ -97,7 +75,7 @@ public abstract class Rooster {
     public interface OnSpeakCompleted {
         void onSpeakCompleted();
 
-        void onRepeateCompleted();
+        void onRepeatCompleted();
     }
 
     //Minute speak completed listener
@@ -109,15 +87,21 @@ public abstract class Rooster {
             if (mOnSpeakCompleted != null) {
                 mOnSpeakCompleted.onSpeakCompleted();
             }
-            if (getIsRepeat()) {
+            if ((getRepeatCount() != 0)) {
                 doRepeat();
+            } else if (getRepeatCount() == 0) {
+                if (mOnSpeakCompleted != null) {
+                    mOnSpeakCompleted.onRepeatCompleted();
+                }
             }
         }
     };
 
     public Rooster(Context ctx, int volume, int alarmType) {
+        mAlarmObject = new AlarmObject();
+        mAlarmObject.setAlarmRepeat(0);
+        mAlarmObject.setAlarmVolume(volume);
         mContext = ctx;
-        mVolumeAlarm = volume;
         mAlarmSpeakType = alarmType;
         mMediaPlayers = new ArrayList<>();
     }
@@ -219,8 +203,8 @@ public abstract class Rooster {
     protected void doRepeat() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, getHourOfDay());
-        calendar.set(Calendar.MINUTE, getMinute() + 1);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.SECOND, getMinute());
+        calendar.add(Calendar.SECOND, mAlarmObject.getInterval());
 
         String timer = ">>>doRepeat d= " + calendar.get(Calendar.DAY_OF_YEAR)
                 + ", m= " + calendar.get(Calendar.MONTH)
@@ -229,17 +213,11 @@ public abstract class Rooster {
                 + ", m= " + calendar.get(Calendar.MINUTE);
         Log.d(TAG, timer);
 
-        if (mNextAlarmPendingIntent != null) {
-            mNextAlarmPendingIntent.cancel();
-        }
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-
-        Intent recvIntent = new Intent(mContext, AlarmActivity.class);
-        recvIntent.putExtra(Define.EXTRA_REPEAT_ALARM, true);
-        mNextAlarmPendingIntent = PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, recvIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent nextAlarmPendingIntent = createPendingIntent();
         if (Build.VERSION.SDK_INT >= 19) {
             Log.d(TAG, ">>>doRepeat setup alarm");
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mNextAlarmPendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), nextAlarmPendingIntent);
         }
     }
 
@@ -259,7 +237,7 @@ public abstract class Rooster {
     }
 
     private void mediaplayerReleaseAndRemove() {
-        //Relase old resource
+        //Release old resource
         if (mMediaPlayers != null) {
 
             for (int i = mMediaPlayers.size() - 1; i >= 0; i--) {
@@ -270,7 +248,7 @@ public abstract class Rooster {
     }
 
     private void mediaplayerStopAndReleaseRemove() {
-        //Relase old resource
+        //Release old resource
         if (mMediaPlayers != null) {
 
             for (int i = mMediaPlayers.size() - 1; i >= 0; i--) {
@@ -284,7 +262,15 @@ public abstract class Rooster {
     protected void setupVolumeForAudioStream() {
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 
-        int volumeOfAlarm = mAlarmObject == null ? mVolumeAlarm : mAlarmObject.getAlarmVolume();
+        int volumeOfAlarm = mAlarmObject == null ? mAlarmObject.getAlarmVolume() : mAlarmObject.getAlarmVolume();
         audioManager.setStreamVolume(mDefaultStream, volumeOfAlarm, 0);
+    }
+
+    private PendingIntent createPendingIntent() {
+        Intent receiveIntent = new Intent(mContext, AlarmActivity.class);
+        receiveIntent.setAction(String.valueOf(mAlarmObject.getAlarmId()));
+        receiveIntent.putExtra(Define.EXTRA_REPEAT_ALARM, true);
+        receiveIntent.putExtra(Define.EXTRA_REPEAT_ALARM_COUNT, mRepeatCount > 0 ? mRepeatCount-- : 0);
+        return PendingIntent.getActivity(mContext, Define.REQ_CODE_REPEATE, receiveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

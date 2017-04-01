@@ -2,5 +2,9 @@
     {
         "merged": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\color_picker_swatch.xml",
         "source": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\drawable\\color_picker_swatch.xml"
+    },
+    {
+        "merged": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\color_picker_swatch.xml",
+        "source": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\drawable\\color_picker_swatch.xml"
     }
 ]

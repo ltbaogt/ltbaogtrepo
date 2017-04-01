@@ -4,6 +4,14 @@
         "source": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_dialog.xml"
     },
     {
+        "merged": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\color_picker_dialog.xml",
+        "source": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_dialog.xml"
+    },
+    {
+        "merged": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\color_picker_swatch.xml",
+        "source": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_swatch.xml"
+    },
+    {
         "merged": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\color_picker_swatch.xml",
         "source": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_swatch.xml"
     }

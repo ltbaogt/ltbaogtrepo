@@ -12,9 +12,8 @@ public class ViRooster extends Rooster {
 
     private static final String TAG = "MyClock";
 
-    public ViRooster(Context ctx, AlarmObject ao, boolean isRepeat, int alarmType) {
+    public ViRooster(Context ctx, AlarmObject ao, int alarmType) {
         super(ctx, ao, alarmType);
-        setIsRepeat(isRepeat);
     }
 
     public ViRooster(Context ctx, int volume, int alarmType) {

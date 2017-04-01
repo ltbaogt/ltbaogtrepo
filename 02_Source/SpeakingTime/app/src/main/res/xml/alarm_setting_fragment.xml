@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <EditTextPreference
-        android:key="snooze"
-        android:summary="summary of snooze"
+    <SwitchPreferenceCompat
+        android:title="24h Format"
+        app:key="hour_of_day_format" />
+    <SwitchPreferenceCompat
+        android:title="Repeat every day"
+        app:key="repeat_every_day" />
+
+    <SwitchPreferenceCompat
+        android:key="snooze_on_off"
         android:title="Snooze" />
     <Preference
+        android:dependency="snooze_on_off"
         android:summary="Snooze setting summary"
         android:title="Snooze setting"
         app:key="go_to_snooze_setting">
@@ -15,7 +22,7 @@
         android:defaultValue="0"
         android:title="Alarm type"
         app:entries="@array/alarm_type_entries_list_preference"
-        app:entryValues="@array/alarm_type_entryvalues_list_preference"
+        app:entryValues="@array/alarm_type_entry_values_list_preference"
         app:key="st_alarm_mode" />
 
     <com.ryutb.speakingtime.view.AlarmVolumePreference

@@ -34,10 +34,15 @@ public class AlarmObject {
     private int mAlarmHour;
     private int mAlarmMinute;
     private int mAlarmVolume;
-    private int mAlarmRepeat;
+    private int mAlarmRepeat = 3;
     private int mAlarmType;
     private int mAlarmIs24Hour;
+    private int mInterval;
 
+    public int getInterval() {
+        mInterval = 10;
+        return mInterval;
+    }
     public int getAlarmId() {
         return mAlarmId;
     }

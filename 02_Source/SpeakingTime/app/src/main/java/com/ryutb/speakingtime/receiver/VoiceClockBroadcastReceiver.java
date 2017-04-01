@@ -63,7 +63,7 @@ public class VoiceClockBroadcastReceiver extends BroadcastReceiver {
                     }
 
                     @Override
-                    public void onRepeateCompleted() {
+                    public void onRepeatCompleted() {
 
                     }
                 });

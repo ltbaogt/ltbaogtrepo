@@ -1,5 +1,9 @@
 [
     {
+        "merged": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\ic_colorpicker_swatch_selected.png",
+        "source": "E:\\01_android\\repo\\voca\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\drawable-mdpi-v4\\ic_colorpicker_swatch_selected.png"
+    },
+    {
         "merged": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\ic_colorpicker_swatch_selected.png",
         "source": "C:\\Users\\My PC\\Desktop\\New folder\\ltbaogtrepo\\02_Source\\VocaReminder\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\drawable-mdpi-v4\\ic_colorpicker_swatch_selected.png"
     }
